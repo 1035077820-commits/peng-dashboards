@@ -80,7 +80,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
       <div class="card-entry" onclick="showPage('sample')">
         <div class="icon">📦</div>
         <h3>拿样数据分析</h3>
-        <p>各业务员6月每周拿样件数与客户数趋势</p>
+        <p>各业务员每周拿样件数与客户数趋势</p>
       </div>
       <div class="card-entry" onclick="showPage('pattern')">
         <div class="icon">🧵</div>
@@ -99,6 +99,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
   <div class="page" id="page-sample">
     <button class="btn-back" onclick="showPage('home')">← 返回目录</button>
     <h2 style="margin-bottom:20px;color:#111FBF;">📦 拿样数据分析</h2>
+    <div style="margin-bottom:16px;">
+      <label style="font-weight:bold;margin-right:8px;">月份：</label>
+      <select id="sample-month-select" onchange="switchSampleMonth(this.value)" style="padding:6px 12px;border-radius:6px;border:1px solid #ccc;font-size:14px;">
+        <option value="7月" selected>7月</option>
+        <option value="6月">6月</option>
+      </select>
+    </div>
 
     <div class="chart-section">
       <h3>拿样件数趋势（6月第1-4周）</h3>
@@ -261,29 +268,52 @@ const colors = [
   '#1abc9c','#e67e22','#3498db','#e91e63'
 ];
 
-// 拿样数据（从Excel计算）
-const sampleQty = {
-  '刘晓霞': [20, 0, 6, 1],
-  '刘江滔': [40, 8, 1, 0],
-  '刘胜楠': [40, 0, 5, 11],
-  '彭培强': [2, 0, 0, 0],
-  '敬健浩': [2, 2, 0, 8],
-  '朱家豪': [8, 5, 5, 2],
-  '林梓仪': [61, 2, 0, 30],
-  '潘嘉瑜': [8, 15, 0, 0],
-  '苏芷萱': [11, 2, 0, 0]
+// 拿样数据（按月份存储）
+const sampleData = {
+  '6月': {
+    qty: {
+      '刘晓霞': [20, 0, 6, 1],
+      '刘江滔': [40, 8, 1, 0],
+      '刘胜楠': [40, 0, 5, 11],
+      '彭培强': [2, 0, 0, 0],
+      '敬健浩': [2, 2, 0, 8],
+      '朱家豪': [8, 5, 5, 2],
+      '林梓仪': [61, 2, 0, 30],
+      '潘嘉瑜': [8, 15, 0, 0],
+      '苏芷萱': [11, 2, 0, 0]
+    },
+    cust: {
+      '刘晓霞': [3, 0, 1, 1],
+      '刘江滔': [1, 1, 1, 0],
+      '刘胜楠': [4, 0, 1, 1],
+      '彭培强': [1, 0, 0, 0],
+      '敬健浩': [1, 1, 0, 3],
+      '朱家豪': [4, 2, 1, 1],
+      '林梓仪': [4, 1, 0, 7],
+      '潘嘉瑜': [2, 2, 0, 0],
+      '苏芷萱': [2, 1, 0, 0]
+    }
+  },
+  '7月': {
+    qty: {
+      '刘晓霞': [4, 6, 0, 0],
+      '敬健浩': [4, 12, 0, 0],
+      '朱家豪': [2, 10, 0, 0],
+      '林梓仪': [15, 0, 0, 0],
+      '潘嘉瑜': [33, 0, 0, 0]
+    },
+    cust: {
+      '刘晓霞': [1, 2, 0, 0],
+      '敬健浩': [1, 2, 0, 0],
+      '朱家豪': [1, 2, 0, 0],
+      '林梓仪': [2, 0, 0, 0],
+      '潘嘉瑜': [2, 0, 0, 0]
+    }
+  }
 };
-const sampleCust = {
-  '刘晓霞': [3, 0, 1, 1],
-  '刘江滔': [1, 1, 1, 0],
-  '刘胜楠': [4, 0, 1, 1],
-  '彭培强': [1, 0, 0, 0],
-  '敬健浩': [1, 1, 0, 3],
-  '朱家豪': [4, 2, 1, 1],
-  '林梓仪': [4, 1, 0, 7],
-  '潘嘉瑜': [2, 2, 0, 0],
-  '苏芷萱': [2, 1, 0, 0]
-};
+let currentSampleMonth = '7月';
+let sampleQty = sampleData[currentSampleMonth].qty;
+let sampleCust = sampleData[currentSampleMonth].cust;
 
 // 打版数据（从Excel计算）
 const patternQty = {
@@ -439,15 +469,59 @@ function createLineChart(canvasId, data, title) {
   });
 }
 
+// ===== 月份切换函数 =====
+let chartSampleQtyRef = null;
+let chartSampleCustRef = null;
+
+function switchSampleMonth(month) {
+  currentSampleMonth = month;
+  sampleQty = sampleData[month].qty;
+  sampleCust = sampleData[month].cust;
+  
+  // Destroy old charts
+  if (chartSampleQtyRef) chartSampleQtyRef.destroy();
+  if (chartSampleCustRef) chartSampleCustRef.destroy();
+  
+  // Recreate charts
+  chartSampleQtyRef = createLineChart('chart-sample-qty', sampleQty, '拿样件数');
+  createFilterButtons('filter-sample-qty', chartSampleQtyRef);
+  chartSampleCustRef = createLineChart('chart-sample-cust', sampleCust, '拿样客户数');
+  createFilterButtons('filter-sample-cust', chartSampleCustRef);
+  
+  // Rebuild tables
+  const people = Object.keys(sampleQty);
+  let tbody = document.getElementById('table-sample-qty');
+  tbody.innerHTML = '';
+  let totalRow = [0,0,0,0];
+  people.forEach(name => {
+    const d = sampleQty[name];
+    const sum = d.reduce((a,b) => a+b, 0);
+    d.forEach((v,i) => totalRow[i] += v);
+    tbody.innerHTML += `<tr><td>${name}</td><td>${d[0]}</td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><b>${sum}</b></td></tr>`;
+  });
+  tbody.innerHTML += `<tr class="summary-row"><td>合计</td><td>${totalRow[0]}</td><td>${totalRow[1]}</td><td>${totalRow[2]}</td><td>${totalRow[3]}</td><td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
+  
+  tbody = document.getElementById('table-sample-cust');
+  tbody.innerHTML = '';
+  totalRow = [0,0,0,0];
+  people.forEach(name => {
+    const d = sampleCust[name];
+    const sum = d.reduce((a,b) => a+b, 0);
+    d.forEach((v,i) => totalRow[i] += v);
+    tbody.innerHTML += `<tr><td>${name}</td><td>${d[0]}</td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><b>${sum}</b></td></tr>`;
+  });
+  tbody.innerHTML += `<tr class="summary-row"><td>合计</td><td>${totalRow[0]}</td><td>${totalRow[1]}</td><td>${totalRow[2]}</td><td>${totalRow[3]}</td><td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
+}
+
 // ===== 初始化图表 =====
 document.addEventListener('DOMContentLoaded', function() {
   // 拿样件数折线图
-  const chartSampleQty = createLineChart('chart-sample-qty', sampleQty, '拿样件数');
-  createFilterButtons('filter-sample-qty', chartSampleQty);
+  chartSampleQtyRef = createLineChart('chart-sample-qty', sampleQty, '拿样件数');
+  createFilterButtons('filter-sample-qty', chartSampleQtyRef);
 
   // 拿样客户数折线图
-  const chartSampleCust = createLineChart('chart-sample-cust', sampleCust, '拿样客户数');
-  createFilterButtons('filter-sample-cust', chartSampleCust);
+  chartSampleCustRef = createLineChart('chart-sample-cust', sampleCust, '拿样客户数');
+  createFilterButtons('filter-sample-cust', chartSampleCustRef);
 
   // 拿样件数表格
   let tbody = document.getElementById('table-sample-qty');
