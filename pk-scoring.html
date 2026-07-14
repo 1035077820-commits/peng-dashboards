@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPT演讲PK赛 评分系统 - 2026.7.13</title>
+<style>
+:root {
+  --brand: rgb(17, 31, 191);
+  --brand-light: rgba(17, 31, 191, 0.15);
+  --brand-dark: rgb(8, 15, 95);
+  --bg-start: #050a2e;
+  --bg-mid: #0a1245;
+  --bg-end: #060d35;
+  --card-bg: rgba(255,255,255,0.04);
+  --card-border: rgba(255,255,255,0.08);
+  --text: #e8eaf6;
+  --text-muted: #9fa8da;
+  --excellent: #4caf50;
+  --normal: #2196f3;
+  --improve: #ff9800;
+  --danger: #f44336;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  gap: 16px;
+  border-bottom: 1px solid var(--card-border);
+}
+.header img {
+  height: 40px;
+  filter: brightness(1.1);
+}
+.header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+.header .date {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-left: 12px;
+}
+
+/* Tabs */
+.tab-nav {
+  display: flex;
+  justify-content: center;
+  padding: 16px 20px 0;
+  gap: 8px;
+}
+.tab-btn {
+  padding: 10px 28px;
+  border: 2px solid var(--brand);
+  border-radius: 8px 8px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: transparent;
+  color: var(--text-muted);
+}
+.tab-btn.active {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 -2px 12px rgba(17,31,191,0.4);
+}
+.tab-btn:hover { color: #fff; background: rgba(17,31,191,0.5); }
+
+/* Content */
+.tab-content { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+.tab-content.active { display: block; }
+
+/* Password Gate */
+#password-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 16px;
+}
+#password-gate h2 { color: #fff; font-size: 22px; }
+#password-gate input {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 2px solid var(--brand);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 15px;
+  width: 260px;
+  text-align: center;
+}
+#password-gate input:focus { outline: none; border-color: #5c6bc0; box-shadow: 0 0 12px rgba(17,31,191,0.5); }
+#password-gate button {
+  padding: 10px 36px;
+  background: var(--brand);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+#password-gate button:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(17,31,191,0.5); }
+.pw-error { color: var(--danger); font-size: 13px; display: none; }
+
+/* Scoring Panel */
+#scoring-panel { display: none; }
+.judge-selector {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.judge-btn {
+  padding: 8px 20px;
+  border-radius: 6px;
+  border: 2px solid rgba(17,31,191,0.5);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.judge-btn.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(17,31,191,0.4);
+}
+.judge-btn:hover { border-color: var(--brand); color: #fff; }
+
+/* Rules Panel */
+.rules-panel {
+  background: rgba(17,31,191,0.08);
+  border: 1px solid rgba(17,31,191,0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.rules-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.rules-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #7986cb;
+}
+.rules-toggle {
+  font-size: 12px;
+  color: var(--text-muted);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+.rules-body { margin-top: 12px; }
+.rules-body.collapsed { display: none; }
+.rule-item {
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  border-left: 3px solid var(--brand);
+}
+.rule-item h4 {
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.rule-levels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  font-size: 12px;
+}
+.rule-level {
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+.rule-level.excellent { background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.3); color: #81c784; }
+.rule-level.normal { background: rgba(33,150,243,0.1); border: 1px solid rgba(33,150,243,0.3); color: #64b5f6; }
+.rule-level.improve { background: rgba(255,152,0,0.1); border: 1px solid rgba(255,152,0,0.3); color: #ffb74d; }
+.rule-level strong { display: block; margin-bottom: 2px; }
+
+/* Group Cards */
+.group-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+}
+.group-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #7986cb;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+/* Player Card */
+.player-card {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.player-card:last-child { border-bottom: none; }
+.player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.player-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+.player-total {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brand);
+  background: var(--brand-light);
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+/* Score Row */
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.score-label {
+  width: 140px;
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.score-slider-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+input[type="range"] {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--brand);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(17,31,191,0.5);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--brand);
+  cursor: pointer;
+  border: none;
+}
+.score-value {
+  width: 36px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+.score-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  min-width: 56px;
+  text-align: center;
+}
+.badge-excellent { background: rgba(76,175,80,0.2); color: #81c784; }
+.badge-normal { background: rgba(33,150,243,0.2); color: #64b5f6; }
+.badge-improve { background: rgba(255,152,0,0.2); color: #ffb74d; }
+.badge-none { background: rgba(255,255,255,0.05); color: #666; }
+/* Bonus Section */
+.bonus-section {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+  border: 1px solid rgba(255,152,0,0.3);
+  display: none;
+}
+.bonus-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.bonus-title { font-size: 16px; font-weight: 700; color: #ffb74d; }
+.bonus-toggle-btn {
+  padding: 6px 16px;
+  background: rgba(255,152,0,0.2);
+  border: 1px solid rgba(255,152,0,0.4);
+  border-radius: 6px;
+  color: #ffb74d;
+  font-size: 13px;
+  cursor: pointer;
+}
+.bonus-content { display: none; }
+.bonus-content.show { display: block; }
+.bonus-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: rgba(255,152,0,0.08);
+  border-radius: 6px;
+}
+.bonus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+.bonus-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+}
+.bonus-item label { color: #ddd; font-size: 13px; flex: 1; }
+.bonus-select {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 12px;
+}
+.bonus-select option { background: #1a237e; color: #fff; }
+
+/* Ranking */
+.ranking-header {
+  text-align: center;
+  padding: 24px 0 16px;
+}
+.ranking-header h1 {
+  font-size: 28px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.ranking-header .date { color: var(--text-muted); font-size: 13px; }
+
+.warning-banner {
+  background: rgba(244,67,54,0.1);
+  border: 2px solid rgba(244,67,54,0.5);
+  border-radius: 10px;
+  padding: 12px 20px;
+  text-align: center;
+  margin: 12px 0;
+  animation: pulse-border 2s infinite;
+}
+.warning-banner span { font-size: 16px; font-weight: 700; color: #ef5350; }
+@keyframes pulse-border {
+  0%,100% { border-color: rgba(244,67,54,0.4); }
+  50% { border-color: rgba(244,67,54,1); }
+}
+
+.atmosphere {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+.atmo-text {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 16px;
+}
+.atmo-text:nth-child(1) { color: #ffb74d; background: rgba(255,152,0,0.12); }
+.atmo-text:nth-child(2) { color: #ef5350; background: rgba(244,67,54,0.12); }
+.atmo-text:nth-child(3) { color: #64b5f6; background: rgba(33,150,243,0.12); }
+
+.refresh-bar {
+  text-align: center;
+  margin: 10px 0;
+  font-size: 12px;
+  color: #666;
+}
+.refresh-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--brand);
+  border-radius: 50%;
+  margin-right: 4px;
+  animation: blink 1s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+.ranking-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+.ranking-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.ranking-table td {
+  padding: 12px 14px;
+  background: var(--card-bg);
+  font-size: 14px;
+}
+.ranking-table tr td:first-child { border-radius: 8px 0 0 8px; }
+.ranking-table tr td:last-child { border-radius: 0 8px 8px 0; }
+.ranking-table tr.danger td {
+  background: rgba(244,67,54,0.1);
+  animation: flash-danger 1.5s infinite;
+}
+@keyframes flash-danger {
+  0%,100% { box-shadow: inset 0 0 0 1px rgba(244,67,54,0.3); }
+  50% { box-shadow: inset 0 0 0 2px rgba(244,67,54,0.8); }
+}
+.rank-medal { font-size: 18px; }
+.rank-num { color: #666; font-size: 15px; font-weight: 600; }
+.score-final { font-size: 17px; font-weight: 700; color: #7986cb; }
+.bonus-badge-rank {
+  font-size: 11px;
+  background: rgba(255,152,0,0.2);
+  color: #ffb74d;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.group-tag {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--brand-light);
+  color: #7986cb;
+}
+
+/* Comment textarea */
+.comment-wrap {
+  margin-top: 8px;
+}
+.comment-wrap label {
+  font-size: 11px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.comment-textarea {
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 13px;
+  resize: vertical;
+  font-family: inherit;
+}
+.comment-textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 8px rgba(17,31,191,0.3);
+}
+
+/* Save toast */
+.save-status {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  padding: 8px 16px;
+  background: rgba(76,175,80,0.9);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  display: none;
+  z-index: 999;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rule-levels { grid-template-columns: 1fr; }
+  .score-row { flex-wrap: wrap; }
+  .score-label { width: 100%; }
+  .header h1 { font-size: 16px; }
+  .ranking-table { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+<!-- Header -->
+<div class="header">
+  <img src="./jiezhan-logo-dark.png" alt="捷展潮牌供应链">
+  <h1>PPT演讲PK赛 · 评分系统</h1>
+  <span class="date">2026.7.13 · 下午5:00开始</span>
+</div>
+
+<!-- Tab Navigation -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('scoring')">🎤 评委评分</button>
+  <button class="tab-btn" onclick="switchTab('ranking')">🏆 实时排名</button>
+</div>
+
+<!-- Scoring Tab -->
+<div id="tab-scoring" class="tab-content active">
+  <div id="password-gate">
+    <h2>🔐 评委通道</h2>
+    <p style="color:var(--text-muted);font-size:13px;">请输入评委密码进入评分系统</p>
+    <input type="password" id="pw-input" placeholder="请输入密码" onkeydown="if(event.key==='Enter')checkPassword()">
+    <button onclick="checkPassword()">进入评分</button>
+    <p class="pw-error" id="pw-error">密码错误，请重试</p>
+  </div>
+
+  <div id="scoring-panel">
+    <div class="judge-selector">
+      <button class="judge-btn" onclick="selectJudge(0)">彭培强（蓝队队长）</button>
+      <button class="judge-btn" onclick="selectJudge(1)">王娟（橙队队长）</button>
+      <button class="judge-btn" onclick="selectJudge(2)">何小小（人事负责人）</button>
+    </div>
+
+    <!-- Rules Reference -->
+    <div class="rules-panel">
+      <div class="rules-header" onclick="toggleRules()">
+        <span class="rules-title">📋 评分标准参考</span>
+        <span class="rules-toggle" id="rules-toggle-text">收起 ▲</span>
+      </div>
+      <div class="rules-body" id="rules-body">
+        <div class="rule-item">
+          <h4>🎭 情绪感染力（30分）</h4>
+          <div class="rule-levels">
+            <div class="rule-level excellent"><strong>优秀 27-30分</strong>有激情、有起伏，能精准调动听众情绪，现场反应积极<br><em>感染力强，收放自如</em></div>
+            <div class="rule-level normal"><strong>一般 18-26分</strong>表达自然，有基本感染力，但缺乏明显高潮<br><em>自然得体，偶有亮点</em></div>
+            <div class="rule-level improve"><strong>待提升 9-17分</strong>情绪平淡或刻意，缺乏感染力，听众无共鸣<br><em>无情绪起伏，或过度夸张</em></div>
+          </div>
+        </div>
+        <div class="rule-item">
+          <h4>🗣️ 语言流畅度（30分）</h4>
+          <div class="rule-levels">
+            <div class="rule-level excellent"><strong>优秀 27-30分</strong>表达自如连贯，无卡顿、无口头禅，节奏把控出色<br><em>语言如行云流水</em></div>
+            <div class="rule-level normal"><strong>一般 18-26分</strong>整体顺畅，偶有轻微停顿或重复，不影响理解<br><em>基本流畅，有小瑕疵</em></div>
+            <div class="rule-level improve"><strong>待提升 9-17分</strong>频繁卡顿、明显念稿或逻辑混乱，影响信息传递<br><em>严重不连贯，听感吃力</em></div>
+          </div>
+        </div>
+        <div class="rule-item">
+          <h4>📊 内容完整性与逻辑性（40分）</h4>
+          <div class="rule-levels">
+            <div class="rule-level excellent"><strong>优秀 34-40分</strong>结构完整、层层递进，客户视角突出，论据充分有力<br><em>逻辑严密，说服力强</em></div>
+            <div class="rule-level normal"><strong>一般 24-33分</strong>主要模块完整，逻辑基本顺畅，有1~2处衔接或深度不足<br><em>框架清晰，细节可优化</em></div>
+            <div class="rule-level improve"><strong>待提升 12-23分</strong>内容跳跃或结构松散，缺乏主线，客户痛点未有效回应<br><em>内容碎片化，主线不明</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="scoring-groups"></div>
+
+    <!-- Bonus -->
+    <div class="bonus-section" id="bonus-section">
+      <div class="bonus-header">
+        <span class="bonus-title">🎁 加分机制</span>
+        <button class="bonus-toggle-btn" onclick="toggleBonus()">申请加分</button>
+      </div>
+      <div class="bonus-content" id="bonus-content">
+        <div class="bonus-note">📌 第1位上台 +5分 | 第2位上台 +3分 | 第3位上台 +1分<br>由彭培强手动指定获得加分的选手</div>
+        <div class="bonus-grid" id="bonus-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ranking Tab -->
+<div id="tab-ranking" class="tab-content">
+  <div class="ranking-header">
+    <h1>🏆 PPT演讲PK赛 实时排名</h1>
+    <div class="date">2026年7月13日 下午5:00 · 捷展潮牌供应链</div>
+  </div>
+  <div class="warning-banner"><span>⚠️ 低于70分取消秋冬新品提成资格</span></div>
+  <div class="atmosphere">
+    <span class="atmo-text">🔥 想拿大客户？先站上台</span>
+    <span class="atmo-text">💀 低于70分，新品提成出局</span>
+    <span class="atmo-text">⏱️ 每一秒都在决定你的排名</span>
+  </div>
+  <div class="refresh-bar"><span class="refresh-dot"></span>实时刷新中 · 每5秒自动更新</div>
+  <table class="ranking-table">
+    <thead><tr><th>排名</th><th>选手</th><th>组别</th><th>评委均分</th><th>加分</th><th>总分</th></tr></thead>
+    <tbody id="ranking-body"></tbody>
+  </table>
+</div>
+
+<div class="save-status" id="save-status">✅ 已保存</div>
+<script>
+const API_BASE = 'https://bucks-backed-stop-range.trycloudflare.com';
+const PASSWORD = 'jiezhan20141212';
+
+const GROUPS = [
+  { name: '第一组', players: ['张玉珠', '刘江滔', '冯佩珊', '朱家豪'] },
+  { name: '第二组', players: ['敬健浩', '潘嘉瑜(大俞)', '周乐', '林梓仪'] },
+  { name: '第三组', players: ['邓正瑶', '刘胜楠', '刘晓霞'] }
+];
+
+const JUDGES = ['彭培强', '王娟', '何小小'];
+
+const DIMENSIONS = [
+  { key: 'emotion', label: '情绪感染力', max: 30, min: 0,
+    ranges: [{min:27,max:30,label:'优秀',cls:'badge-excellent'},{min:18,max:26,label:'一般',cls:'badge-normal'},{min:9,max:17,label:'待提升',cls:'badge-improve'}] },
+  { key: 'fluency', label: '语言流畅度', max: 30, min: 0,
+    ranges: [{min:27,max:30,label:'优秀',cls:'badge-excellent'},{min:18,max:26,label:'一般',cls:'badge-normal'},{min:9,max:17,label:'待提升',cls:'badge-improve'}] },
+  { key: 'content', label: '内容与逻辑', max: 40, min: 0,
+    ranges: [{min:34,max:40,label:'优秀',cls:'badge-excellent'},{min:24,max:33,label:'一般',cls:'badge-normal'},{min:12,max:23,label:'待提升',cls:'badge-improve'}] }
+];
+
+const ALL_PLAYERS = GROUPS.flatMap(g => g.players);
+let currentJudge = -1;
+let data = { scores: {}, bonus: {}, comments: {} };
+
+async function loadData() {
+  try {
+    const resp = await fetch(API_BASE + '/api/data');
+    if (resp.ok) data = await resp.json();
+  } catch(e) { console.error('Load failed:', e); }
+  return data;
+}
+
+function showSaved() {
+  const el = document.getElementById('save-status');
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 1200);
+}
+
+async function initData() {
+  await loadData();
+  renderRanking();
+}
+
+async function checkPassword() {
+  if (document.getElementById('pw-input').value === PASSWORD) {
+    document.getElementById('password-gate').style.display = 'none';
+    document.getElementById('scoring-panel').style.display = 'block';
+    await loadData();
+    selectJudge(0);
+  } else {
+    const err = document.getElementById('pw-error');
+    err.style.display = 'block';
+    setTimeout(() => { err.style.display = 'none'; }, 2000);
+  }
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', (tab==='scoring'&&i===0)||(tab==='ranking'&&i===1));
+  });
+  document.getElementById('tab-scoring').classList.toggle('active', tab==='scoring');
+  document.getElementById('tab-ranking').classList.toggle('active', tab==='ranking');
+  if (tab==='ranking') renderRanking();
+}
+
+function selectJudge(idx) {
+  currentJudge = idx;
+  document.querySelectorAll('.judge-btn').forEach((btn,i) => btn.classList.toggle('active', i===idx));
+  document.getElementById('bonus-section').style.display = idx===0 ? 'block' : 'none';
+  renderScoringPanel();
+}
+
+function toggleRules() {
+  const body = document.getElementById('rules-body');
+  const text = document.getElementById('rules-toggle-text');
+  body.classList.toggle('collapsed');
+  text.textContent = body.classList.contains('collapsed') ? '展开 ▼' : '收起 ▲';
+}
+
+function toggleBonus() {
+  document.getElementById('bonus-content').classList.toggle('show');
+}
+
+function getBadge(dim, val) {
+  const v = parseInt(val);
+  if (!v || v === 0) return { label: '-', cls: 'badge-none' };
+  for (const r of dim.ranges) {
+    if (v >= r.min && v <= r.max) return { label: r.label, cls: r.cls };
+  }
+  if (v < dim.ranges[dim.ranges.length-1].min) return { label: '偏低', cls: 'badge-improve' };
+  return { label: '超范围', cls: 'badge-improve' };
+}
+
+async function updateScore(judge, player, dimKey, value, max) {
+  let v = parseInt(value) || 0;
+  if (v > max) v = max;
+  if (v < 0) v = 0;
+  if (!data.scores[judge]) data.scores[judge] = {};
+  if (!data.scores[judge][player]) data.scores[judge][player] = {emotion:0,fluency:0,content:0};
+  data.scores[judge][player][dimKey] = v;
+  // Update display without full re-render
+  const totalEl = document.getElementById(`total-${judge}-${player}`);
+  if (totalEl) {
+    const s = data.scores[judge][player];
+    totalEl.textContent = (s.emotion + s.fluency + s.content) || '-';
+  }
+  const dim = DIMENSIONS.find(d => d.key === dimKey);
+  const badge = getBadge(dim, v);
+  const badgeEl = document.getElementById(`badge-${judge}-${player}-${dimKey}`);
+  if (badgeEl) { badgeEl.textContent = badge.label; badgeEl.className = 'score-badge ' + badge.cls; }
+  const valEl = document.getElementById(`val-${judge}-${player}-${dimKey}`);
+  if (valEl) valEl.textContent = v;
+  // Save to server
+  try {
+    await fetch(API_BASE + '/api/score', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({judge,player,dimension:dimKey,value:v})});
+    showSaved();
+  } catch(e) { console.error('Save score failed:', e); }
+}
+
+function renderScoringPanel() {
+  if (currentJudge < 0) return;
+  const judge = JUDGES[currentJudge];
+  const container = document.getElementById('scoring-groups');
+  let html = '';
+
+  GROUPS.forEach(group => {
+    html += '<div class="group-card"><div class="group-title">' + group.name + '</div>';
+    group.players.forEach(player => {
+      const scores = data.scores[judge][player];
+      const total = (scores.emotion||0) + (scores.fluency||0) + (scores.content||0);
+
+      html += '<div class="player-card"><div class="player-header">';
+      html += '<span class="player-name">' + player + '</span>';
+      html += '<span class="player-total" id="total-' + judge + '-' + player + '">' + (total||'-') + '</span>';
+      html += '</div>';
+
+      DIMENSIONS.forEach(dim => {
+        const val = scores[dim.key] || 0;
+        const badge = getBadge(dim, val);
+        html += '<div class="score-row">';
+        html += '<span class="score-label">' + dim.label + '(' + dim.max + '分)</span>';
+        html += '<div class="score-slider-wrap">';
+        html += '<input type="range" min="0" max="' + dim.max + '" value="' + val + '" ';
+        html += 'oninput="updateScore(\'' + judge + '\',\'' + player + '\',\'' + dim.key + '\',this.value,' + dim.max + ');this.nextElementSibling.textContent=this.value">';
+        html += '<span class="score-value" id="val-' + judge + '-' + player + '-' + dim.key + '">' + val + '</span>';
+        html += '<span class="score-badge ' + badge.cls + '" id="badge-' + judge + '-' + player + '-' + dim.key + '">' + badge.label + '</span>';
+        html += '</div></div>';
+      });
+
+      html += '</div>';
+
+      // Comment textarea
+      const comment = (data.comments && data.comments[judge] && data.comments[judge][player]) || '';
+      html += '<div class="comment-wrap">';
+      html += '<label>📝 文字点评</label>';
+      html += '<textarea class="comment-textarea" placeholder="输入对' + player + '的点评..." ';
+      html += 'oninput="updateComment(\'' + judge + '\',\'' + player + '\',this.value)">' + comment + '</textarea>';
+      html += '</div>';
+
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+  renderBonusGrid();
+}
+
+function renderBonusGrid() {
+  const grid = document.getElementById('bonus-grid');
+  if (!grid) return;
+  let html = '';
+  ALL_PLAYERS.forEach(player => {
+    const bonus = data.bonus[player] || 0;
+    html += '<div class="bonus-item"><label>' + player + '</label>';
+    html += '<select class="bonus-select" onchange="updateBonus(\'' + player + '\',this.value)">';
+    html += '<option value="0"' + (bonus===0?' selected':'') + '>无加分</option>';
+    html += '<option value="5"' + (bonus===5?' selected':'') + '>+5（第1位）</option>';
+    html += '<option value="3"' + (bonus===3?' selected':'') + '>+3（第2位）</option>';
+    html += '<option value="1"' + (bonus===1?' selected':'') + '>+1（第3位）</option>';
+    html += '</select></div>';
+  });
+  grid.innerHTML = html;
+}
+
+let commentTimer = null;
+function updateComment(judge, player, value) {
+  if (!data.comments) data.comments = {};
+  if (!data.comments[judge]) data.comments[judge] = {};
+  data.comments[judge][player] = value;
+  // Debounce save
+  clearTimeout(commentTimer);
+  commentTimer = setTimeout(async () => {
+    try {
+      await fetch(API_BASE + '/api/comment', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({judge,player,comment:value})});
+      showSaved();
+    } catch(e) { console.error('Save comment failed:', e); }
+  }, 800);
+}
+
+async function updateBonus(player, value) {
+  data.bonus[player] = parseInt(value) || 0;
+  try {
+    await fetch(API_BASE + '/api/bonus', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({player,value:parseInt(value)||0})});
+    showSaved();
+  } catch(e) { console.error('Save bonus failed:', e); }
+}
+
+async function renderRanking() {
+  await loadData();
+  const results = ALL_PLAYERS.map(player => {
+    let totalAvg = 0, judgeCount = 0;
+    JUDGES.forEach(judge => {
+      const s = data.scores[judge][player];
+      const sum = (s.emotion||0) + (s.fluency||0) + (s.content||0);
+      if (sum > 0) { totalAvg += sum; judgeCount++; }
+    });
+    const avg = judgeCount > 0 ? totalAvg / judgeCount : 0;
+    const bonus = data.bonus[player] || 0;
+    const finalScore = avg + bonus;
+    const groupName = GROUPS.find(g => g.players.includes(player))?.name || '';
+    return { player, avg: Math.round(avg*100)/100, bonus, finalScore: Math.round(finalScore*100)/100, groupName };
+  });
+
+  results.sort((a,b) => b.finalScore - a.finalScore);
+  const tbody = document.getElementById('ranking-body');
+  let html = '';
+  results.forEach((r,i) => {
+    const rank = i + 1;
+    const isDanger = r.finalScore > 0 && r.finalScore < 70;
+    let rankDisplay = '';
+    if (rank===1) rankDisplay = '<span class="rank-medal">🥇</span>';
+    else if (rank===2) rankDisplay = '<span class="rank-medal">🥈</span>';
+    else if (rank===3) rankDisplay = '<span class="rank-medal">🥉</span>';
+    else rankDisplay = '<span class="rank-num">' + rank + '</span>';
+
+    html += '<tr class="' + (isDanger?'danger':'') + '">';
+    html += '<td>' + rankDisplay + '</td>';
+    html += '<td style="font-weight:600;color:#fff;">' + r.player + '</td>';
+    html += '<td><span class="group-tag">' + r.groupName + '</span></td>';
+    html += '<td>' + (r.avg > 0 ? r.avg.toFixed(1) : '-') + '</td>';
+    html += '<td>' + (r.bonus > 0 ? '<span class="bonus-badge-rank">+' + r.bonus + '</span>' : '-') + '</td>';
+    html += '<td><span class="score-final">' + (r.finalScore > 0 ? r.finalScore.toFixed(1) : '-') + '</span></td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+setInterval(() => {
+  if (document.getElementById('tab-ranking').classList.contains('active')) renderRanking();
+}, 5000);
+initData();
+</script>
+</body>
+</html>

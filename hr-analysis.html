@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝队 2026上半年人力资源分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a237e 50%, #0d47a1 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,22,40,0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid rgba(66,165,245,0.3);
+        }
+        .nav-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #42a5f5;
+        }
+        .nav-links { display: flex; gap: 8px; }
+        .nav-links a {
+            color: #90caf9;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(66,165,245,0.2);
+            color: #fff;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 80px 24px 40px; }
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Cover */
+        .cover {
+            text-align: center;
+            padding: 100px 20px;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .cover h1 {
+            font-size: 3em;
+            background: linear-gradient(90deg, #42a5f5, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        .cover .subtitle { color: #90caf9; font-size: 1.3em; margin-bottom: 10px; }
+        .cover .date { color: #546e7a; font-size: 1em; }
+
+        /* Cards */
+        .section-title {
+            font-size: 1.6em;
+            color: #42a5f5;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(66,165,245,0.3);
+        }
+        .person-header {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(66,165,245,0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+        .person-header h2 { color: #fff; font-size: 1.8em; margin-bottom: 8px; }
+        .person-header .role { color: #90caf9; font-size: 1.1em; }
+        .person-header .summary { color: #b0bec5; margin-top: 12px; line-height: 1.6; }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(66,165,245,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .stat-card .value { font-size: 1.6em; font-weight: 700; color: #42a5f5; }
+        .stat-card .value.danger { color: #ef5350; }
+        .stat-card .value.warning { color: #ffa726; }
+        .stat-card .value.success { color: #66bb6a; }
+        .stat-card .label { color: #78909c; font-size: 0.85em; margin-top: 6px; }
+
+        .chart-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+        .chart-card h3 { color: #90caf9; margin-bottom: 16px; }
+
+        .issue-list {
+            background: rgba(239,83,80,0.08);
+            border: 1px solid rgba(239,83,80,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .issue-list h3 { color: #ef5350; margin-bottom: 12px; }
+        .issue-list ul { list-style: none; padding: 0; }
+        .issue-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #cfd8dc;
+            padding-left: 20px;
+            position: relative;
+        }
+        .issue-list li::before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+        }
+
+        .plan-card {
+            background: rgba(66,165,245,0.08);
+            border: 1px solid rgba(66,165,245,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .plan-card h3 { color: #42a5f5; margin-bottom: 12px; }
+        .plan-card .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .plan-card .step-num {
+            background: #42a5f5;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .plan-card .step-content { color: #cfd8dc; line-height: 1.5; }
+
+        .commission-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .commission-table th, .commission-table td {
+            padding: 10px 14px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .commission-table th {
+            background: rgba(66,165,245,0.2);
+            color: #90caf9;
+            font-weight: 600;
+        }
+        .commission-table .highlight-row { background: rgba(66,165,245,0.1); }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid { grid-template-columns: 1fr; }
+            .cover h1 { font-size: 2em; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="nav-title">📊 蓝队人力资源分析</div>
+        <div class="nav-links">
+            <a href="#" onclick="showPage('cover')" class="active">首页</a>
+            <a href="#" onclick="showPage('ljt')">刘江滔</a>
+            <a href="#" onclick="showPage('lsn')">刘胜楠</a>
+            <a href="#" onclick="showPage('commission')">新提成方案</a>
+            <a href="#" onclick="showPage('path')">晋升路径</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 封面 -->
+        <div class="page active" id="page-cover">
+            <div class="cover">
+                <h1>2026年上半年<br>人力资源分析报告</h1>
+                <p class="subtitle">蓝队 · 组长岗位评估</p>
+                <p class="date">评估周期：2026年1月 - 6月</p>
+            </div>
+        </div>
+
+        <!-- 刘江滔分析 -->
+        <div class="page" id="page-ljt">
+            <div class="person-header">
+                <h2>刘江滔</h2>
+                <div class="role">破局者战队 · 组长 → 建议调整为 P2（中级业务员）</div>
+                <div class="summary">
+                    入职以来担任破局者战队组长，2026年上半年整体业绩波动大，4-6月连续未达标，团队管理能力及大客户开发方面存在明显短板。
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="value">¥134.1万</div>
+                    <div class="label">半年总业绩</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value danger">¥175万</div>
+                    <div class="label">半年总目标</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value warning">76.6%</div>
+                    <div class="label">平均达成率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value danger">未达标</div>
+                    <div class="label">人效500万/年</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value danger">3个月</div>
+                    <div class="label">连续未达标</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>📈 月度业绩 vs 目标</h3>
+                    <canvas id="ljtMonthly"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>📊 月度达成率</h3>
+                    <canvas id="ljtRate"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>👥 破局者战队成员业绩对比（半年累计）</h3>
+                <canvas id="ljtTeam"></canvas>
+            </div>
+
+            <div class="issue-list">
+                <h3>🚨 核心问题</h3>
+                <ul>
+                    <li>半年个人业绩未达标（76.6%），4-6月连续低于85%</li>
+                    <li>无大客户（年超100万），客户开发维系能力不足</li>
+                    <li>情绪管控差，容易颓废，影响团队氛围</li>
+                    <li>无效加班多，工作效率有待提升</li>
+                    <li>团队人效远未达到500万/年标准</li>
+                    <li>2月业绩仅1.48万（达成率14.79%），波动极大</li>
+                </ul>
+            </div>
+
+            <div class="plan-card">
+                <h3>📋 调整方案</h3>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content"><strong>职级调整：</strong>组长 → P2（中级业务员），专注个人业绩提升</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content"><strong>提成调整：</strong>按P2标准，业务员分配比例62%（原组长15%取消）</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content"><strong>业绩要求：</strong>年业绩目标≥300万，月均25万基准线</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content"><strong>重新晋升路径：</strong>满足组长职能 + 动态500万/年 + 价值观达标 + 80分述职评审</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 刘胜楠分析 -->
+        <div class="page" id="page-lsn">
+            <div class="person-header">
+                <h2>刘胜楠</h2>
+                <div class="role">遇强则强战队 · 组长 → 建议调整为 P4（资深业务员）</div>
+                <div class="summary">
+                    遇强则强战队组长，个人业绩能力较强但波动明显。管理职责长期缺失，订单事故频发致公司亏损，负能量传播影响团队。
+                    已于5月26日发出PIP（绩效改进计划），约定6月30日前达标但问题改善有限。
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="value">¥300.8万</div>
+                    <div class="label">半年总业绩</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">¥340万</div>
+                    <div class="label">半年总目标</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value warning">88.5%</div>
+                    <div class="label">平均达成率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value warning">接近</div>
+                    <div class="label">人效500万/年</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value danger">7万+</div>
+                    <div class="label">订单事故亏损</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>📈 月度业绩 vs 目标</h3>
+                    <canvas id="lsnMonthly"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>📊 月度达成率</h3>
+                    <canvas id="lsnRate"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>👥 遇强则强战队成员业绩对比（半年累计）</h3>
+                <canvas id="lsnTeam"></canvas>
+            </div>
+
+            <div class="issue-list">
+                <h3>🚨 核心问题（PIP已记录）</h3>
+                <ul>
+                    <li>4月业绩缺口约40万（达成率仅51%），波动极大</li>
+                    <li>管理职责缺失：1-3月极少履行组长管理职责，依赖大俞</li>
+                    <li>对组员Top客户情况不掌握</li>
+                    <li>订单事故频发：近期两起订单错误致公司亏损7万+</li>
+                    <li>负能量传播：公开场合宣泄负面情绪，与生产同事争执</li>
+                    <li>跨部门协作差：沟通方式生硬，被反馈"不配合"</li>
+                    <li>人员管理滞后：小婷离职后未及时启动招聘</li>
+                    <li>PIP约定6月底改善，但核心问题仍存在</li>
+                </ul>
+            </div>
+
+            <div class="plan-card">
+                <h3>📋 调整方案</h3>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content"><strong>职级调整：</strong>组长 → P4（资深业务员），保留高业绩能力认可</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content"><strong>提成调整：</strong>按P4标准，业务员分配比例68%（原组长15%取消）</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content"><strong>业绩要求：</strong>年业绩目标≥500万，月均42万基准线</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content"><strong>后续跟进：</strong>订单质量管控、情绪管理、协作改善持续纳入考核</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新提成方案 -->
+        <div class="page" id="page-commission">
+            <h2 class="section-title">💰 新提成方案（2026年7月起）</h2>
+
+            <div class="chart-card">
+                <h3>P级别定义</h3>
+                <table class="commission-table">
+                    <thead>
+                        <tr><th>等级</th><th>业绩门槛（年）</th><th>定位</th><th>适用人员</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>P1</td><td>≥160万</td><td>初级业务员</td><td>-</td></tr>
+                        <tr class="highlight-row"><td><strong>P2</strong></td><td><strong>≥300万</strong></td><td><strong>中级业务员</strong></td><td><strong>刘江滔</strong></td></tr>
+                        <tr><td>P3</td><td>≥400万</td><td>高级业务员</td><td>-</td></tr>
+                        <tr class="highlight-row"><td><strong>P4</strong></td><td><strong>≥500万</strong></td><td><strong>资深业务员</strong></td><td><strong>刘胜楠</strong></td></tr>
+                        <tr><td>P5</td><td>≥1000万</td><td>王牌业务员</td><td>-</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="chart-card">
+                <h3>提成分配比例</h3>
+                <table class="commission-table">
+                    <thead>
+                        <tr><th>等级</th><th>队长</th><th>组长</th><th>跟单</th><th>业务员</th><th>升级奖励</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>P1</td><td>15%</td><td>15%</td><td>10%</td><td>60%</td><td>基础</td></tr>
+                        <tr class="highlight-row"><td><strong>P2</strong></td><td>15%</td><td>13%</td><td>10%</td><td><strong>62%</strong></td><td>+2%</td></tr>
+                        <tr><td>P3</td><td>15%</td><td>10%</td><td>10%</td><td>65%</td><td>+3%</td></tr>
+                        <tr class="highlight-row"><td><strong>P4</strong></td><td>15%</td><td>7%</td><td>10%</td><td><strong>68%</strong></td><td>+3%</td></tr>
+                        <tr><td>P5</td><td>15%</td><td>0%</td><td>10%</td><td>75%</td><td>+7%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="chart-card">
+                <h3>提成系数</h3>
+                <table class="commission-table">
+                    <thead>
+                        <tr><th>客户类型</th><th>提成系数</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>新客户 / 老客户增量</td><td>1.2</td></tr>
+                        <tr><td>老客户</td><td>0.9</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="chart-card">
+                <h3>📊 调整前后对比</h3>
+                <canvas id="commissionChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 晋升路径 -->
+        <div class="page" id="page-path">
+            <h2 class="section-title">🚀 重新晋升组长路径（可上可下）</h2>
+
+            <div class="plan-card">
+                <h3>晋升条件</h3>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content"><strong>职能达标：</strong>满足组长职能表所有要求（管理能力、带教能力、客户把控）</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content"><strong>业绩达标：</strong>个人业绩达到动态500万/年标准</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content"><strong>价值观：</strong>与团队价值观一致，执行力高，积极正向</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content"><strong>大客户：</strong>拥有超100万年产出的大客户至少1个</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div class="step-content"><strong>拜访能力：</strong>有独立外出拜访并拿到结果的能力</div>
+                </div>
+            </div>
+
+            <div class="plan-card">
+                <h3>评审流程</h3>
+                <div class="step">
+                    <div class="step-num">①</div>
+                    <div class="step-content"><strong>报名申请：</strong>个人提交组长竞聘申请</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">②</div>
+                    <div class="step-content"><strong>团队评分：</strong>队伍全体成员评分</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">③</div>
+                    <div class="step-content"><strong>达80分：</strong>综合评分达到80分及以上</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">④</div>
+                    <div class="step-content"><strong>述职报告：</strong>提交述职报告接受评审</div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>述职评审权重</h3>
+                <canvas id="reviewChart"></canvas>
+            </div>
+
+            <div class="chart-card" style="background: rgba(102,187,106,0.08); border-color: rgba(102,187,106,0.3);">
+                <h3 style="color: #66bb6a;">✅ 核心理念：可上可下</h3>
+                <p style="color: #b0bec5; line-height: 1.8; margin-top: 10px;">
+                    组长不是终身制。达到标准可以晋升，持续不达标则调整。<br>
+                    这是对每个人的公平——用业绩和能力说话，给每个人上升通道。<br>
+                    降级不是否定，是聚焦——先把个人业绩做好，再考虑管理。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + id).classList.add('active');
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // 刘江滔月度数据
+        const ljtTargets = [20, 10, 30, 35, 35, 30];
+        const ljtCompleted = [20.55, 1.48, 37.64, 28.23, 29.41, 16.71];
+        const ljtRates = [102.73, 14.79, 125.48, 80.66, 84.02, 55.69];
+
+        // 刘胜楠月度数据
+        const lsnTargets = [40, 15, 60, 80, 70, 75];
+        const lsnCompleted = [41.01, 20.25, 51.40, 40.80, 70.41, 76.97];
+        const lsnRates = [102.52, 134.98, 85.66, 51.00, 100.59, 102.63];
+
+        const months = ['1月', '2月', '3月', '4月', '5月', '6月'];
+        const chartOptions = {
+            responsive: true,
+            plugins: { legend: { labels: { color: '#b0bec5' } } },
+            scales: {
+                x: { ticks: { color: '#78909c' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                y: { ticks: { color: '#78909c' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+            }
+        };
+
+        // 刘江滔月度业绩
+        new Chart(document.getElementById('ljtMonthly'), {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    { label: '目标（万）', data: ljtTargets, backgroundColor: 'rgba(66,165,245,0.3)', borderColor: '#42a5f5', borderWidth: 1 },
+                    { label: '完成（万）', data: ljtCompleted, backgroundColor: ljtCompleted.map((v,i) => v >= ljtTargets[i] ? 'rgba(102,187,106,0.6)' : 'rgba(239,83,80,0.6)'), borderRadius: 6 }
+                ]
+            },
+            options: chartOptions
+        });
+
+        // 刘江滔达成率
+        new Chart(document.getElementById('ljtRate'), {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: '达成率 %',
+                    data: ljtRates,
+                    borderColor: '#ef5350',
+                    backgroundColor: 'rgba(239,83,80,0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: ljtRates.map(r => r >= 100 ? '#66bb6a' : '#ef5350')
+                }, {
+                    label: '100%基准线',
+                    data: [100,100,100,100,100,100],
+                    borderColor: 'rgba(255,255,255,0.3)',
+                    borderDash: [5,5],
+                    pointRadius: 0,
+                    fill: false
+                }]
+            },
+            options: chartOptions
+        });
+
+        // 刘江滔团队对比
+        new Chart(document.getElementById('ljtTeam'), {
+            type: 'bar',
+            data: {
+                labels: ['刘江滔', '朱家豪'],
+                datasets: [{
+                    label: '半年总业绩（万）',
+                    data: [134.1, 169.6],
+                    backgroundColor: ['#ef5350', '#42a5f5'],
+                    borderRadius: 8
+                }]
+            },
+            options: { ...chartOptions, indexAxis: 'y' }
+        });
+
+        // 刘胜楠月度业绩
+        new Chart(document.getElementById('lsnMonthly'), {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    { label: '目标（万）', data: lsnTargets, backgroundColor: 'rgba(66,165,245,0.3)', borderColor: '#42a5f5', borderWidth: 1 },
+                    { label: '完成（万）', data: lsnCompleted, backgroundColor: lsnCompleted.map((v,i) => v >= lsnTargets[i] ? 'rgba(102,187,106,0.6)' : 'rgba(239,83,80,0.6)'), borderRadius: 6 }
+                ]
+            },
+            options: chartOptions
+        });
+
+        // 刘胜楠达成率
+        new Chart(document.getElementById('lsnRate'), {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: '达成率 %',
+                    data: lsnRates,
+                    borderColor: '#ffa726',
+                    backgroundColor: 'rgba(255,167,38,0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: lsnRates.map(r => r >= 100 ? '#66bb6a' : r >= 80 ? '#ffa726' : '#ef5350')
+                }, {
+                    label: '100%基准线',
+                    data: [100,100,100,100,100,100],
+                    borderColor: 'rgba(255,255,255,0.3)',
+                    borderDash: [5,5],
+                    pointRadius: 0,
+                    fill: false
+                }]
+            },
+            options: chartOptions
+        });
+
+        // 刘胜楠团队对比
+        new Chart(document.getElementById('lsnTeam'), {
+            type: 'bar',
+            data: {
+                labels: ['刘胜楠', '潘嘉瑜', '许凤婷', '苏芷萱'],
+                datasets: [{
+                    label: '半年总业绩（万）',
+                    data: [300.8, 111.7, 37.3, 27.1],
+                    backgroundColor: ['#ffa726', '#42a5f5', '#7c4dff', '#66bb6a'],
+                    borderRadius: 8
+                }]
+            },
+            options: { ...chartOptions, indexAxis: 'y' }
+        });
+
+        // 提成对比
+        new Chart(document.getElementById('commissionChart'), {
+            type: 'bar',
+            data: {
+                labels: ['刘江滔（组长→P2）', '刘胜楠（组长→P4）'],
+                datasets: [
+                    { label: '原方案-业务员提成', data: [60, 60], backgroundColor: 'rgba(120,144,156,0.5)' },
+                    { label: '新方案-业务员提成', data: [62, 68], backgroundColor: 'rgba(66,165,245,0.7)' }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    ...chartOptions.scales,
+                    y: { ...chartOptions.scales.y, title: { display: true, text: '提成分配比例 %', color: '#78909c' } }
+                }
+            }
+        });
+
+        // 述职评审权重
+        new Chart(document.getElementById('reviewChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['队长评分（60%）', '在任组长+人事（40%）'],
+                datasets: [{
+                    data: [60, 40],
+                    backgroundColor: ['#42a5f5', '#7c4dff']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { color: '#b0bec5' }, position: 'bottom' } }
+            }
+        });
+    </script>
+</body>
+</html>

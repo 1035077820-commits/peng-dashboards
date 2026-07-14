@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蓝队数据分析看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f7fa; color: #333; }
+.header { background: #111FBF; color: white; padding: 20px 30px; text-align: center; }
+.header h1 { font-size: 24px; font-weight: 600; }
+.header p { font-size: 14px; opacity: 0.8; margin-top: 5px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+/* 首页目录 */
+.home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+.card-entry { background: white; border-radius: 12px; padding: 40px 30px; text-align: center; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.card-entry:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(17,31,191,0.15); }
+.card-entry .icon { font-size: 48px; margin-bottom: 15px; }
+.card-entry h3 { font-size: 20px; color: #111FBF; }
+.card-entry p { font-size: 14px; color: #666; margin-top: 8px; }
+
+/* 页面 */
+.page { display: none; }
+.page.active { display: block; }
+.btn-back { display: inline-flex; align-items: center; gap: 6px; background: #111FBF; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; margin-bottom: 20px; }
+.btn-back:hover { background: #0d18a0; }
+
+/* 筛选按钮组 */
+.filter-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+.filter-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid #111FBF; background: white; color: #111FBF; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+.filter-btn.active { background: #111FBF; color: white; }
+.filter-btn:hover { background: #e8edff; }
+.filter-btn.active:hover { background: #0d18a0; }
+
+/* 图表区域 */
+.chart-section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.chart-section h3 { font-size: 16px; margin-bottom: 12px; color: #333; }
+.chart-container { position: relative; height: 350px; }
+
+/* 表格 */
+.data-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+.data-table th { background: #111FBF; color: white; padding: 10px 12px; text-align: center; }
+.data-table td { padding: 8px 12px; text-align: center; border-bottom: 1px solid #eee; }
+.data-table tr:hover { background: #f8f9ff; }
+.data-table .summary-row { background: #E8EDFF; font-weight: 600; }
+.data-table .green { color: #16a34a; font-weight: 600; }
+
+/* 分析区域 */
+.analysis-box { background: #f0f4ff; border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; min-height: 80px; line-height: 1.8; font-size: 14px; color: #444; }
+.analysis-box:focus { outline: 2px solid #111FBF; outline-offset: 2px; }
+.analysis-box h4 { color: #111FBF; margin-bottom: 8px; }
+
+/* 说明文字 */
+.note-text { font-size: 13px; color: #666; margin: 10px 0; padding: 10px; background: #fff8e1; border-radius: 6px; border-left: 3px solid #ffa000; }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .container { padding: 12px; }
+  .chart-container { height: 280px; }
+  .data-table { font-size: 11px; }
+  .data-table th, .data-table td { padding: 6px 4px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔵 蓝队数据分析看板</h1>
+  <p>2026年6月 · 数据驱动决策</p>
+</div>
+
+<div class="container">
+  <!-- 首页 -->
+  <div class="page active" id="page-home">
+    <div class="home-grid">
+      <div class="card-entry" onclick="showPage('sample')">
+        <div class="icon">📦</div>
+        <h3>拿样数据分析</h3>
+        <p>各业务员6月每周拿样件数与客户数趋势</p>
+      </div>
+      <div class="card-entry" onclick="showPage('pattern')">
+        <div class="icon">🧵</div>
+        <h3>打版数据分析</h3>
+        <p>打版趋势与工厂分类对比</p>
+      </div>
+      <div class="card-entry" onclick="showPage('customer')">
+        <div class="icon">📱</div>
+        <h3>客户运营分析</h3>
+        <p>添加率与触达次数周对比</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 拿样分析页 -->
+  <div class="page" id="page-sample">
+    <button class="btn-back" onclick="showPage('home')">← 返回目录</button>
+    <h2 style="margin-bottom:20px;color:#111FBF;">📦 拿样数据分析</h2>
+
+    <div class="chart-section">
+      <h3>拿样件数趋势（6月第1-4周）</h3>
+      <div class="filter-group" id="filter-sample-qty"></div>
+      <div class="chart-container"><canvas id="chart-sample-qty"></canvas></div>
+    </div>
+
+    <div class="chart-section">
+      <h3>拿样客户数趋势（6月第1-4周）</h3>
+      <div class="filter-group" id="filter-sample-cust"></div>
+      <div class="chart-container"><canvas id="chart-sample-cust"></canvas></div>
+    </div>
+
+    <!-- 件数汇总表 -->
+    <div class="chart-section">
+      <h3>拿样件数汇总</h3>
+      <table class="data-table">
+        <thead><tr><th>业务员</th><th>第1周</th><th>第2周</th><th>第3周</th><th>第4周</th><th>合计</th></tr></thead>
+        <tbody id="table-sample-qty"></tbody>
+      </table>
+    </div>
+
+    <!-- 客户数汇总表 -->
+    <div class="chart-section">
+      <h3>拿样客户数汇总</h3>
+      <table class="data-table">
+        <thead><tr><th>业务员</th><th>第1周</th><th>第2周</th><th>第3周</th><th>第4周</th><th>合计</th></tr></thead>
+        <tbody id="table-sample-cust"></tbody>
+      </table>
+    </div>
+
+    <div class="analysis-box" contenteditable="true">
+      <h4>📊 数据洞察</h4>
+      <p>• 林梓仪拿样件数合计93件居首，第1周61件+第4周30件爆发式增长，客户开拓能力强</p>
+      <p>• 刘胜楠合计56件排第二，第1周40件高起点</p>
+      <p>• 刘江滔第1周40件高起点后持续下降，需关注客户维护</p>
+      <p>• 彭培强拿样量偏低（仅2件），建议加强客户邀样引导</p>
+      <p>• 整体第1周最活跃，中间两周偏淡，第4周有所回升</p>
+    </div>
+  </div>
+
+  <!-- 打版分析页 -->
+  <div class="page" id="page-pattern">
+    <button class="btn-back" onclick="showPage('home')">← 返回目录</button>
+    <h2 style="margin-bottom:20px;color:#111FBF;">🧵 打版数据分析</h2>
+
+    <div class="chart-section">
+      <h3>打版数量趋势（6月第1-4周）</h3>
+      <div class="filter-group" id="filter-pattern"></div>
+      <div class="chart-container"><canvas id="chart-pattern-trend"></canvas></div>
+    </div>
+
+    <div class="chart-section">
+      <h3>打版工厂分类对比</h3>
+      <div class="chart-container"><canvas id="chart-pattern-factory"></canvas></div>
+    </div>
+
+    <!-- 打版汇总表 -->
+    <div class="chart-section">
+      <h3>打版数量汇总</h3>
+      <table class="data-table">
+        <thead><tr><th>业务员</th><th>第1周</th><th>第2周</th><th>第3周</th><th>第4周</th><th>合计</th><th>半成品打版</th><th>合作版房&板房</th></tr></thead>
+        <tbody id="table-pattern"></tbody>
+      </table>
+    </div>
+
+    <div class="analysis-box" contenteditable="true">
+      <h4>📊 数据洞察</h4>
+      <p>• 敬健浩打版总量44件领先，第2周19件为全队峰值</p>
+      <p>• 刘晓霞33件，刘胜楠29件，朱家豪29件紧随其后</p>
+      <p>• 朱家豪半成品打版16件最多，善用内部资源</p>
+      <p>• 林梓仪半成品11件，合作版房5件</p>
+      <p>• 苏芷萱仅6件，打版活跃度需提升</p>
+      <p>• 整体第2周为高峰期，第3-4周明显回落</p>
+    </div>
+  </div>
+
+  <!-- 客户运营分析页 -->
+  <div class="page" id="page-customer">
+    <button class="btn-back" onclick="showPage('home')">← 返回目录</button>
+    <h2 style="margin-bottom:20px;color:#111FBF;">📱 客户运营分析</h2>
+
+    <!-- 板块一：微信添加率 -->
+    <div class="chart-section">
+      <h3>微信添加率对比（6.23 vs 6.29）</h3>
+      <div class="chart-container"><canvas id="chart-wechat-rate"></canvas></div>
+    </div>
+
+    <div class="chart-section">
+      <h3>CRM添加率对比（6.23 vs 6.29）</h3>
+      <div class="chart-container"><canvas id="chart-crm-rate"></canvas></div>
+    </div>
+
+    <div class="chart-section">
+      <h3>添加率明细数据</h3>
+      <table class="data-table" id="table-add-rate">
+        <thead>
+          <tr>
+            <th rowspan="2">业务员</th>
+            <th colspan="4">6.23（上周）</th>
+            <th colspan="4">6.29（本周）</th>
+          </tr>
+          <tr>
+            <th>分配数</th><th>微信添加数</th><th>微信添加率</th><th>CRM率</th>
+            <th>分配数</th><th>微信添加数</th><th>微信添加率</th><th>CRM率</th>
+          </tr>
+        </thead>
+        <tbody id="table-add-body"></tbody>
+      </table>
+    </div>
+
+    <div class="analysis-box" contenteditable="true">
+      <h4>📊 添加率洞察</h4>
+      <p>点击编辑，填写您的分析...</p>
+    </div>
+
+    <!-- 板块二：触达次数分析 -->
+    <div class="chart-section">
+      <h3>合计未触达数对比（6.23 vs 6.29）</h3>
+      <div class="chart-container"><canvas id="chart-touch-compare"></canvas></div>
+    </div>
+
+    <div class="chart-section">
+      <h3>本周未触达次数堆叠（6.29）</h3>
+      <div class="chart-container"><canvas id="chart-touch-stack"></canvas></div>
+    </div>
+
+    <div class="chart-section">
+      <h3>触达次数明细数据</h3>
+      <div class="note-text">📌 说明：分配客户后有触达就打标签，未触达被统计。第一次触达未通过需进行第二次触达。</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th rowspan="2">业务员</th>
+            <th colspan="4">6.23（上周）</th>
+            <th colspan="4">6.29（本周）</th>
+          </tr>
+          <tr>
+            <th>第1次</th><th>第2次</th><th>第3次</th><th>合计</th>
+            <th>第1次</th><th>第2次</th><th>第3次</th><th>合计</th>
+          </tr>
+        </thead>
+        <tbody id="table-touch-body"></tbody>
+      </table>
+    </div>
+
+    <div class="analysis-box" contenteditable="true">
+      <h4>📊 触达洞察</h4>
+      <p>点击编辑，填写您的分析...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 数据定义 =====
+const salespeople = ['刘晓霞','刘江滔','刘胜楠','彭培强','敬健浩','朱家豪','林梓仪','潘嘉瑜','苏芷萱'];
+const weeks = ['第1周','第2周','第3周','第4周'];
+const colors = [
+  '#111FBF','#e74c3c','#2ecc71','#f39c12','#9b59b6',
+  '#1abc9c','#e67e22','#3498db','#e91e63'
+];
+
+// 拿样数据（从Excel计算）
+const sampleQty = {
+  '刘晓霞': [20, 0, 6, 1],
+  '刘江滔': [40, 8, 1, 0],
+  '刘胜楠': [40, 0, 5, 11],
+  '彭培强': [2, 0, 0, 0],
+  '敬健浩': [2, 2, 0, 8],
+  '朱家豪': [8, 5, 5, 2],
+  '林梓仪': [61, 2, 0, 30],
+  '潘嘉瑜': [8, 15, 0, 0],
+  '苏芷萱': [11, 2, 0, 0]
+};
+const sampleCust = {
+  '刘晓霞': [3, 0, 1, 1],
+  '刘江滔': [1, 1, 1, 0],
+  '刘胜楠': [4, 0, 1, 1],
+  '彭培强': [1, 0, 0, 0],
+  '敬健浩': [1, 1, 0, 3],
+  '朱家豪': [4, 2, 1, 1],
+  '林梓仪': [4, 1, 0, 7],
+  '潘嘉瑜': [2, 2, 0, 0],
+  '苏芷萱': [2, 1, 0, 0]
+};
+
+// 打版数据（从Excel计算）
+const patternQty = {
+  '刘晓霞': [8, 11, 7, 7],
+  '刘江滔': [14, 7, 2, 2],
+  '刘胜楠': [11, 9, 4, 5],
+  '彭培强': [0, 5, 2, 5],
+  '敬健浩': [12, 19, 2, 11],
+  '朱家豪': [9, 10, 6, 4],
+  '林梓仪': [6, 7, 2, 1],
+  '潘嘉瑜': [8, 9, 2, 2],
+  '苏芷萱': [2, 4, 0, 0]
+};
+const factoryData = {
+  '刘晓霞': {half: 0, coop: 28},
+  '刘江滔': {half: 1, coop: 21},
+  '刘胜楠': {half: 0, coop: 24},
+  '彭培强': {half: 0, coop: 10},
+  '敬健浩': {half: 3, coop: 41},
+  '朱家豪': {half: 16, coop: 12},
+  '林梓仪': {half: 11, coop: 5},
+  '潘嘉瑜': {half: 3, coop: 15},
+  '苏芷萱': {half: 1, coop: 5}
+};
+
+// ===== 客户运营数据（硬编码自Excel） =====
+// 交集人员（两个时间段都出现的）
+const custPeople = ['刘晓霞','敬健浩','刘胜楠','苏芷萱','潘嘉瑜','许凤婷','刘江滔','朱家豪','林梓仪'];
+
+// 添加率数据
+const addRate623 = {
+  '刘晓霞': {alloc:327, wxAdd:229, wxRate:70, crmAdd:148, crmRate:45},
+  '敬健浩': {alloc:99, wxAdd:74, wxRate:75, crmAdd:26, crmRate:26},
+  '刘胜楠': {alloc:213, wxAdd:179, wxRate:84, crmAdd:31, crmRate:15},
+  '苏芷萱': {alloc:381, wxAdd:267, wxRate:70, crmAdd:110, crmRate:29},
+  '潘嘉瑜': {alloc:37, wxAdd:31, wxRate:84, crmAdd:4, crmRate:11},
+  '许凤婷': {alloc:362, wxAdd:259, wxRate:72, crmAdd:164, crmRate:45},
+  '刘江滔': {alloc:363, wxAdd:279, wxRate:77, crmAdd:72, crmRate:20},
+  '朱家豪': {alloc:257, wxAdd:173, wxRate:67, crmAdd:86, crmRate:33},
+  '林梓仪': {alloc:316, wxAdd:247, wxRate:78, crmAdd:103, crmRate:33}
+};
+const addRate629 = {
+  '刘晓霞': {alloc:329, wxAdd:233, wxRate:71, crmAdd:148, crmRate:45},
+  '敬健浩': {alloc:99, wxAdd:74, wxRate:75, crmAdd:26, crmRate:26},
+  '刘胜楠': {alloc:259, wxAdd:211, wxRate:81, crmAdd:50, crmRate:19},
+  '苏芷萱': {alloc:381, wxAdd:267, wxRate:70, crmAdd:110, crmRate:29},
+  '潘嘉瑜': {alloc:37, wxAdd:33, wxRate:89, crmAdd:9, crmRate:24},
+  '许凤婷': {alloc:362, wxAdd:259, wxRate:72, crmAdd:163, crmRate:45},
+  '刘江滔': {alloc:487, wxAdd:371, wxRate:76, crmAdd:116, crmRate:24},
+  '朱家豪': {alloc:259, wxAdd:178, wxRate:69, crmAdd:86, crmRate:33},
+  '林梓仪': {alloc:419, wxAdd:330, wxRate:79, crmAdd:123, crmRate:29}
+};
+
+// 触达数据 - 交集人员
+const touchPeople = ['刘晓霞','敬健浩','刘胜楠','苏芷萱','潘嘉瑜','刘江滔','朱家豪','林梓仪'];
+
+const touch623 = {
+  '刘晓霞': {t1:5, t2:14, t3:3, total:22},
+  '敬健浩': {t1:0, t2:3, t3:2, total:5},
+  '刘胜楠': {t1:0, t2:5, t3:7, total:12},
+  '苏芷萱': {t1:15, t2:19, t3:22, total:56},
+  '潘嘉瑜': {t1:0, t2:6, t3:0, total:6},
+  '刘江滔': {t1:1, t2:7, t3:8, total:16},
+  '朱家豪': {t1:2, t2:18, t3:19, total:39},
+  '林梓仪': {t1:2, t2:30, t3:7, total:39}
+};
+const touch629 = {
+  '刘晓霞': {t1:5, t2:12, t3:3, total:20},
+  '敬健浩': {t1:0, t2:3, t3:2, total:5},
+  '刘胜楠': {t1:1, t2:7, t3:7, total:15},
+  '苏芷萱': {t1:1, t2:33, t3:21, total:55},
+  '潘嘉瑜': {t1:0, t2:0, t3:1, total:1},
+  '刘江滔': {t1:0, t2:38, t3:10, total:48},
+  '朱家豪': {t1:2, t2:16, t3:10, total:28},
+  '林梓仪': {t1:5, t2:36, t3:14, total:55}
+};
+
+// ===== 页面切换 =====
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ===== 筛选按钮创建 =====
+function createFilterButtons(containerId, chartInstance) {
+  const container = document.getElementById(containerId);
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn active';
+  allBtn.textContent = '全部';
+  allBtn.onclick = () => {
+    container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    allBtn.classList.add('active');
+    chartInstance.data.datasets.forEach(ds => { ds.hidden = false; });
+    chartInstance.update();
+  };
+  container.appendChild(allBtn);
+
+  salespeople.forEach((name, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = name;
+    btn.onclick = () => {
+      container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      chartInstance.data.datasets.forEach((ds, idx) => {
+        ds.hidden = idx !== i;
+      });
+      chartInstance.update();
+    };
+    container.appendChild(btn);
+  });
+}
+
+// ===== 折线图通用 =====
+function createLineChart(canvasId, data, title) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  const datasets = salespeople.map((name, i) => ({
+    label: name,
+    data: data[name],
+    borderColor: colors[i],
+    backgroundColor: colors[i] + '20',
+    borderWidth: 2,
+    pointRadius: 4,
+    pointBackgroundColor: colors[i],
+    tension: 0.3,
+    hidden: false
+  }));
+
+  return new Chart(ctx, {
+    type: 'line',
+    data: { labels: weeks, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        datalabels: {
+          align: 'top',
+          font: { size: 10, weight: 'bold' },
+          color: (ctx) => ctx.dataset.borderColor,
+          display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0,
+          formatter: (v) => v
+        },
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#f0f0f0' } },
+        x: { grid: { display: false } }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+// ===== 初始化图表 =====
+document.addEventListener('DOMContentLoaded', function() {
+  // 拿样件数折线图
+  const chartSampleQty = createLineChart('chart-sample-qty', sampleQty, '拿样件数');
+  createFilterButtons('filter-sample-qty', chartSampleQty);
+
+  // 拿样客户数折线图
+  const chartSampleCust = createLineChart('chart-sample-cust', sampleCust, '拿样客户数');
+  createFilterButtons('filter-sample-cust', chartSampleCust);
+
+  // 拿样件数表格
+  let tbody = document.getElementById('table-sample-qty');
+  let totalRow = [0,0,0,0];
+  salespeople.forEach(name => {
+    const d = sampleQty[name];
+    const sum = d.reduce((a,b) => a+b, 0);
+    d.forEach((v,i) => totalRow[i] += v);
+    tbody.innerHTML += `<tr><td>${name}</td><td>${d[0]}</td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><b>${sum}</b></td></tr>`;
+  });
+  tbody.innerHTML += `<tr class="summary-row"><td>合计</td><td>${totalRow[0]}</td><td>${totalRow[1]}</td><td>${totalRow[2]}</td><td>${totalRow[3]}</td><td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
+
+  // 拿样客户数表格
+  tbody = document.getElementById('table-sample-cust');
+  totalRow = [0,0,0,0];
+  salespeople.forEach(name => {
+    const d = sampleCust[name];
+    const sum = d.reduce((a,b) => a+b, 0);
+    d.forEach((v,i) => totalRow[i] += v);
+    tbody.innerHTML += `<tr><td>${name}</td><td>${d[0]}</td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><b>${sum}</b></td></tr>`;
+  });
+  tbody.innerHTML += `<tr class="summary-row"><td>合计</td><td>${totalRow[0]}</td><td>${totalRow[1]}</td><td>${totalRow[2]}</td><td>${totalRow[3]}</td><td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
+
+  // 打版趋势折线图
+  const chartPatternTrend = createLineChart('chart-pattern-trend', patternQty, '打版数量');
+  createFilterButtons('filter-pattern', chartPatternTrend);
+
+  // 打版工厂分类柱状图
+  const ctxFactory = document.getElementById('chart-pattern-factory').getContext('2d');
+  new Chart(ctxFactory, {
+    type: 'bar',
+    data: {
+      labels: salespeople,
+      datasets: [
+        {
+          label: '半成品打版',
+          data: salespeople.map(n => factoryData[n].half),
+          backgroundColor: '#111FBF88',
+          borderColor: '#111FBF',
+          borderWidth: 1
+        },
+        {
+          label: '合作版房&板房',
+          data: salespeople.map(n => factoryData[n].coop),
+          backgroundColor: '#111FBF',
+          borderColor: '#0d18a0',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          font: { size: 11, weight: 'bold' },
+          color: '#333',
+          display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0
+        },
+        legend: { position: 'top' }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#f0f0f0' } },
+        x: { grid: { display: false } }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
+  // 打版汇总表
+  tbody = document.getElementById('table-pattern');
+  totalRow = [0,0,0,0,0,0,0];
+  salespeople.forEach(name => {
+    const d = patternQty[name];
+    const sum = d.reduce((a,b) => a+b, 0);
+    const f = factoryData[name];
+    totalRow[0] += d[0]; totalRow[1] += d[1]; totalRow[2] += d[2]; totalRow[3] += d[3];
+    totalRow[4] += sum; totalRow[5] += f.half; totalRow[6] += f.coop;
+    tbody.innerHTML += `<tr><td>${name}</td><td>${d[0]}</td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><b>${sum}</b></td><td>${f.half}</td><td>${f.coop}</td></tr>`;
+  });
+  tbody.innerHTML += `<tr class="summary-row"><td>合计</td><td>${totalRow[0]}</td><td>${totalRow[1]}</td><td>${totalRow[2]}</td><td>${totalRow[3]}</td><td><b>${totalRow[4]}</b></td><td>${totalRow[5]}</td><td>${totalRow[6]}</td></tr>`;
+
+  // ===== 客户运营图表 =====
+
+  // 微信添加率柱状图
+  const ctxWx = document.getElementById('chart-wechat-rate').getContext('2d');
+  new Chart(ctxWx, {
+    type: 'bar',
+    data: {
+      labels: custPeople,
+      datasets: [
+        {
+          label: '6.23 微信添加率',
+          data: custPeople.map(n => addRate623[n].wxRate),
+          backgroundColor: '#111FBF44',
+          borderColor: '#111FBF88',
+          borderWidth: 1
+        },
+        {
+          label: '6.29 微信添加率',
+          data: custPeople.map(n => addRate629[n].wxRate),
+          backgroundColor: '#111FBF',
+          borderColor: '#0d18a0',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          font: { size: 10, weight: 'bold' },
+          color: '#333',
+          formatter: (v) => v + '%'
+        },
+        legend: { position: 'top' },
+        annotation: {
+          annotations: {
+            targetLine: {
+              type: 'line',
+              yMin: 80,
+              yMax: 80,
+              borderColor: '#e74c3c',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              label: {
+                display: true,
+                content: '达标线 80%',
+                position: 'end',
+                color: '#e74c3c',
+                font: { size: 11 }
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: false, min: 50, max: 100, grid: { color: '#f0f0f0' } },
+        x: { grid: { display: false } }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
+  // CRM添加率柱状图
+  const ctxCrm = document.getElementById('chart-crm-rate').getContext('2d');
+  new Chart(ctxCrm, {
+    type: 'bar',
+    data: {
+      labels: custPeople,
+      datasets: [
+        {
+          label: '6.23 CRM率',
+          data: custPeople.map(n => addRate623[n].crmRate),
+          backgroundColor: '#111FBF44',
+          borderColor: '#111FBF88',
+          borderWidth: 1
+        },
+        {
+          label: '6.29 CRM率',
+          data: custPeople.map(n => addRate629[n].crmRate),
+          backgroundColor: '#111FBF',
+          borderColor: '#0d18a0',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          font: { size: 10, weight: 'bold' },
+          color: '#333',
+          formatter: (v) => v + '%'
+        },
+        legend: { position: 'top' },
+        annotation: {
+          annotations: {
+            targetLine: {
+              type: 'line',
+              yMin: 40,
+              yMax: 40,
+              borderColor: '#e74c3c',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              label: {
+                display: true,
+                content: '达标线 40%',
+                position: 'end',
+                color: '#e74c3c',
+                font: { size: 11 }
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, min: 0, max: 55, grid: { color: '#f0f0f0' } },
+        x: { grid: { display: false } }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
+  // 添加率表格
+  tbody = document.getElementById('table-add-body');
+  custPeople.forEach(name => {
+    const d1 = addRate623[name];
+    const d2 = addRate629[name];
+    const wxClass = d2.wxRate > d1.wxRate ? 'green' : '';
+    const crmClass = d2.crmRate > d1.crmRate ? 'green' : '';
+    tbody.innerHTML += `<tr>
+      <td>${name}</td>
+      <td>${d1.alloc}</td><td>${d1.wxAdd}</td><td>${d1.wxRate}%</td><td>${d1.crmRate}%</td>
+      <td>${d2.alloc}</td><td>${d2.wxAdd}</td><td class="${wxClass}">${d2.wxRate}%</td><td class="${crmClass}">${d2.crmRate}%</td>
+    </tr>`;
+  });
+
+  // 触达 - 合计未触达数分组柱状图（6.23 vs 6.29）
+  const ctxTouchCompare = document.getElementById('chart-touch-compare').getContext('2d');
+  new Chart(ctxTouchCompare, {
+    type: 'bar',
+    data: {
+      labels: touchPeople,
+      datasets: [
+        {
+          label: '6.23 合计未触达',
+          data: touchPeople.map(n => touch623[n].total),
+          backgroundColor: '#111FBF44',
+          borderColor: '#111FBF88',
+          borderWidth: 1
+        },
+        {
+          label: '6.29 合计未触达',
+          data: touchPeople.map(n => touch629[n].total),
+          backgroundColor: '#111FBF',
+          borderColor: '#0d18a0',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          font: { size: 10, weight: 'bold' },
+          color: '#333'
+        },
+        legend: { position: 'top' }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#f0f0f0' } },
+        x: { grid: { display: false } }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
+  // 触达 - 本周堆叠柱状图（第1次/第2次/第3次）
+  const ctxTouchStack = document.getElementById('chart-touch-stack').getContext('2d');
+  new Chart(ctxTouchStack, {
+    type: 'bar',
+    data: {
+      labels: touchPeople,
+      datasets: [
+        {
+          label: '第1次未触达',
+          data: touchPeople.map(n => touch629[n].t1),
+          backgroundColor: '#3498db',
+          borderColor: '#2980b9',
+          borderWidth: 1
+        },
+        {
+          label: '第2次未触达',
+          data: touchPeople.map(n => touch629[n].t2),
+          backgroundColor: '#f39c12',
+          borderColor: '#e67e22',
+          borderWidth: 1
+        },
+        {
+          label: '第3次未触达',
+          data: touchPeople.map(n => touch629[n].t3),
+          backgroundColor: '#e74c3c',
+          borderColor: '#c0392b',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        datalabels: {
+          font: { size: 10, weight: 'bold' },
+          color: '#fff',
+          display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0
+        },
+        legend: { position: 'top' }
+      },
+      scales: {
+        y: { beginAtZero: true, stacked: true, grid: { color: '#f0f0f0' } },
+        x: { stacked: true, grid: { display: false } }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
+  // 触达表格
+  tbody = document.getElementById('table-touch-body');
+  let totals623 = {t1:0,t2:0,t3:0,total:0};
+  let totals629 = {t1:0,t2:0,t3:0,total:0};
+  touchPeople.forEach(name => {
+    const d1 = touch623[name];
+    const d2 = touch629[name];
+    totals623.t1 += d1.t1; totals623.t2 += d1.t2; totals623.t3 += d1.t3; totals623.total += d1.total;
+    totals629.t1 += d2.t1; totals629.t2 += d2.t2; totals629.t3 += d2.t3; totals629.total += d2.total;
+    const totalClass = d2.total < d1.total ? 'green' : '';
+    const t1Class = d2.t1 < d1.t1 ? 'green' : '';
+    const t2Class = d2.t2 < d1.t2 ? 'green' : '';
+    const t3Class = d2.t3 < d1.t3 ? 'green' : '';
+    tbody.innerHTML += `<tr>
+      <td>${name}</td>
+      <td>${d1.t1}</td><td>${d1.t2}</td><td>${d1.t3}</td><td>${d1.total}</td>
+      <td class="${t1Class}">${d2.t1}</td><td class="${t2Class}">${d2.t2}</td><td class="${t3Class}">${d2.t3}</td><td class="${totalClass}">${d2.total}</td>
+    </tr>`;
+  });
+  const totalTotalClass = totals629.total < totals623.total ? 'green' : '';
+  tbody.innerHTML += `<tr class="summary-row">
+    <td>合计</td>
+    <td>${totals623.t1}</td><td>${totals623.t2}</td><td>${totals623.t3}</td><td>${totals623.total}</td>
+    <td>${totals629.t1}</td><td>${totals629.t2}</td><td>${totals629.t3}</td><td class="${totalTotalClass}">${totals629.total}</td>
+  </tr>`;
+});
+</script>
+</body>
+</html>
