@@ -108,13 +108,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
     </div>
 
     <div class="chart-section">
-      <h3>拿样件数趋势（6月第1-4周）</h3>
+      <h3>拿样件数趋势</h3>
       <div class="filter-group" id="filter-sample-qty"></div>
       <div class="chart-container"><canvas id="chart-sample-qty"></canvas></div>
     </div>
 
     <div class="chart-section">
-      <h3>拿样客户数趋势（6月第1-4周）</h3>
+      <h3>拿样客户数趋势</h3>
       <div class="filter-group" id="filter-sample-cust"></div>
       <div class="chart-container"><canvas id="chart-sample-cust"></canvas></div>
     </div>
@@ -262,7 +262,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
 <script>
 // ===== 数据定义 =====
 const salespeople = ['刘晓霞','刘江滔','刘胜楠','彭培强','敬健浩','朱家豪','林梓仪','潘嘉瑜','苏芷萱'];
-const weeks = ['第1周','第2周','第3周','第4周'];
+const weeks = sampleData[currentSampleMonth].weeks;
 const colors = [
   '#111FBF','#e74c3c','#2ecc71','#f39c12','#9b59b6',
   '#1abc9c','#e67e22','#3498db','#e91e63'
@@ -271,6 +271,7 @@ const colors = [
 // 拿样数据（按月份存储）
 const sampleData = {
   '6月': {
+    weeks: ['W1(6/1-8,8天)', 'W2(6/9-15,7天)', 'W3(6/16-22,7天)', 'W4(6/23-30,8天)'],
     qty: {
       '刘晓霞': [20, 0, 6, 1],
       '刘江滔': [40, 8, 1, 0],
@@ -295,19 +296,20 @@ const sampleData = {
     }
   },
   '7月': {
+    weeks: ['W1(7/1-5,5天)', 'W2(7/6-12,7天)', 'W3(7/13-19,7天)', 'W4(7/20-26,7天)', 'W5(7/27-31,5天)'],
     qty: {
-      '刘晓霞': [4, 6, 0, 0],
-      '敬健浩': [4, 12, 0, 0],
-      '朱家豪': [2, 10, 0, 0],
-      '林梓仪': [15, 0, 0, 0],
-      '潘嘉瑜': [33, 0, 0, 0]
+      '刘晓霞': [4, 6, 0, 0, 0],
+      '敬健浩': [4, 12, 0, 0, 0],
+      '朱家豪': [2, 10, 0, 0, 0],
+      '林梓仪': [15, 0, 0, 0, 0],
+      '潘嘉瑜': [33, 0, 0, 0, 0]
     },
     cust: {
-      '刘晓霞': [1, 2, 0, 0],
-      '敬健浩': [1, 2, 0, 0],
-      '朱家豪': [1, 2, 0, 0],
-      '林梓仪': [2, 0, 0, 0],
-      '潘嘉瑜': [2, 0, 0, 0]
+      '刘晓霞': [1, 2, 0, 0, 0],
+      '敬健浩': [1, 2, 0, 0, 0],
+      '朱家豪': [1, 2, 0, 0, 0],
+      '林梓仪': [2, 0, 0, 0, 0],
+      '潘嘉瑜': [2, 0, 0, 0, 0]
     }
   }
 };
@@ -401,6 +403,7 @@ function showPage(page) {
 // ===== 筛选按钮创建 =====
 function createFilterButtons(containerId, chartInstance) {
   const container = document.getElementById(containerId);
+  container.innerHTML = '';
   const allBtn = document.createElement('button');
   allBtn.className = 'filter-btn active';
   allBtn.textContent = '全部';
@@ -412,15 +415,15 @@ function createFilterButtons(containerId, chartInstance) {
   };
   container.appendChild(allBtn);
 
-  salespeople.forEach((name, i) => {
+  chartInstance.data.datasets.forEach((ds, i) => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn';
-    btn.textContent = name;
+    btn.textContent = ds.label;
     btn.onclick = () => {
       container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      chartInstance.data.datasets.forEach((ds, idx) => {
-        ds.hidden = idx !== i;
+      chartInstance.data.datasets.forEach((d, idx) => {
+        d.hidden = idx !== i;
       });
       chartInstance.update();
     };
@@ -431,21 +434,23 @@ function createFilterButtons(containerId, chartInstance) {
 // ===== 折线图通用 =====
 function createLineChart(canvasId, data, title) {
   const ctx = document.getElementById(canvasId).getContext('2d');
-  const datasets = salespeople.map((name, i) => ({
+  const currentWeeks = sampleData[currentSampleMonth].weeks;
+  const people = Object.keys(data);
+  const datasets = people.map((name, i) => ({
     label: name,
     data: data[name],
-    borderColor: colors[i],
-    backgroundColor: colors[i] + '20',
+    borderColor: colors[i % colors.length],
+    backgroundColor: colors[i % colors.length] + '20',
     borderWidth: 2,
     pointRadius: 4,
-    pointBackgroundColor: colors[i],
+    pointBackgroundColor: colors[i % colors.length],
     tension: 0.3,
     hidden: false
   }));
 
   return new Chart(ctx, {
     type: 'line',
-    data: { labels: weeks, datasets },
+    data: { labels: currentWeeks, datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -477,6 +482,7 @@ function switchSampleMonth(month) {
   currentSampleMonth = month;
   sampleQty = sampleData[month].qty;
   sampleCust = sampleData[month].cust;
+  const wks = sampleData[month].weeks;
   
   // Destroy old charts
   if (chartSampleQtyRef) chartSampleQtyRef.destroy();
@@ -488,29 +494,34 @@ function switchSampleMonth(month) {
   chartSampleCustRef = createLineChart('chart-sample-cust', sampleCust, '拿样客户数');
   createFilterButtons('filter-sample-cust', chartSampleCustRef);
   
-  // Rebuild tables
+  // Rebuild tables with dynamic headers
   const people = Object.keys(sampleQty);
+  const numWeeks = wks.length;
+  const headerHtml = '<tr><th>业务员</th>' + wks.map((w,i) => `<th>第${i+1}周</th>`).join('') + '<th>合计</th></tr>';
+  
   let tbody = document.getElementById('table-sample-qty');
+  tbody.parentElement.querySelector('thead').innerHTML = headerHtml;
   tbody.innerHTML = '';
-  let totalRow = [0,0,0,0];
+  let totalRow = new Array(numWeeks).fill(0);
   people.forEach(name => {
     const d = sampleQty[name];
     const sum = d.reduce((a,b) => a+b, 0);
     d.forEach((v,i) => totalRow[i] += v);
-    tbody.innerHTML += `<tr><td>${name}</td><td>${d[0]}</td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><b>${sum}</b></td></tr>`;
+    tbody.innerHTML += `<tr><td>${name}</td>${d.map(v => `<td>${v}</td>`).join('')}<td><b>${sum}</b></td></tr>`;
   });
-  tbody.innerHTML += `<tr class="summary-row"><td>合计</td><td>${totalRow[0]}</td><td>${totalRow[1]}</td><td>${totalRow[2]}</td><td>${totalRow[3]}</td><td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
+  tbody.innerHTML += `<tr class="summary-row"><td>合计</td>${totalRow.map(v => `<td>${v}</td>`).join('')}<td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
   
   tbody = document.getElementById('table-sample-cust');
+  tbody.parentElement.querySelector('thead').innerHTML = headerHtml;
   tbody.innerHTML = '';
-  totalRow = [0,0,0,0];
+  totalRow = new Array(numWeeks).fill(0);
   people.forEach(name => {
     const d = sampleCust[name];
     const sum = d.reduce((a,b) => a+b, 0);
     d.forEach((v,i) => totalRow[i] += v);
-    tbody.innerHTML += `<tr><td>${name}</td><td>${d[0]}</td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><b>${sum}</b></td></tr>`;
+    tbody.innerHTML += `<tr><td>${name}</td>${d.map(v => `<td>${v}</td>`).join('')}<td><b>${sum}</b></td></tr>`;
   });
-  tbody.innerHTML += `<tr class="summary-row"><td>合计</td><td>${totalRow[0]}</td><td>${totalRow[1]}</td><td>${totalRow[2]}</td><td>${totalRow[3]}</td><td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
+  tbody.innerHTML += `<tr class="summary-row"><td>合计</td>${totalRow.map(v => `<td>${v}</td>`).join('')}<td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
 }
 
 // ===== 初始化图表 =====
