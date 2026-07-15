@@ -80,7 +80,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
       <div class="card-entry" onclick="showPage('sample')">
         <div class="icon">📦</div>
         <h3>拿样数据分析</h3>
-        <p>各业务员每周拿样件数与客户数趋势</p>
+        <p>各业务员6月每周拿样件数与客户数趋势</p>
       </div>
       <div class="card-entry" onclick="showPage('pattern')">
         <div class="icon">🧵</div>
@@ -99,22 +99,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
   <div class="page" id="page-sample">
     <button class="btn-back" onclick="showPage('home')">← 返回目录</button>
     <h2 style="margin-bottom:20px;color:#111FBF;">📦 拿样数据分析</h2>
-    <div style="margin-bottom:16px;">
-      <label style="font-weight:bold;margin-right:8px;">月份：</label>
-      <select id="sample-month-select" onchange="switchSampleMonth(this.value)" style="padding:6px 12px;border-radius:6px;border:1px solid #ccc;font-size:14px;">
-        <option value="7月" selected>7月</option>
-        <option value="6月">6月</option>
-      </select>
-    </div>
 
     <div class="chart-section">
-      <h3>拿样件数趋势</h3>
+      <h3>拿样件数趋势（6月第1-4周）</h3>
       <div class="filter-group" id="filter-sample-qty"></div>
       <div class="chart-container"><canvas id="chart-sample-qty"></canvas></div>
     </div>
 
     <div class="chart-section">
-      <h3>拿样客户数趋势</h3>
+      <h3>拿样客户数趋势（6月第1-4周）</h3>
       <div class="filter-group" id="filter-sample-cust"></div>
       <div class="chart-container"><canvas id="chart-sample-cust"></canvas></div>
     </div>
@@ -262,60 +255,35 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC'
 <script>
 // ===== 数据定义 =====
 const salespeople = ['刘晓霞','刘江滔','刘胜楠','彭培强','敬健浩','朱家豪','林梓仪','潘嘉瑜','苏芷萱'];
-const weeks = sampleData[currentSampleMonth].weeks;
+const weeks = ['第1周','第2周','第3周','第4周'];
 const colors = [
   '#111FBF','#e74c3c','#2ecc71','#f39c12','#9b59b6',
   '#1abc9c','#e67e22','#3498db','#e91e63'
 ];
 
-// 拿样数据（按月份存储）
-const sampleData = {
-  '6月': {
-    weeks: ['W1(6/1-8,8天)', 'W2(6/9-15,7天)', 'W3(6/16-22,7天)', 'W4(6/23-30,8天)'],
-    qty: {
-      '刘晓霞': [20, 0, 6, 1],
-      '刘江滔': [40, 8, 1, 0],
-      '刘胜楠': [40, 0, 5, 11],
-      '彭培强': [2, 0, 0, 0],
-      '敬健浩': [2, 2, 0, 8],
-      '朱家豪': [8, 5, 5, 2],
-      '林梓仪': [61, 2, 0, 30],
-      '潘嘉瑜': [8, 15, 0, 0],
-      '苏芷萱': [11, 2, 0, 0]
-    },
-    cust: {
-      '刘晓霞': [3, 0, 1, 1],
-      '刘江滔': [1, 1, 1, 0],
-      '刘胜楠': [4, 0, 1, 1],
-      '彭培强': [1, 0, 0, 0],
-      '敬健浩': [1, 1, 0, 3],
-      '朱家豪': [4, 2, 1, 1],
-      '林梓仪': [4, 1, 0, 7],
-      '潘嘉瑜': [2, 2, 0, 0],
-      '苏芷萱': [2, 1, 0, 0]
-    }
-  },
-  '7月': {
-    weeks: ['W1(7/1-5,5天)', 'W2(7/6-12,7天)', 'W3(7/13-19,7天)', 'W4(7/20-26,7天)', 'W5(7/27-31,5天)'],
-    qty: {
-      '刘晓霞': [4, 6, 0, 0, 0],
-      '敬健浩': [4, 12, 0, 0, 0],
-      '朱家豪': [2, 10, 0, 0, 0],
-      '林梓仪': [15, 0, 0, 0, 0],
-      '潘嘉瑜': [33, 0, 0, 0, 0]
-    },
-    cust: {
-      '刘晓霞': [1, 2, 0, 0, 0],
-      '敬健浩': [1, 2, 0, 0, 0],
-      '朱家豪': [1, 2, 0, 0, 0],
-      '林梓仪': [2, 0, 0, 0, 0],
-      '潘嘉瑜': [2, 0, 0, 0, 0]
-    }
-  }
+// 拿样数据（从Excel计算）
+const sampleQty = {
+  '刘晓霞': [20, 0, 6, 1],
+  '刘江滔': [40, 8, 1, 0],
+  '刘胜楠': [40, 0, 5, 11],
+  '彭培强': [2, 0, 0, 0],
+  '敬健浩': [2, 2, 0, 8],
+  '朱家豪': [8, 5, 5, 2],
+  '林梓仪': [61, 2, 0, 30],
+  '潘嘉瑜': [8, 15, 0, 0],
+  '苏芷萱': [11, 2, 0, 0]
 };
-let currentSampleMonth = '7月';
-let sampleQty = sampleData[currentSampleMonth].qty;
-let sampleCust = sampleData[currentSampleMonth].cust;
+const sampleCust = {
+  '刘晓霞': [3, 0, 1, 1],
+  '刘江滔': [1, 1, 1, 0],
+  '刘胜楠': [4, 0, 1, 1],
+  '彭培强': [1, 0, 0, 0],
+  '敬健浩': [1, 1, 0, 3],
+  '朱家豪': [4, 2, 1, 1],
+  '林梓仪': [4, 1, 0, 7],
+  '潘嘉瑜': [2, 2, 0, 0],
+  '苏芷萱': [2, 1, 0, 0]
+};
 
 // 打版数据（从Excel计算）
 const patternQty = {
@@ -403,7 +371,6 @@ function showPage(page) {
 // ===== 筛选按钮创建 =====
 function createFilterButtons(containerId, chartInstance) {
   const container = document.getElementById(containerId);
-  container.innerHTML = '';
   const allBtn = document.createElement('button');
   allBtn.className = 'filter-btn active';
   allBtn.textContent = '全部';
@@ -415,15 +382,15 @@ function createFilterButtons(containerId, chartInstance) {
   };
   container.appendChild(allBtn);
 
-  chartInstance.data.datasets.forEach((ds, i) => {
+  salespeople.forEach((name, i) => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn';
-    btn.textContent = ds.label;
+    btn.textContent = name;
     btn.onclick = () => {
       container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      chartInstance.data.datasets.forEach((d, idx) => {
-        d.hidden = idx !== i;
+      chartInstance.data.datasets.forEach((ds, idx) => {
+        ds.hidden = idx !== i;
       });
       chartInstance.update();
     };
@@ -434,23 +401,21 @@ function createFilterButtons(containerId, chartInstance) {
 // ===== 折线图通用 =====
 function createLineChart(canvasId, data, title) {
   const ctx = document.getElementById(canvasId).getContext('2d');
-  const currentWeeks = sampleData[currentSampleMonth].weeks;
-  const people = Object.keys(data);
-  const datasets = people.map((name, i) => ({
+  const datasets = salespeople.map((name, i) => ({
     label: name,
     data: data[name],
-    borderColor: colors[i % colors.length],
-    backgroundColor: colors[i % colors.length] + '20',
+    borderColor: colors[i],
+    backgroundColor: colors[i] + '20',
     borderWidth: 2,
     pointRadius: 4,
-    pointBackgroundColor: colors[i % colors.length],
+    pointBackgroundColor: colors[i],
     tension: 0.3,
     hidden: false
   }));
 
   return new Chart(ctx, {
     type: 'line',
-    data: { labels: currentWeeks, datasets },
+    data: { labels: weeks, datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -474,65 +439,15 @@ function createLineChart(canvasId, data, title) {
   });
 }
 
-// ===== 月份切换函数 =====
-let chartSampleQtyRef = null;
-let chartSampleCustRef = null;
-
-function switchSampleMonth(month) {
-  currentSampleMonth = month;
-  sampleQty = sampleData[month].qty;
-  sampleCust = sampleData[month].cust;
-  const wks = sampleData[month].weeks;
-  
-  // Destroy old charts
-  if (chartSampleQtyRef) chartSampleQtyRef.destroy();
-  if (chartSampleCustRef) chartSampleCustRef.destroy();
-  
-  // Recreate charts
-  chartSampleQtyRef = createLineChart('chart-sample-qty', sampleQty, '拿样件数');
-  createFilterButtons('filter-sample-qty', chartSampleQtyRef);
-  chartSampleCustRef = createLineChart('chart-sample-cust', sampleCust, '拿样客户数');
-  createFilterButtons('filter-sample-cust', chartSampleCustRef);
-  
-  // Rebuild tables with dynamic headers
-  const people = Object.keys(sampleQty);
-  const numWeeks = wks.length;
-  const headerHtml = '<tr><th>业务员</th>' + wks.map((w,i) => `<th>第${i+1}周</th>`).join('') + '<th>合计</th></tr>';
-  
-  let tbody = document.getElementById('table-sample-qty');
-  tbody.parentElement.querySelector('thead').innerHTML = headerHtml;
-  tbody.innerHTML = '';
-  let totalRow = new Array(numWeeks).fill(0);
-  people.forEach(name => {
-    const d = sampleQty[name];
-    const sum = d.reduce((a,b) => a+b, 0);
-    d.forEach((v,i) => totalRow[i] += v);
-    tbody.innerHTML += `<tr><td>${name}</td>${d.map(v => `<td>${v}</td>`).join('')}<td><b>${sum}</b></td></tr>`;
-  });
-  tbody.innerHTML += `<tr class="summary-row"><td>合计</td>${totalRow.map(v => `<td>${v}</td>`).join('')}<td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
-  
-  tbody = document.getElementById('table-sample-cust');
-  tbody.parentElement.querySelector('thead').innerHTML = headerHtml;
-  tbody.innerHTML = '';
-  totalRow = new Array(numWeeks).fill(0);
-  people.forEach(name => {
-    const d = sampleCust[name];
-    const sum = d.reduce((a,b) => a+b, 0);
-    d.forEach((v,i) => totalRow[i] += v);
-    tbody.innerHTML += `<tr><td>${name}</td>${d.map(v => `<td>${v}</td>`).join('')}<td><b>${sum}</b></td></tr>`;
-  });
-  tbody.innerHTML += `<tr class="summary-row"><td>合计</td>${totalRow.map(v => `<td>${v}</td>`).join('')}<td><b>${totalRow.reduce((a,b)=>a+b,0)}</b></td></tr>`;
-}
-
 // ===== 初始化图表 =====
 document.addEventListener('DOMContentLoaded', function() {
   // 拿样件数折线图
-  chartSampleQtyRef = createLineChart('chart-sample-qty', sampleQty, '拿样件数');
-  createFilterButtons('filter-sample-qty', chartSampleQtyRef);
+  const chartSampleQty = createLineChart('chart-sample-qty', sampleQty, '拿样件数');
+  createFilterButtons('filter-sample-qty', chartSampleQty);
 
   // 拿样客户数折线图
-  chartSampleCustRef = createLineChart('chart-sample-cust', sampleCust, '拿样客户数');
-  createFilterButtons('filter-sample-cust', chartSampleCustRef);
+  const chartSampleCust = createLineChart('chart-sample-cust', sampleCust, '拿样客户数');
+  createFilterButtons('filter-sample-cust', chartSampleCust);
 
   // 拿样件数表格
   let tbody = document.getElementById('table-sample-qty');
