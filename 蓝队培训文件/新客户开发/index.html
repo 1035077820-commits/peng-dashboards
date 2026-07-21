@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新客户开发 — 蓝队培训文件</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+        .breadcrumb { font-size: 13px; color: #64748b; margin-bottom: 24px; }
+        .breadcrumb a { color: #3b82f6; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        h1 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .subtitle { color: #94a3b8; margin-bottom: 32px; font-size: 15px; }
+        .toc {
+            background: #1e293b; border: 1px solid #334155;
+            border-radius: 10px; padding: 20px 28px; margin-bottom: 40px;
+        }
+        .toc h3 { color: #3b82f6; font-size: 14px; margin-bottom: 12px; }
+        .toc ul { list-style: none; }
+        .toc li { margin-bottom: 6px; }
+        .toc a { color: #94a3b8; text-decoration: none; font-size: 14px; }
+        .toc a:hover { color: #3b82f6; }
+        .section { margin-bottom: 48px; }
+        .section h2 {
+            font-size: 22px; color: #fff; margin-bottom: 16px;
+            padding-bottom: 8px; border-bottom: 2px solid #334155;
+        }
+        .section h3 { font-size: 17px; color: #3b82f6; margin: 20px 0 10px; }
+        .card {
+            background: #1e293b; border: 1px solid #334155;
+            border-radius: 10px; padding: 20px 24px; margin-bottom: 16px;
+        }
+        .card ul { padding-left: 20px; margin-top: 8px; }
+        .card li { margin-bottom: 4px; color: #cbd5e1; }
+        .card p { color: #cbd5e1; margin-bottom: 8px; }
+        .steps { display: flex; flex-direction: column; gap: 12px; }
+        .step {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: #1e293b; border: 1px solid #334155;
+            border-radius: 10px; padding: 16px 20px;
+        }
+        .step-num {
+            min-width: 36px; height: 36px; border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 16px; color: #fff;
+        }
+        .step-content h4 { color: #fff; font-size: 15px; margin-bottom: 4px; }
+        .step-content p { color: #94a3b8; font-size: 13px; }
+        .table-wrap { overflow-x: auto; margin: 16px 0; }
+        table {
+            width: 100%; border-collapse: collapse;
+            background: #1e293b; border-radius: 8px; overflow: hidden;
+        }
+        th {
+            background: #334155; color: #3b82f6; font-size: 13px;
+            padding: 10px 14px; text-align: left;
+        }
+        td { padding: 10px 14px; border-top: 1px solid #334155; font-size: 13px; color: #cbd5e1; }
+        tr:hover td { background: #263347; }
+        .highlight-box {
+            background: linear-gradient(135deg, #1e3a5f, #1e293b);
+            border-left: 4px solid #d69e2e; border-radius: 8px;
+            padding: 16px 20px; margin: 16px 0;
+        }
+        .highlight-box p { color: #fbbf24; font-size: 14px; }
+        .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+        .tag {
+            background: #334155; color: #94a3b8; padding: 4px 12px;
+            border-radius: 6px; font-size: 12px;
+        }
+        .tag.blue { background: #1e3a5f; color: #60a5fa; }
+        .footer { text-align: center; margin-top: 48px; color: #475569; font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="breadcrumb"><a href="../index.html">蓝队培训文件</a> / 新客户开发</div>
+<h1>📋 新客户开发</h1>
+<p class="subtitle">从零到一掌握客户背调方法论 · 信息采集规范 · CRM录入标准 · 合作切入策略</p>
+
+<div class="toc">
+    <h3>📑 目录</h3>
+    <ul>
+        <li><a href="#overview">一、为什么要做客户背调</a></li>
+        <li><a href="#process">二、背调八步流程</a></li>
+        <li><a href="#template">三、信息采集模板（通用+专业属性）</a></li>
+        <li><a href="#crm">四、CRM资料录入规范</a></li>
+        <li><a href="#types">五、客户类型判定（11类）</a></li>
+        <li><a href="#contact">六、关键联系人挖掘方法</a></li>
+        <li><a href="#strategy">七、合作切入策略</a></li>
+        <li><a href="#tools">八、实用工具与数据源</a></li>
+    </ul>
+</div>
+
+<!-- Section 1 -->
+<div class="section" id="overview">
+    <h2>一、为什么要做客户背调？</h2>
+    <div class="card">
+        <p><strong>核心目的：</strong>让客户把生产订单下给捷展。捷展是供应商/工厂角色，背调目的是争取客户的OEM/ODM生产订单。</p>
+        <p>背调不是学术研究，而是<strong>打单前的侦察</strong>。你要知道：</p>
+        <ul>
+            <li>客户是谁？多大体量？谁在做采购决策？</li>
+            <li>他们现在的供应商是谁？有什么不满？</li>
+            <li>捷展的优势能切哪个点？（小单快反/高工艺印花/功能面料/GRS认证/复合工艺一站式）</li>
+            <li>什么时机接触最合适？（新季开发窗口/展会前后）</li>
+        </ul>
+    </div>
+    <div class="highlight-box">
+        <p>✨ 备战充分，一击即中。想到哪儿击哪儿，十次拜访九次空。</p>
+    </div>
+</div>
+
+<!-- Section 2 -->
+<div class="section" id="process">
+    <h2>二、背调八步流程</h2>
+    <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h4>工商信息查询</h4><p>天眼查/企查查 → 注册资本、成立时间、法人、经营范围、风险提示</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h4>官网与电商渠道</h4><p>官网、淘宝/天猫/1688/抖音店铺 → 产品定价、风格定位、在售品类、店铺客服可问商务合作</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h4>社交媒体调研</h4><p>小红书/抖音/Instagram → 粉丝量、内容调性、用户评价、市场影响力</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h4>行业信息挖掘</h4><p>融资情况、现有供应商、合作工厂线索（看吊牌、产地、媒体提及）</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h4>风险排查</h4><p>法律诉讼、负面舆情、经营异常、被执行人信息</p></div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-content"><h4>关键联系人挖掘</h4><p>创始人/采购负责人/设计总监 → 姓名、职位、触达渠道（社媒私信/门店到访/展会对接）</p></div></div>
+        <div class="step"><div class="step-num">7</div><div class="step-content"><h4>竞品分析</h4><p>同赛道品牌3-5个、客户现有供应商线索、捷展同类成功案例作为背书</p></div></div>
+        <div class="step"><div class="step-num">8</div><div class="step-content"><h4>近期动态 → 找切入时机</h4><p>新系列/联名/新店/展会计划/融资扩张 → 即将到来的发布会是最佳切入窗口</p></div></div>
+    </div>
+</div>
+
+<!-- Section 3: 信息采集模板 -->
+<div class="section" id="template">
+    <h2>三、信息采集模板</h2>
+    <h3>📌 通用属性背调（20项）</h3>
+    <div class="table-wrap"><table>
+        <tr><th>#</th><th>维度</th><th>说明</th></tr>
+        <tr><td>1</td><td>所在城市</td><td>注册地/实际运营地</td></tr>
+        <tr><td>2</td><td>公司全名</td><td>工商注册全名</td></tr>
+        <tr><td>3</td><td>公司LOGO</td><td>描述或链接</td></tr>
+        <tr><td>4</td><td>公司网址</td><td>官网URL</td></tr>
+        <tr><td>5</td><td>线上店铺</td><td>淘宝/天猫/1688/抖音店铺链接</td></tr>
+        <tr><td>6</td><td>公司地址</td><td>详细地址（拜访用）</td></tr>
+        <tr><td>7</td><td>公司类型</td><td>有限公司/个体/合伙等</td></tr>
+        <tr><td>8</td><td>成立时间</td><td>年份</td></tr>
+        <tr><td>9</td><td>行业经验</td><td>从业年限/行业背景</td></tr>
+        <tr><td>10</td><td>公司规模</td><td>员工人数/年营收量级</td></tr>
+        <tr><td>11</td><td>年采购量</td><td>预估采购体量</td></tr>
+        <tr><td>12</td><td>综合实力</td><td>注册资本/融资情况/品牌矩阵</td></tr>
+        <tr><td>13</td><td>主营产品</td><td>核心品类（T恤/卫衣/外套/裤装等）</td></tr>
+        <tr><td>14</td><td>产品档次</td><td>高端/中端/性价比</td></tr>
+        <tr><td>15</td><td>客户群体</td><td>目标消费者画像</td></tr>
+        <tr><td>16</td><td>销售模式</td><td>DTC/批发/分销/电商等</td></tr>
+        <tr><td>17</td><td>现有供应商</td><td>已知供应链信息</td></tr>
+        <tr><td>18</td><td>办事处/分支</td><td>分公司/办事处数量</td></tr>
+        <tr><td>19</td><td>付款方式</td><td>行业惯例推测</td></tr>
+        <tr><td>20</td><td>采购风格</td><td>供应商偏好/品质要求/价格敏感度</td></tr>
+    </table></div>
+
+    <h3>🎯 专业属性背调（6项）</h3>
+    <div class="table-wrap"><table>
+        <tr><th>#</th><th>维度</th><th>说明</th></tr>
+        <tr><td>1</td><td>设计能力</td><td>自主设计团队 / 外包设计 / 供应商ODM</td></tr>
+        <tr><td>2</td><td>销售渠道</td><td>线上/线下/批发/零售分布</td></tr>
+        <tr><td>3</td><td>运营能力</td><td>电商运营水平/内容营销能力</td></tr>
+        <tr><td>4</td><td>团队规模</td><td>企业职工人数</td></tr>
+        <tr><td>5</td><td>组织架构</td><td>设计/采购/销售部门结构</td></tr>
+        <tr><td>6</td><td>客户类型判定</td><td>见第五章分类</td></tr>
+    </table></div>
+
+    <div class="highlight-box">
+        <p>💡 查不到的项标注“❓未查到”，绝对不要编造。线下拜访时补充确认。</p>
+    </div>
+</div>
+
+<!-- Section 4: CRM -->
+<div class="section" id="crm">
+    <h2>四、CRM资料录入规范</h2>
+    <div class="card">
+        <p><strong>核心原则：</strong>每次背调完成后，必须录入CRM，设置下次跟进提醒（3-7天）。</p>
+    </div>
+    <h3>必填字段</h3>
+    <div class="card">
+        <ul>
+            <li><strong>客户名称</strong>：公司全名 + 品牌名（如“广州某某服饰有限公司 / BRAND”）</li>
+            <li><strong>客户等级</strong>：★★★★★（根据体量/潜力/匹配度）</li>
+            <li><strong>联系人</strong>：姓名 + 职位 + 电话 + 微信</li>
+            <li><strong>客户类型</strong>：品牌商/批发商/网商/网红 等</li>
+            <li><strong>客户来源</strong>：展会/小红书/1688/老客户转介绍/公海挖掘</li>
+            <li><strong>需求摘要</strong>：客户的核心采购需求（品类/数量/工艺/交期）</li>
+            <li><strong>跟进记录</strong>：每次沟通内容、客户反应、下一步计划</li>
+        </ul>
+    </div>
+    <h3>录入时机</h3>
+    <div class="card">
+        <ul>
+            <li>背调完成后 → 立即建档</li>
+            <li>拜访前 → 补充洽谈方案</li>
+            <li>拜访后24h内 → 更新跟进记录</li>
+            <li>每周五 → 汇总本周拜访案例，提炼成功话术/失败教训</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Section 5: 客户类型 -->
+<div class="section" id="types">
+    <h2>五、客户类型判定（11类）</h2>
+    <p style="color:#94a3b8;margin-bottom:16px;">根据调研结果，从以下类型中选择最匹配的1-2个：</p>
+    <div class="table-wrap"><table>
+        <tr><th>代码</th><th>类型</th><th>特征</th><th>采购偏好</th></tr>
+        <tr><td>A</td><td>品牌商</td><td>自有品牌，重设计和品牌调性</td><td>ODM/OEM，看工艺和品质</td></tr>
+        <tr><td>B</td><td>批发商</td><td>走量为主，价格敏感</td><td>现货+低价，MOQ低</td></tr>
+        <tr><td>C</td><td>经销商</td><td>代理品牌，区域分销</td><td>稳定供应+价格保护</td></tr>
+        <tr><td>D</td><td>连锁超市</td><td>大批量标品采购</td><td>最低价+认证齐全</td></tr>
+        <tr><td>E</td><td>网商</td><td>电商为主，重性价比和上新速度</td><td>小单快反+图片支持</td></tr>
+        <tr><td>F</td><td>网红/KOL</td><td>IP/人设驱动，小批量高频</td><td>超小 MOQ+快速打样</td></tr>
+        <tr><td>G</td><td>工程商</td><td>团体定制/工装</td><td>印Logo+交期准</td></tr>
+        <tr><td>H</td><td>大型终端</td><td>大型零售终端</td><td>年框协议+质检严格</td></tr>
+        <tr><td>I</td><td>小B买家</td><td>小批量个体采购</td><td>混批+灵活</td></tr>
+        <tr><td>J</td><td>个体买家</td><td>散客</td><td>现货直发</td></tr>
+        <tr><td>K</td><td>制造企业</td><td>同行/代工需求</td><td>产能补充+工艺外包</td></tr>
+    </table></div>
+    <div class="highlight-box">
+        <p>🎯 判定客户类型后，对应调整报价策略和沟通方式。品牌商聊工艺，批发商聊价格，网红聊速度。</p>
+    </div>
+</div>
+
+<!-- Section 6: 联系人挖掘 -->
+<div class="section" id="contact">
+    <h2>六、关键联系人挖掘方法</h2>
+    <p style="color:#94a3b8;margin-bottom:16px;">联系方式是背调的核心交付物之一。找不到直接联系方式时，必须给出可行的触达路径。</p>
+    <div class="card">
+        <h4 style="color:#fff;margin-bottom:12px;">🔍 挖掘渠道（按优先级）</h4>
+        <ul>
+            <li><strong>工商系统</strong>：天眼查/企查查找法人、股东、高管姓名</li>
+            <li><strong>社媒账号</strong>：抖音/小红书/微信公众号/Instagram→私信是最常用触达方式</li>
+            <li><strong>电商店铺客服</strong>：淘宝/天猫/1688客服入口可问商务合作联系人</li>
+            <li><strong>搜“品牌+商务合作+联系方式+邮箱”</strong></li>
+            <li><strong>搜“品牌+创始人/主理人/CEO/采购总监”</strong></li>
+            <li><strong>LinkedIn / 脉脉</strong>：找团队成员（采购/产品/供应链岗位）</li>
+            <li><strong>线下门店/Showroom</strong>：直接到店是最快触达</li>
+            <li><strong>展会</strong>：ComplexCon、Innersect、Ontimeshow、Labelhood、上海/米兰时装周→展会对接最高效</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h4 style="color:#fff;margin-bottom:12px;">📞 要找的关键人</h4>
+        <ul>
+            <li>创始人 / CEO / 主理人（决策者）</li>
+            <li>采购总监 / 供应链负责人（执行者）</li>
+            <li>设计总监 / 产品经理（影响者）</li>
+            <li>法人 / 股东（工商查询）</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Section 7: 合作切入策略 -->
+<div class="section" id="strategy">
+    <h2>七、合作切入策略</h2>
+    <div class="card">
+        <h4 style="color:#fff;margin-bottom:12px;">💪 捷展供应商核心优势（强调这些）</h4>
+        <div class="tag-list">
+            <span class="tag blue">小单快反</span>
+            <span class="tag blue">高工艺印花</span>
+            <span class="tag blue">功能面料</span>
+            <span class="tag blue">GRS认证</span>
+            <span class="tag blue">复合工艺一站式</span>
+            <span class="tag blue">15年潮牌代工经验</span>
+        </div>
+    </div>
+    <div class="card">
+        <h4 style="color:#fff;margin-bottom:12px;">🚀 推进路径（4步）</h4>
+        <ul>
+            <li><strong>Step 1 · 建立联系</strong>：社媒私信/展会换名片/门店拜访，送工艺册+样卡</li>
+            <li><strong>Step 2 · 富样触达</strong>：挑3-5款匹配客户风格的样衣寄送，附同类客户案例</li>
+            <li><strong>Step 3 · 需求碰撞</strong>：用SPIN提问法了解当前供应商的痛点，针对性报价</li>
+            <li><strong>Step 4 · 锁定合作</strong>：小单试单 → 季度框架 → 年度协议</li>
+        </ul>
+    </div>
+    <div class="highlight-box">
+        <p>❓ 所有合作建议必须从“让客户把订单下给捷展”的角度出发，不是联名、不是赞助、不是投资。</p>
+    </div>
+</div>
+
+<!-- Section 8: 工具 -->
+<div class="section" id="tools">
+    <h2>八、实用工具与数据源</h2>
+    <div class="table-wrap"><table>
+        <tr><th>用途</th><th>工具</th><th>网址</th></tr>
+        <tr><td>工商信息</td><td>天眼查 / 企查查</td><td>tianyancha.com / qcc.com</td></tr>
+        <tr><td>电商数据</td><td>1688 / 淘宝 / 抖音店铺</td><td>1688.com / taobao.com</td></tr>
+        <tr><td>社交媒体</td><td>小红书 / 抖音 / Instagram</td><td>xiaohongshu.com</td></tr>
+        <tr><td>职场人脉</td><td>LinkedIn / 脉脉</td><td>linkedin.com / maimai.cn</td></tr>
+        <tr><td>风险排查</td><td>天眼查风险预警</td><td>天眼查App</td></tr>
+        <tr><td>展会信息</td><td>Innersect / Ontimeshow官网</td><td>各展会官网</td></tr>
+        <tr><td>AI背调助手</td><td>金牌销售虾 🦐</td><td>Discord发送品牌名即可</td></tr>
+    </table></div>
+    <div class="card">
+        <h4 style="color:#fff;margin-bottom:12px;">🦐 AI背调快捷指令</h4>
+        <p>在Discord直接发送以下格式即可触发自动背调：</p>
+        <ul>
+            <li><code>/kehu 品牌名</code> — 完整八步背调报告</li>
+            <li><code>背调一下 XX</code> — 同上</li>
+            <li><code>查一下这个客户 XX</code> — 同上</li>
+        </ul>
+        <p style="margin-top:8px;color:#94a3b8;">AI会自动搜索并整理出结构化背调报告，含基本信息、规模实力、品牌市场、风险、联系方式、竞品、近期动态、合作建议。</p>
+    </div>
+</div>
+
+<div class="footer">
+    捷展贸易 · 蓝队培训文件 · 新客户开发 · 2026
+</div>
+
+</div><!-- /.container -->
+</body>
+</html>
