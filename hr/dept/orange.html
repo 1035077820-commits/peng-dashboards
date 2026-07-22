@@ -43,8 +43,9 @@ td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0}
 
 <div class="tabs">
 <div class="tab active" onclick="switchTab(0)">📊 上半年数据</div>
-<div class="tab" onclick="switchTab(1)">📋 人效复盘 & 方案</div>
+<div class="tab" onclick="switchTab(1)">📋 人效复盘</div>
 <div class="tab" onclick="switchTab(2)">🎯 下半年目标</div>
+<div class="tab" onclick="switchTab(3)">📈 上半年业绩复盘</div>
 </div>
 
 <!-- PAGE 1: 上半年数据 -->
@@ -185,6 +186,55 @@ td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0}
 </div>
 
 <div class="footer">QUICKSHOW · 橙队 · 2026</div>
+
+<!-- PAGE 4: 上半年业绩复盘 -->
+<div class="page" id="page3">
+
+<div class="kpis">
+<div class="kpi"><div class="lb">团队完成率(含档口)</div><div class="vl" style="color:#fa8c16">88%</div><div class="nt">缺口240万</div></div>
+<div class="kpi"><div class="lb">个人完成率(排除档口)</div><div class="vl" style="color:#52c41a">110%</div><div class="nt">超额154.9万</div></div>
+<div class="kpi"><div class="lb">档口缺口</div><div class="vl" style="color:#f5222d">395万</div><div class="nt">广州226万+杭州169万</div></div>
+</div>
+
+<div class="card">
+<h3>个人业绩1-6月完成情况（万元）</h3>
+<table>
+<tr><th>业务员</th><th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>合计</th><th>目标</th><th>完成率</th></tr>
+<tr><td>玉珠</td><td>71.2</td><td>12.4</td><td>105.4</td><td>63.2</td><td>68.4</td><td>55.9</td><td><strong>376.5</strong></td><td>264</td><td style="color:#52c41a"><strong>142%</strong></td></tr>
+<tr><td>冯冯</td><td>90.2</td><td>91.7</td><td>141.0</td><td>128.3</td><td>100.7</td><td>106.3</td><td><strong>658.2</strong></td><td>511</td><td style="color:#52c41a"><strong>128%</strong></td></tr>
+<tr><td>正瑶</td><td>61.9</td><td>13.2</td><td>18.1</td><td>114.7</td><td>16.9</td><td>31.2</td><td><strong>256.0</strong></td><td>255</td><td style="color:#52c41a"><strong>100%</strong></td></tr>
+<tr><td>阿乐</td><td>19.1</td><td>15.2</td><td>46.6</td><td>42.6</td><td>29.5</td><td>18.7</td><td><strong>171.7</strong></td><td>219.1</td><td style="color:#f5222d"><strong>78%</strong></td></tr>
+<tr style="color:#888"><td>昊芯(已淘汰)</td><td>26.4</td><td>4.3</td><td>17.3</td><td>12.0</td><td>8.8</td><td>17.4</td><td>86.3</td><td>115</td><td>75%</td></tr>
+<tr style="color:#888"><td>新人(合并)</td><td>7.5</td><td>-</td><td>0.9</td><td>8.1</td><td>9.2</td><td>5.1</td><td>30.4</td><td>-</td><td>-</td></tr>
+<tr style="font-weight:700;border-top:2px solid #2832c2"><td>个人合计</td><td>276.3</td><td>136.9</td><td>329.3</td><td>368.5</td><td>233.5</td><td>234.5</td><td>1579.0</td><td>1424.1</td><td style="color:#52c41a">110%</td></tr>
+<tr style="color:#fa8c16"><td>广州档口</td><td>42.3</td><td>11.9</td><td>33.1</td><td>44.6</td><td>36.5</td><td>20.4</td><td>188.9</td><td>415</td><td style="color:#f5222d">45%</td></tr>
+<tr style="color:#fa8c16"><td>杭州档口</td><td>59.3</td><td>-10.8</td><td>9.3</td><td>15.2</td><td>15.2</td><td>12.4</td><td>100.6</td><td>270</td><td style="color:#f5222d">37%</td></tr>
+</table>
+</div>
+
+<div class="reason">
+<h4>核心发现</h4>
+<ul>
+<li><strong>玉珠和冯冯增长明显</strong>：玉珠142%超额111万，冯冯128%超额147万</li>
+<li><strong>正瑶刚好完成</strong>：100.38%（已扣减森马业绩）</li>
+<li><strong>阿乐缺口20万</strong>：完成玉78%，下半年追平</li>
+<li><strong>档口拖累严重</strong>：广州45%+杭州37%，合计缺口395万</li>
+<li><strong>昊芯已淘汰，新人未留存</strong></li>
+</ul>
+</div>
+
+<div class="solution">
+<h4>下半年调整方向</h4>
+<ul>
+<li>精力全面聚焦战略客户和大客户，一客一策</li>
+<li>不再追加档口资源投入，档口维持正常供货即可</li>
+<li>阿乐下半年追平缺口</li>
+<li>继续物色销售人才2名，为2027年做准备</li>
+<li>培养至少1名专攻大客户的精英销售</li>
+</ul>
+</div>
+
+</div>
 
 <script>
 function switchTab(n){
