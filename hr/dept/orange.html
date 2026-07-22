@@ -43,7 +43,8 @@ td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0}
 
 <div class="tabs">
 <div class="tab active" onclick="switchTab(0)">📊 上半年数据</div>
-<div class="tab" onclick="switchTab(1)">📋 人效复盘 & 下半年方案</div>
+<div class="tab" onclick="switchTab(1)">📋 人效复盘 & 方案</div>
+<div class="tab" onclick="switchTab(2)">🎯 下半年目标</div>
 </div>
 
 <!-- PAGE 1: 上半年数据 -->
@@ -151,6 +152,38 @@ td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0}
 
 </div>
 
+<!-- PAGE 3: 下半年目标 -->
+<div class="page" id="page2">
+<div class="card">
+<h3>下半年业绩目标（保底 + 挑战）</h3>
+<table>
+<tr><th>业务员</th><th>7月</th><th>7月挑战</th><th>8月</th><th>8月挑战</th><th>9月</th><th>9月挑战</th><th>10月</th><th>10月挑战</th><th>11月</th><th>11月挑战</th><th>12月</th><th>12月挑战</th><th>合计</th><th>挑战合计</th></tr>
+<tr><td>正瑶</td><td>50</td><td>50</td><td>45</td><td>55.5</td><td>45</td><td>61</td><td>45</td><td>65</td><td>45</td><td>74</td><td>35</td><td>53.6</td><td><strong>265</strong></td><td><strong>359.1</strong></td></tr>
+<tr><td>冯冯</td><td>78</td><td>144</td><td>45</td><td>69.5</td><td>60</td><td>80</td><td>104</td><td>114</td><td>125</td><td>136.6</td><td>107</td><td>121</td><td><strong>519</strong></td><td><strong>665</strong></td></tr>
+<tr><td>玉珠</td><td>49.5</td><td>49.5</td><td>44</td><td>68.5</td><td>55</td><td>83</td><td>44</td><td>94</td><td>49.5</td><td>107.5</td><td>44</td><td>90.5</td><td><strong>286</strong></td><td><strong>493</strong></td></tr>
+<tr><td>阿乐</td><td>46</td><td>46</td><td>36.5</td><td>47</td><td>46</td><td>62</td><td>43.8</td><td>63.8</td><td>43.8</td><td>61.2</td><td>34.8</td><td>48.75</td><td><strong>250.9</strong></td><td><strong>328.75</strong></td></tr>
+<tr style="font-weight:700;border-top:2px solid #2832c2"><td>合计</td><td>223.5</td><td>289.5</td><td>170.5</td><td>240.5</td><td>206</td><td>286</td><td>236.8</td><td>336.8</td><td>263.3</td><td>379.3</td><td>220.8</td><td>313.8</td><td><strong>1320.9</strong></td><td><strong>1845.9</strong></td></tr>
+<tr style="color:#fa8c16"><td>新人缺口</td><td>66</td><td>70</td><td></td><td>80</td><td></td><td>100</td><td></td><td>116</td><td></td><td></td><td></td><td>93</td><td></td><td><strong>525</strong></td></tr>
+</table>
+<p style="margin-top:10px;font-size:11px;color:#888">单位：万元。挑战目标 = 保底目标 + 新人缺口分摊。</p>
+</div>
+
+<div class="card">
+<h3>个人目标对比（保底 vs 挑战）</h3>
+<div id="chart3" class="chart"></div>
+</div>
+
+<div class="target-card">
+<h4>挑战目标说明</h4>
+<ul style="padding-left:16px;font-size:12px;line-height:2">
+<li>保底目标合计：<strong>1320.9万</strong></li>
+<li>挑战目标合计：<strong>1845.9万</strong>（+525万，+39.7%）</li>
+<li>525万缺口来源：新人未到岗，由现有4人分摊</li>
+<li>月度提成不受影响，完成情况影响年底奖金池分配系数</li>
+</ul>
+</div>
+</div>
+
 <div class="footer">QUICKSHOW · 橙队 · 2026</div>
 
 <script>
@@ -168,6 +201,9 @@ var c2=echarts.init(document.getElementById('chart2'));
 c2.setOption({tooltip:{trigger:'axis'},xAxis:{type:'category',data:['1月','2月','3月','4月','5月','6月']},yAxis:{type:'value',name:'万/人'},series:[
 {name:'月人效',type:'line',data:[23.27,7.49,14.59,23.24,24.46,19.94],smooth:true,itemStyle:{color:'#2832c2'},areaStyle:{color:'rgba(40,50,194,0.08)'}}
 ]});
-window.addEventListener('resize',function(){c1.resize();c2.resize()});
+window.addEventListener('resize',function(){c1.resize();c2.resize();if(window.c3)c3.resize()});
+var c3;
+function initChart3(){if(c3)return;c3=echarts.init(document.getElementById('chart3'));c3.setOption({tooltip:{trigger:'axis'},legend:{data:['保底','挑战']},xAxis:{type:'category',data:['正瑶','冯冯','玉珠','阿乐']},yAxis:{type:'value',name:'万'},series:[{name:'保底',type:'bar',data:[265,519,286,250.9],itemStyle:{color:'#2832c2'}},{name:'挑战',type:'bar',data:[359.1,665,493,328.75],itemStyle:{color:'#faad14'}}]});}
+var origSwitch=switchTab;switchTab=function(n){origSwitch(n);if(n===2)setTimeout(initChart3,100);};
 </script>
 </body></html>
