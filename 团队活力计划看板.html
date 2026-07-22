@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团队活力计划 · 看板</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+            background: #0c0f2d;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .header {
+            text-align: center;
+            padding: 32px 0 24px;
+        }
+        .header h1 {
+            font-size: 32px;
+            background: linear-gradient(135deg, #ffd700, #ff9500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header p { color: #8b9bd4; font-size: 14px; }
+        .purpose {
+            background: linear-gradient(135deg, #1a1f5e, #111fbf30);
+            border: 1px solid #2d3abf;
+            border-radius: 12px;
+            padding: 20px 24px;
+            max-width: 800px;
+            margin: 0 auto 32px;
+        }
+        .purpose h3 { color: #ffd700; font-size: 15px; margin-bottom: 10px; }
+        .purpose .pain { color: #ff6b6b; font-size: 13px; margin-bottom: 8px; }
+        .purpose .goal { color: #7df9ff; font-size: 13px; }
+        .timeline {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+        .timeline .month {
+            background: #1a1f5e;
+            border: 1px solid #2d3abf;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: #8b9bd4;
+            text-align: center;
+            min-width: 100px;
+        }
+        .timeline .month.active {
+            border-color: #ffd700;
+            background: #2d1f00;
+            color: #ffd700;
+        }
+        .timeline .month strong { display: block; font-size: 14px; color: #fff; margin-bottom: 2px; }
+        .timeline .month.active strong { color: #ffd700; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #111852;
+            border: 1px solid #2d3abf;
+            border-radius: 14px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+        .card:hover {
+            border-color: #ffd700;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,215,0,0.08);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .card-header .emoji { font-size: 28px; }
+        .card-header h2 { font-size: 18px; color: #fff; }
+        .card-header .when {
+            margin-left: auto;
+            background: #2d1f00;
+            color: #ffd700;
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .card .purpose-block {
+            background: #0c0f2d;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+        }
+        .card .purpose-block h4 {
+            color: #ffd700;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+        .card .purpose-block p {
+            color: #7df9ff;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .card .help {
+            font-size: 12px;
+            color: #8b9bd4;
+            line-height: 1.8;
+        }
+        .card .help strong { color: #fff; }
+        .card .spark {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #2d3abf;
+            font-size: 12px;
+        }
+        .spark .yes { color: #4ade80; }
+        .spark .partial { color: #fbbf24; }
+        .flow {
+            max-width: 800px;
+            margin: 32px auto 0;
+            background: #111852;
+            border: 1px solid #2d3abf;
+            border-radius: 14px;
+            padding: 24px;
+        }
+        .flow h3 { color: #ffd700; font-size: 16px; margin-bottom: 14px; text-align: center; }
+        .flow-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .flow-step {
+            background: #0c0f2d;
+            border: 1px solid #2d3abf;
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: center;
+            font-size: 12px;
+            color: #e2e8f0;
+            min-width: 120px;
+        }
+        .flow-step .label { color: #8b9bd4; font-size: 10px; margin-bottom: 4px; }
+        .flow-step .action { color: #7df9ff; font-weight: 600; }
+        .flow-arrow { color: #ffd700; font-size: 20px; }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #4a5080;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔥 团队活力计划</h1>
+        <p>国际事业部 · 17人 · 2026年7月-12月 · 预算2K/季</p>
+    </div>
+
+    <div class="purpose">
+        <h3>🎯 为什么做这个？</h3>
+        <p class="pain">痛点：开会让分享想法没人发言 → 有想法怕被否定 → 怕担责出错 → 缺乏激情和归属感</p>
+        <p class="goal">目标：敢开口 → 敢担当 → 有创意 → 有归属 → 展现出比现在更好的状态</p>
+    </div>
+
+    <div class="timeline">
+        <div class="month active"><strong>7月</strong>辩论赛</div>
+        <div class="month"><strong>8月</strong>吐槽墙+印象</div>
+        <div class="month"><strong>9月</strong>角色扮演</div>
+        <div class="month"><strong>10月</strong>疯狂提案</div>
+        <div class="month"><strong>11月</strong>辩论2.0</div>
+        <div class="month"><strong>12月</strong>年度收官</div>
+    </div>
+
+    <div class="grid">
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <span class="emoji">🔥</span>
+                <h2>辩论赛</h2>
+                <span class="when">7月 / 11月</span>
+            </div>
+            <div class="purpose-block">
+                <h4>目的</h4>
+                <p>被迫表达立场，发现"说了也没事" → 降低所有人的开口门槛</p>
+            </div>
+            <div class="help">
+                <strong>对团队的帮助：</strong><br>
+                • 立场是随机抽的 = 安全保护伞<br>
+                • 练习快速组织语言和逻辑说服<br>
+                • 辩完发现：说错了真的没有后果
+            </div>
+            <div class="spark">
+                <span class="yes">✅ 激发分享欲：强制输出观点，练表达肌肉</span>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <span class="emoji">📝</span>
+                <h2>匿名吐槽墙</h2>
+                <span class="when">8月</span>
+            </div>
+            <div class="purpose-block">
+                <h4>目的</h4>
+                <p>给安全出口，让"不敢说"变成"被允许说" → 建立"说了真的会改"的信任</p>
+            </div>
+            <div class="help">
+                <strong>对团队的帮助：</strong><br>
+                • 匿名 = 零风险，先迈第一步<br>
+                • 你当场回应+承诺改 = 信任建立<br>
+                • 为后面敢当面说打基础
+            </div>
+            <div class="spark">
+                <span class="partial">⚡ 过渡性：先敢匿名说 → 后面才敢当面说</span>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <span class="emoji">🌟</span>
+                <h2>队友印象</h2>
+                <span class="when">8月 / 11月</span>
+            </div>
+            <div class="purpose-block">
+                <h4>目的</h4>
+                <p>让每个人被看见、被认可 → 归属感拉满 → 更愿意主动表现</p>
+            </div>
+            <div class="help">
+                <strong>对团队的帮助：</strong><br>
+                • 发现"原来同事这么看我" → 自信提升<br>
+                • 打破部门小圈子，跨组互相认可<br>
+                • 被认可后自然更愿意表达
+            </div>
+            <div class="spark">
+                <span class="yes">✅ 被认可后更愿意表现自己</span>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <span class="emoji">🎭</span>
+                <h2>角色扮演</h2>
+                <span class="when">9月</span>
+            </div>
+            <div class="purpose-block">
+                <h4>目的</h4>
+                <p>模拟实战场景，全员支招 → 笑点多自然破冰 → 积累团队话术库</p>
+            </div>
+            <div class="help">
+                <strong>对团队的帮助：</strong><br>
+                • 演着演着就放开了，创意自然冒出来<br>
+                • 全员共同解决问题 → 集体智慧<br>
+                • 好的应对话术记录下来，团队共享
+            </div>
+            <div class="spark">
+                <span class="yes">✅✅ 天然有笑点，创意自然冒出来</span>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <span class="emoji">🎁</span>
+                <h2>盲盒感谢</h2>
+                <span class="when">9月</span>
+            </div>
+            <div class="purpose-block">
+                <h4>目的</h4>
+                <p>跨圈表达认可 → 打破隔阂 → 团队情感连接升温</p>
+            </div>
+            <div class="help">
+                <strong>对团队的帮助：</strong><br>
+                • 练"具体表达"能力（不能说泛泛的谢谢）<br>
+                • 金队和出海之间建立情感连接<br>
+                • 暖场用，为其他活动铺垫氛围
+            </div>
+            <div class="spark">
+                <span class="partial">⚡ 暖场基础：为后续活动打开氛围</span>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <span class="emoji">💡</span>
+                <h2>疯狂提案</h2>
+                <span class="when">10月 季度重活动</span>
+            </div>
+            <div class="purpose-block">
+                <h4>目的</h4>
+                <p>规则禁止说"不行" → 越荒谬越鼓励 → 释放创意无压力 → 好点子真的会落地</p>
+            </div>
+            <div class="help">
+                <strong>对团队的帮助：</strong><br>
+                • "怕被否定"的恐惧彻底消除<br>
+                • 好点子给预算落地 → "我的想法真的管用了"<br>
+                • 一旦体验到被采纳，创意就停不下来
+            </div>
+            <div class="spark">
+                <span class="yes">✅✅✅ 最直接激发创意的活动</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flow -->
+    <div class="flow">
+        <h3>📈 递进逻辑：为什么是这个顺序？</h3>
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="label">7月</div>
+                <div class="action">被迫说</div>
+                辩论赛
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">
+                <div class="label">8月</div>
+                <div class="action">安全说</div>
+                匿名吐槽
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">
+                <div class="label">9月</div>
+                <div class="action">演着说</div>
+                角色扮演
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">
+                <div class="label">10月</div>
+                <div class="action">疯狂说</div>
+                疯狂提案
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-step">
+                <div class="label">11-12月</div>
+                <div class="action">主动说</div>
+                习惯形成
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        国际事业部 · 团队活力计划 · 2026 H2
+    </div>
+</body>
+</html>
