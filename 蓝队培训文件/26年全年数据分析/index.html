@@ -82,37 +82,36 @@
 <div class="slide active">
     <h2>🔥 团队冲刺激励会</h2>
     <h1>蓝队 · 下半年冲刺动员</h1>
-    <p class="sub">捷展贸易 · 国际定制事业部</p>
 </div>
 
 <!-- Slide 2 -->
 <div class="slide">
     <p class="sub">今年的目标是多少？</p>
-    <div class="big-num">6110万</div>
+    <div class="big-num step" style="opacity:0">6110万</div>
 </div>
 
 <!-- Slide 3 -->
 <div class="slide">
     <p class="sub">上半年我们干得怎么样？</p>
-    <div class="data-row">
+    <div class="data-row step" style="opacity:0">
         <div class="data-card"><div class="num">2315万</div><div class="label">上半年目标</div></div>
         <div class="data-card"><div class="num" style="color:#4ade80;">2410.8万</div><div class="label">实际完成 ✅</div></div>
     </div>
-    <p class="sub">完成了，还超了。但是——<strong>下半年才是真战场。</strong></p>
+    <p class="sub step" style="opacity:0">完成了，还超了。但是——<strong>下半年才是真战场。</strong></p>
 </div>
 
 <!-- Slide 4 -->
 <div class="slide">
     <p class="sub">下半年的目标？</p>
-    <div class="big-num">3800万</div>
+    <div class="big-num step" style="opacity:0">3800万</div>
 </div>
 
 <!-- Slide 5 -->
 <div class="slide">
     <p class="sub">分配到每个人的目标是多少？</p>
-    <div class="big-num">2900万</div>
-    <p class="sub">差了多少？</p>
-    <div class="big-num red">800万缺口</div>
+    <div class="big-num step" style="opacity:0">2900万</div>
+    <p class="sub step" style="opacity:0">差了多少？</p>
+    <div class="big-num red step" style="opacity:0">800万缺口</div>
 </div>
 
 <!-- Slide 6 -->
@@ -145,15 +144,15 @@
 <!-- Slide 9 -->
 <div class="slide">
     <p class="sub">作为队长，我为大家争取了什么？</p>
-    <div class="big-num green">15万奖金</div>
-    <p class="sub">从团队利润里拿出来的15万，作为团队奖金。<br>7-9月 + 10-12月，分两阶段。<br><strong>原来的提成制度不变，一分不少。</strong></p>
+    <div class="big-num green step" style="opacity:0">15万奖金</div>
+    <p class="sub step" style="opacity:0">从团队利润里拿出来的15万，作为团队奖金。<br>7-9月 + 10-12月，分两阶段。<br><strong>原来的提成制度不变，一分不少。</strong></p>
 </div>
 
 <!-- Slide 10 -->
 <div class="slide">
     <p class="sub">你要认领多少？</p>
-    <div class="big-num">850万</div>
-    <p class="sub">今年必须要拿下的850万。<br><strong>拿下了，年终奖还有。拿不下，年终奖不用想了。</strong></p>
+    <div class="big-num step" style="opacity:0">850万</div>
+    <p class="sub step" style="opacity:0">今年必须要拿下的850万。<br><strong>拿下了，年终奖还有。拿不下，年终奖不用想了。</strong></p>
 </div>
 
 <!-- Slide 11 -->
@@ -181,22 +180,52 @@
 <script>
 const slides = document.querySelectorAll('.slide');
 let current = 0;
+
+function getSteps(slide) {
+    return slide.querySelectorAll('.step');
+}
+function revealedCount(slide) {
+    return slide.querySelectorAll('.step[data-revealed]').length;
+}
+function showNextStep(slide) {
+    const steps = getSteps(slide);
+    for (let s of steps) {
+        if (!s.hasAttribute('data-revealed')) {
+            s.style.opacity = '1';
+            s.style.transition = 'opacity 0.5s ease';
+            s.setAttribute('data-revealed', '1');
+            return true;
+        }
+    }
+    return false;
+}
+function resetSteps(slide) {
+    for (let s of slide.querySelectorAll('.step')) {
+        s.style.opacity = '0';
+        s.removeAttribute('data-revealed');
+    }
+}
 function show(n) {
     slides[current].classList.remove('active');
     current = Math.max(0, Math.min(n, slides.length - 1));
+    resetSteps(slides[current]);
     slides[current].classList.add('active');
     document.getElementById('progress').style.width = ((current + 1) / slides.length * 100) + '%';
     document.getElementById('pageNum').textContent = (current + 1) + ' / ' + slides.length;
 }
-function next() { show(current + 1); }
-function prev() { show(current - 1); }
+function next() {
+    if (!showNextStep(slides[current])) {
+        if (current < slides.length - 1) show(current + 1);
+    }
+}
+function prev() { if (current > 0) show(current - 1); }
 document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') next();
-    if (e.key === 'ArrowLeft' || e.key === 'Backspace') prev();
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); prev(); }
 });
 document.addEventListener('click', e => {
     if (e.target.tagName === 'BUTTON') return;
-    if (e.clientX > window.innerWidth / 2) next(); else prev();
+    next();
 });
 show(0);
 </script>
