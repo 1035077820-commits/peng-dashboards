@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>橙队 · 2026年人效看板</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f5f3;font-family:-apple-system,"PingFang SC",sans-serif;padding:24px;max-width:900px;margin:0 auto;color:#333}
+.hdr{text-align:center;margin-bottom:16px}
+.hdr h1{font-size:20px;color:#1a1a2e}.hdr h1 span{color:#2832c2}
+.hdr p{color:#888;font-size:12px;margin-top:4px}
+.tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid #e8e8e8}
+.tab{padding:10px 24px;font-size:14px;font-weight:600;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tab.active{color:#2832c2;border-bottom-color:#2832c2}
+.tab:hover{color:#2832c2}
+.page{display:none}
+.page.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.kpi{background:#fff;border-radius:8px;padding:14px;border:1px solid #e8e8e8;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.kpi .lb{font-size:10px;color:#888;margin-bottom:4px}
+.kpi .vl{font-size:20px;font-weight:700;color:#2832c2}
+.kpi .nt{font-size:10px;color:#666;margin-top:3px}
+.card{background:#fff;border-radius:8px;padding:16px;border:1px solid #e8e8e8;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.card h3{font-size:14px;color:#2832c2;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#f8f8f6;padding:7px;text-align:center;font-weight:600;color:#555;border-bottom:1px solid #e8e8e8}
+td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0}
+.chart{width:100%;height:260px}
+.footer{text-align:center;color:#aaa;font-size:10px;margin-top:24px}
+.reason{background:#fff8f0;border-left:3px solid #fa8c16;border-radius:6px;padding:14px 16px;margin-bottom:12px}
+.reason h4{color:#fa8c16;font-size:13px;margin-bottom:6px}
+.reason ul{padding-left:16px;font-size:12px;color:#555;line-height:1.8}
+.solution{background:#f0fff4;border-left:3px solid #52c41a;border-radius:6px;padding:14px 16px;margin-bottom:12px}
+.solution h4{color:#52c41a;font-size:13px;margin-bottom:6px}
+.solution ul{padding-left:16px;font-size:12px;color:#555;line-height:1.8}
+.target-card{background:#f0f5ff;border-left:3px solid #2832c2;border-radius:6px;padding:14px 16px;margin-bottom:12px}
+.target-card h4{color:#2832c2;font-size:13px;margin-bottom:6px}
+</style></head><body>
+<div class="hdr">
+<h1>橙队 · <span>2026年人效看板</span></h1>
+<p>QUICKSHOW · 数据驱动决策</p>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab(0)">📊 上半年数据</div>
+<div class="tab" onclick="switchTab(1)">📋 人效复盘 & 下半年方案</div>
+</div>
+
+<!-- PAGE 1: 上半年数据 -->
+<div class="page active" id="page0">
+<div class="kpis">
+<div class="kpi"><div class="lb">H1收入</div><div class="vl">1102.6<small>万</small></div><div class="nt">去年1102.2万 | <span style="color:#52c41a">↑0.0%</span></div></div>
+<div class="kpi"><div class="lb">平均人数</div><div class="vl">9.8<small>人</small></div><div class="nt">去年9.0人</div></div>
+<div class="kpi"><div class="lb">月均人效</div><div class="vl">18.72<small>万/人</small></div><div class="nt">去年20.41万 | <span style="color:#f5222d">↓8.3%</span></div></div>
+<div class="kpi"><div class="lb">人力成本</div><div class="vl">79.4<small>万</small></div><div class="nt">去年70.7万 | <span style="color:#f5222d">↑12.3%</span></div></div>
+<div class="kpi"><div class="lb">人力/收入</div><div class="vl" style="color:#fa8c16">7.2%</div><div class="nt">去年6.4%</div></div>
+</div>
+
+<div class="card">
+<h3>月度明细</h3>
+<table>
+<tr><th>月份</th><th>收入(万)</th><th>去年</th><th>同比</th><th>人数</th><th>人效(万/人)</th><th>去年人效</th><th>人效同比</th><th>成本(万)</th></tr>
+<tr><td>1月</td><td>211.1</td><td>409.9</td><td><span style="color:#f5222d">↓48.5%</span></td><td>9.1</td><td>23.27</td><td>40.99</td><td><span style="color:#f5222d">↓43.2%</span></td><td>16.7</td></tr>
+<tr><td>2月</td><td>79.0</td><td>54.8</td><td><span style="color:#52c41a">↑44.1%</span></td><td>10.6</td><td>7.49</td><td>6.09</td><td><span style="color:#52c41a">↑23.0%</span></td><td>8.8</td></tr>
+<tr><td>3月</td><td>140.3</td><td>335.7</td><td><span style="color:#f5222d">↓58.2%</span></td><td>9.6</td><td>14.59</td><td>33.57</td><td><span style="color:#f5222d">↓56.6%</span></td><td>11.7</td></tr>
+<tr><td>4月</td><td>244.0</td><td>140.5</td><td><span style="color:#52c41a">↑73.7%</span></td><td>10.5</td><td>23.24</td><td>15.61</td><td><span style="color:#52c41a">↑48.9%</span></td><td>16.0</td></tr>
+<tr><td>5月</td><td>248.7</td><td>96.0</td><td><span style="color:#52c41a">↑158.9%</span></td><td>10.2</td><td>24.46</td><td>10.67</td><td><span style="color:#52c41a">↑129.2%</span></td><td>13.2</td></tr>
+<tr><td>6月</td><td>179.5</td><td>65.2</td><td><span style="color:#52c41a">↑175.4%</span></td><td>9.0</td><td>19.94</td><td>9.31</td><td><span style="color:#52c41a">↑114.2%</span></td><td>12.9</td></tr>
+<tr style="font-weight:700;border-top:2px solid #2832c2"><td>合计</td><td>1102.6</td><td>1102.2</td><td><span style="color:#52c41a">↑0.0%</span></td><td>9.8(均)</td><td>18.72</td><td>20.41</td><td><span style="color:#f5222d">↓8.3%</span></td><td>79.4</td></tr>
+</table></div>
+
+<div class="card"><h3>收入趋势（2026 vs 2025）</h3><div id="chart1" class="chart"></div></div>
+<div class="card"><h3>人效趋势</h3><div id="chart2" class="chart"></div></div>
+</div>
+
+<!-- PAGE 2: 人效复盘 -->
+<div class="page" id="page1">
+
+<div class="card">
+<h3>一、核心数据对比</h3>
+<table>
+<tr><th>指标</th><th>2026年1-6月</th><th>2025年1-6月</th><th>变化</th></tr>
+<tr><td>总收入</td><td>1102.6万</td><td>1102.2万</td><td>+0%</td></tr>
+<tr><td>平均人数</td><td>9.8人</td><td>9人</td><td>+8.8%</td></tr>
+<tr><td>人均产值/月</td><td>18.72万</td><td>20.41万</td><td><span style="color:#f5222d">-8.3%</span></td></tr>
+<tr><td>人力成本</td><td>79.4万</td><td>版70.7万</td><td><span style="color:#f5222d">+12%</span></td></tr>
+<tr><td>人力成本占比</td><td>7.2%</td><td>6.4%</td><td>+12.5%</td></tr>
+</table>
+</div>
+
+<div class="reason">
+<h4>二、为什么人效下降？</h4>
+<p style="font-weight:700;color:#d46b08;margin-bottom:8px">① 新人没活过来</p>
+<ul>
+<li>上半年进进出出，没有一个新人留存并产出</li>
+<li>每招一个人 = 2-3个月工资白烧 + 老人带教精力浪费</li>
+<li>结果：人数+0.8，收入+0</li>
+</ul>
+<p style="font-weight:700;color:#d46b08;margin:10px 0 8px">② 没有人才梯队</p>
+<ul>
+<li>老人没精力/方法带新人</li>
+<li>新人独立产出周期3-6个月才能开单</li>
+<li>没有“老带新→新独立→老做大客户”的良性循环</li>
+</ul>
+</div>
+
+<div class="reason">
+<h4>三、为什么人力成本上升？</h4>
+<ul>
+<li>新人工资未产出期：<strong>8~9万</strong>（招了人但没留住/没产出）</li>
+<li>核心问题：<strong>花了更多的钱，但没买到增长</strong></li>
+</ul>
+</div>
+
+<div class="solution">
+<h4>四、7-12月解决方案</h4>
+<p style="font-weight:700;color:#389e0d;margin-bottom:8px">方向1 · 控人数提人效</p>
+<ul>
+<li>不增员，现有7人做1845.9万</li>
+<li>跟单补位招有经验的（梓杏+小杨替补），缩短空窗</li>
+<li>管理兼业务，管理者也背数</li>
+</ul>
+<p style="font-weight:700;color:#389e0d;margin:10px 0 8px">方向2 · 提升人均产出</p>
+<ul>
+<li>525万缺口拆到个人：玉珠+207万 / 冯冯+146万 / 正瑶+94万 / 阿乐+78万</li>
+<li>大客户攻坚：品创等落地拉升单产</li>
+<li>AI工具提效：减少重复劳动，时间还给客户开发</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>五、下半年个人目标拆解</h3>
+<table>
+<tr><th>业务员</th><th>原下半年目标</th><th>挑战目标</th><th>新增缺口</th><th>增幅</th><th>占缺口比例</th></tr>
+<tr><td>玉珠</td><td>286万</td><td>493万</td><td>207万</td><td>72.4%</td><td>39.4%</td></tr>
+<tr><td>冯冯</td><td>519万</td><td>665万</td><td>146万</td><td>28.1%</td><td>27.8%</td></tr>
+<tr><td>正瑶</td><td>265万</td><td>359万</td><td>94万</td><td>35.5%</td><td>17.9%</td></tr>
+<tr><td>阿乐</td><td>250.9万</td><td>329万</td><td>78万</td><td>31.0%</td><td>14.9%</td></tr>
+<tr style="font-weight:700;border-top:2px solid #2832c2"><td>合计</td><td>1320.9万</td><td>1845.9万</td><td>525万</td><td>39.7%</td><td>100%</td></tr>
+</table>
+</div>
+
+<div class="target-card">
+<h4>六、下半年目标</h4>
+<ul style="padding-left:16px;font-size:12px;line-height:2">
+<li>总收入：<strong>1845.9万</strong></li>
+<li>人均产值/月：<strong>≥43万</strong>（较上半年+130%）</li>
+<li>人力成本占比：<strong>≤6%</strong>（回到健康水平）</li>
+</ul>
+</div>
+
+</div>
+
+<div class="footer">QUICKSHOW · 橙队 · 2026</div>
+
+<script>
+function switchTab(n){
+document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('active',i===n));
+if(n===0){setTimeout(()=>{c1&&c1.resize();c2&&c2.resize()},100);}
+}
+var c1=echarts.init(document.getElementById('chart1'));
+c1.setOption({tooltip:{trigger:'axis'},legend:{data:['2026','2025']},xAxis:{type:'category',data:['1月','2月','3月','4月','5月','6月']},yAxis:{type:'value',name:'万'},series:[
+{name:'2026',type:'bar',data:[211.1,79.0,140.3,244.0,248.7,179.5],itemStyle:{color:'#2832c2'}},
+{name:'2025',type:'line',data:[409.9,54.8,335.7,140.5,96.0,65.2],itemStyle:{color:'#faad14'},lineStyle:{type:'dashed'}}
+]});
+var c2=echarts.init(document.getElementById('chart2'));
+c2.setOption({tooltip:{trigger:'axis'},xAxis:{type:'category',data:['1月','2月','3月','4月','5月','6月']},yAxis:{type:'value',name:'万/人'},series:[
+{name:'月人效',type:'line',data:[23.27,7.49,14.59,23.24,24.46,19.94],smooth:true,itemStyle:{color:'#2832c2'},areaStyle:{color:'rgba(40,50,194,0.08)'}}
+]});
+window.addEventListener('resize',function(){c1.resize();c2.resize()});
+</script>
+</body></html>
