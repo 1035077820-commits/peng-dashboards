@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>蓝队 · 2026年人效看板</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f5f3;font-family:-apple-system,"PingFang SC",sans-serif;padding:24px;max-width:900px;margin:0 auto;color:#333}
+.hdr{text-align:center;margin-bottom:16px}
+.hdr h1{font-size:20px;color:#1a1a2e}.hdr h1 span{color:#2832c2}
+.hdr p{color:#888;font-size:12px;margin-top:4px}
+.tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid #e8e8e8}
+.tab{padding:10px 24px;font-size:14px;font-weight:600;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tab.active{color:#2832c2;border-bottom-color:#2832c2}
+.tab:hover{color:#2832c2}
+.page{display:none}.page.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.kpi{background:#fff;border-radius:8px;padding:14px;border:1px solid #e8e8e8;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.kpi .lb{font-size:10px;color:#888;margin-bottom:4px}
+.kpi .vl{font-size:20px;font-weight:700;color:#2832c2}
+.kpi .nt{font-size:10px;color:#666;margin-top:3px}
+.card{background:#fff;border-radius:8px;padding:16px;border:1px solid #e8e8e8;margin-bottom:16px;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.card h3{font-size:14px;color:#2832c2;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#f8f8f6;padding:7px;text-align:center;font-weight:600;color:#555;border-bottom:1px solid #e8e8e8}
+td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0}
+.chart{width:100%;height:260px}
+.footer{text-align:center;color:#aaa;font-size:10px;margin-top:24px}
+.reason{background:#fff8f0;border-left:3px solid #fa8c16;border-radius:6px;padding:14px 16px;margin-bottom:12px}
+.reason h4{color:#fa8c16;font-size:13px;margin-bottom:6px}
+.reason ul{padding-left:16px;font-size:12px;color:#555;line-height:1.8}
+.solution{background:#f0fff4;border-left:3px solid #52c41a;border-radius:6px;padding:14px 16px;margin-bottom:12px}
+.solution h4{color:#52c41a;font-size:13px;margin-bottom:6px}
+.solution ul{padding-left:16px;font-size:12px;color:#555;line-height:1.8}
+.target-card{background:#f0f5ff;border-left:3px solid #2832c2;border-radius:6px;padding:14px 16px;margin-bottom:12px}
+.target-card h4{color:#2832c2;font-size:13px;margin-bottom:6px}
+</style></head><body>
+<div class="hdr">
+<h1>蓝队 · <span>2026年人效看板</span></h1>
+<p>QUICKSHOW · 数据驱动决策</p>
+</div>
+<div class="tabs">
+<div class="tab active" onclick="switchTab(0)">📊 上半年数据</div>
+<div class="tab" onclick="switchTab(1)">📋 人效复盘 & 下半年方案</div>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page active" id="page0">
+<div class="kpis">
+<div class="kpi"><div class="lb">H1收入</div><div class="vl">2080.1<small>万</small></div><div class="nt">去年1710.4万 | <span style="color:#52c41a">↑21.6%</span></div></div>
+<div class="kpi"><div class="lb">平均人数</div><div class="vl">12.8<small>人</small></div><div class="nt">去年11.5人</div></div>
+<div class="kpi"><div class="lb">月均人效</div><div class="vl">27.08<small>万/人</small></div><div class="nt">去年24.84万 | <span style="color:#52c41a">↑9.0%</span></div></div>
+<div class="kpi"><div class="lb">人力成本</div><div class="vl">106.1<small>万</small></div><div class="nt">去年84.3万 | <span style="color:#f5222d">↑25.8%</span></div></div>
+<div class="kpi"><div class="lb">人力/收入</div><div class="vl" style="color:#fa8c16">5.1%</div><div class="nt">去年4.9%</div></div>
+</div>
+<div class="card"><h3>月度明细</h3>
+<table>
+<tr><th>月份</th><th>收入(万)</th><th>去年</th><th>同比</th><th>人数</th><th>人效(万/人)</th><th>去年人效</th><th>人效同比</th><th>成本(万)</th></tr>
+<tr><td>1月</td><td>546.0</td><td>221.8</td><td><span style="color:#52c41a">↑146.2%</span></td><td>12.5</td><td>43.81</td><td>18.48</td><td><span style="color:#52c41a">↑137.1%</span></td><td>21.0</td></tr>
+<tr><td>2月</td><td>158.8</td><td>247.2</td><td><span style="color:#f5222d">↓35.8%</span></td><td>12.5</td><td>12.69</td><td>20.60</td><td><span style="color:#f5222d">↓38.4%</span></td><td>12.0</td></tr>
+<tr><td>3月</td><td>220.1</td><td>259.3</td><td><span style="color:#f5222d">↓15.1%</span></td><td>12.9</td><td>17.01</td><td>23.58</td><td><span style="color:#f5222d">↓27.9%</span></td><td>16.4</td></tr>
+<tr><td>4月</td><td>215.9</td><td>261.2</td><td><span style="color:#f5222d">↓17.3%</span></td><td>14.2</td><td>15.24</td><td>22.78</td><td><span style="color:#f5222d">↓33.1%</span></td><td>15.7</td></tr>
+<tr><td>5月</td><td>466.0</td><td>310.4</td><td><span style="color:#52c41a">↑50.1%</span></td><td>13.0</td><td>35.74</td><td>25.87</td><td><span style="color:#52c41a">↑38.2%</span></td><td>21.0</td></tr>
+<tr><td>6月</td><td>473.4</td><td>410.4</td><td><span style="color:#52c41a">↑15.3%</span></td><td>11.7</td><td>40.46</td><td>39.46</td><td><span style="color:#52c41a">↑2.5%</span></td><td>20.0</td></tr>
+<tr style="font-weight:700;border-top:2px solid #2832c2"><td>合计</td><td>2080.1</td><td>1710.4</td><td><span style="color:#52c41a">↑21.6%</span></td><td>12.8(均)</td><td>27.08</td><td>24.84</td><td><span style="color:#52c41a">↑9.0%</span></td><td>106.1</td></tr>
+</table></div>
+<div class="card"><h3>收入趋势（2026 vs 2025）</h3><div id="chart1" class="chart"></div></div>
+<div class="card"><h3>人效趋势</h3><div id="chart2" class="chart"></div></div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page1">
+
+<div class="card">
+<h3>一、核心数据对比</h3>
+<table>
+<tr><th>指标</th><th>2026年1-6月</th><th>2025年1-6月</th><th>变化</th><th>判断</th></tr>
+<tr><td>总收入</td><td>2080.1万</td><td>1710.4万</td><td><span style="color:#52c41a">+21.6%</span></td><td>✅ 增长</td></tr>
+<tr><td>平均人数</td><td>12.8人</td><td>11.5人</td><td>+11.3%</td><td>❗ 人加了</td></tr>
+<tr><td>人均产值/月</td><td>27.08万</td><td>24.84万</td><td><span style="color:#52c41a">+9.0%</span></td><td>✅ 小幅增长</td></tr>
+<tr><td>人力成本</td><td>106.1万</td><td>84.3万</td><td><span style="color:#f5222d">+25.8%</span></td><td>❌ 超过收入增速</td></tr>
+<tr><td>人力成本占比</td><td>5.1%</td><td>4.9%</td><td>+0.2pp</td><td>⚠️ 小幅恶化</td></tr>
+</table>
+<p style="margin-top:10px;font-size:12px;color:#d46b08;font-weight:600">❗ 核心矛盾：收入增21.6%，但人力成本增25.8%——成本跑赢了收入。</p>
+</div>
+
+<div class="reason">
+<h4>二、为什么人力成本上升快于收入？</h4>
+<p style="font-weight:700;color:#d46b08;margin-bottom:6px">① 人员波动大，新人培养期成本白耗</p>
+<ul>
+<li>上半年人数从12.5波动到14.2再回落到11.7，说明有人进有人走</li>
+<li>每次招人离职 = 招聘成本 + 培养期工资(2-3个月) + 老人带教精力浪费</li>
+<li>4月峰值14.2人→但当月收入仅215.9万，人效降到15.24万/人（全年最低）</li>
+</ul>
+<p style="font-weight:700;color:#d46b08;margin:10px 0 6px">② 提成计算方式变化</p>
+<ul>
+<li>提成制度调整后，同样收入对应更高的人力支出</li>
+<li>收入+21.6% vs 成本+25.8%，差额4.2%主要来自提成结构变化</li>
+</ul>
+<p style="font-weight:700;color:#d46b08;margin:10px 0 6px">③ 销冠离职后产能缺口未填补</p>
+<ul>
+<li>销冠走后，其客户分散到其他人，但没人能达到同等产出</li>
+<li>缺口800万分摊到全员，每人多背目标但实际产出未跟上</li>
+</ul>
+</div>
+
+<div class="reason">
+<h4>三、为什么2-4月人效严重下滑？</h4>
+<ul>
+<li><strong>2月</strong>：春节效应+年后开工慢，人效仅43.81暴跌到12.69（-71%）</li>
+<li><strong>3-4月</strong>：新人进入培养期，占着人头但不产出，拉低整体人效</li>
+<li><strong>5-6月</strong>：新人淘汰后人数回落，留下的都是能打的，人效回升</li>
+</ul>
+<p style="margin-top:8px;font-size:12px;color:#555">结论：人效下滑不是团队能力问题，是<strong>“招人→培养→流失”的无效循环</strong>拖累了数据。</p>
+</div>
+
+<div class="solution">
+<h4>四、7-12月解决方案</h4>
+<p style="font-weight:700;color:#389e0d;margin-bottom:6px">方向1 · 控人数，不再招新销售</p>
+<ul>
+<li>下半年不增员，现有8人做3800万目标</li>
+<li>避免再烧“培养期成本”，每少招1人省~5万无效支出</li>
+<li>只招跟单补位（有经验的，快速上手）</li>
+</ul>
+<p style="font-weight:700;color:#389e0d;margin:10px 0 6px">方向2 · 800万缺口拆解到个人</p>
+<ul>
+<li>彭培强 +250万 | 敬健浩 +100万 | 刘胜楠 +100万</li>
+<li>刘晓霞 +100万 | 潘嘉瑜 +100万 | 刘江滨 +60万</li>
+<li>林梓仪 +35万 | 朱家豪 +55万</li>
+<li>达成120%完成度依旧1.3倍提成，原目标不变</li>
+</ul>
+<p style="font-weight:700;color:#389e0d;margin:10px 0 6px">方向3 · 提升人均产出</p>
+<ul>
+<li>大客户攻坚：聚焦头部客户深挖，提升单产</li>
+<li>客户结构优化：从10000个客户筛出200个值得服务的</li>
+<li>培训体系：持续做大客户挖掘方法论培训</li>
+<li>AI工具提效：减少低价值重复劳动</li>
+</ul>
+<p style="font-weight:700;color:#389e0d;margin:10px 0 6px">方向4 · 激励机制</p>
+<ul>
+<li>5万团队奖金池，7-9月 + 10-12月分两阶段</li>
+<li>按贡献分配，拿下了多一笔奖金，拿不下就什么都没有</li>
+</ul>
+</div>
+
+<div class="target-card">
+<h4>五、下半年目标</h4>
+<ul style="padding-left:16px;font-size:12px;line-height:2">
+<li>总收入：<strong>3800万</strong>（含800万增量目标）</li>
+<li>人均产值/月：<strong>≥95万</strong>（较上半年+250%）</li>
+<li>人力成本占比：<strong>≤4.5%</strong>（回到健康水平以下）</li>
+<li>不招新销售，现有8人拿结果</li>
+</ul>
+</div>
+
+</div>
+
+<div class="footer">QUICKSHOW · 蓝队 · 2026</div>
+<script>
+function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('active',i===n));if(n===0)setTimeout(()=>{c1&&c1.resize();c2&&c2.resize()},100);}
+var c1=echarts.init(document.getElementById('chart1'));
+c1.setOption({tooltip:{trigger:'axis'},legend:{data:['2026','2025']},xAxis:{type:'category',data:['1月','2月','3月','4月','5月','6月']},yAxis:{type:'value',name:'万'},series:[{name:'2026',type:'bar',data:[546.0,158.8,220.1,215.9,466.0,473.4],itemStyle:{color:'#2832c2'}},{name:'2025',type:'line',data:[221.8,247.2,259.3,261.2,310.4,410.4],itemStyle:{color:'#faad14'},lineStyle:{type:'dashed'}}]});
+var c2=echarts.init(document.getElementById('chart2'));
+c2.setOption({tooltip:{trigger:'axis'},xAxis:{type:'category',data:['1月','2月','3月','4月','5月','6月']},yAxis:{type:'value',name:'万/人'},series:[{name:'月人效',type:'line',data:[43.81,12.69,17.01,15.24,35.74,40.46],smooth:true,itemStyle:{color:'#2832c2'},areaStyle:{color:'rgba(40,50,194,0.08)'}}]});
+window.addEventListener('resize',function(){c1.resize();c2.resize()});
+</script></body></html>
