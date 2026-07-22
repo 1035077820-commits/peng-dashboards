@@ -6,184 +6,199 @@
     <title>团队冲刺激励会 · 蓝队</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
-            background: #0a0e27;
-            color: #e2e8f0;
-            line-height: 1.8;
-            min-height: 100vh;
+        html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif; background: #0a0e27; }
+        .slide {
+            width: 100vw; height: 100vh;
+            display: none; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 60px 80px; text-align: center;
+            position: absolute; top: 0; left: 0;
+            animation: fadeIn 0.4s ease;
         }
-        .container { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
-        .breadcrumb { font-size: 13px; color: #64748b; margin-bottom: 24px; }
-        .breadcrumb a { color: #3b82f6; text-decoration: none; }
-        h1 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 8px; }
-        .subtitle { color: #94a3b8; margin-bottom: 32px; }
-        .section { margin-bottom: 40px; }
-        .section-title {
-            font-size: 20px; color: #ffd700; font-weight: 700;
-            padding-bottom: 8px; border-bottom: 2px solid #2d3abf;
-            margin-bottom: 20px;
-        }
-        .speech { font-size: 15px; color: #d4d4e8; margin-bottom: 12px; }
-        .speech strong { color: #fff; }
-        .highlight {
-            background: linear-gradient(135deg, #1a1f5e, #111fbf20);
+        .slide.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { font-size: 56px; color: #fff; margin-bottom: 16px; }
+        h2 { font-size: 40px; color: #ffd700; margin-bottom: 20px; }
+        .big-num { font-size: 96px; font-weight: 900; color: #ffd700; margin: 20px 0; }
+        .big-num.red { color: #ff6b6b; }
+        .big-num.green { color: #4ade80; }
+        .big-num.cyan { color: #7df9ff; }
+        .sub { font-size: 22px; color: #b8c0e8; margin-top: 12px; line-height: 1.8; }
+        .sub strong { color: #fff; }
+        .highlight-box {
+            background: linear-gradient(135deg, #1a1f5e, #111fbf30);
             border-left: 4px solid #ffd700;
-            border-radius: 8px;
-            padding: 16px 20px;
-            margin: 16px 0;
-            font-size: 18px;
-            color: #ffd700;
-            font-weight: 700;
+            border-radius: 12px;
+            padding: 24px 32px;
+            margin: 20px 0;
+            text-align: left;
+            max-width: 800px;
         }
-        .highlight.red { border-left-color: #ef4444; color: #fca5a5; }
-        .highlight.green { border-left-color: #10b981; color: #6ee7b7; }
-        .highlight.cyan { border-left-color: #06b6d4; color: #7df9ff; }
-        .divider {
-            border: none; border-top: 1px solid #2d3abf;
-            margin: 32px 0;
-        }
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px; margin: 16px 0;
+        .highlight-box p { font-size: 20px; color: #e2e8f0; line-height: 1.8; }
+        .highlight-box strong { color: #ffd700; }
+        .data-row {
+            display: flex; gap: 24px; justify-content: center;
+            flex-wrap: wrap; margin: 24px 0;
         }
         .data-card {
-            background: #111852;
-            border: 1px solid #2d3abf;
-            border-radius: 10px;
-            padding: 16px;
-            text-align: center;
+            background: #111852; border: 1px solid #2d3abf;
+            border-radius: 12px; padding: 20px 28px; min-width: 160px;
         }
-        .data-card .num { font-size: 28px; font-weight: 800; color: #ffd700; }
-        .data-card .label { font-size: 12px; color: #8b9bd4; margin-top: 4px; }
-        .ppt-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-        .ppt-table th {
-            background: #1a1f5e; color: #ffd700; padding: 10px 14px;
-            text-align: left; font-size: 13px;
+        .data-card .num { font-size: 36px; font-weight: 800; color: #ffd700; }
+        .data-card .label { font-size: 13px; color: #8b9bd4; margin-top: 4px; }
+        .nav {
+            position: fixed; bottom: 24px; right: 32px;
+            display: flex; gap: 12px; z-index: 100;
         }
-        .ppt-table td {
-            padding: 10px 14px; border-top: 1px solid #2d3abf;
-            font-size: 13px; color: #d4d4e8;
+        .nav button {
+            background: #1a1f5e; border: 1px solid #2d3abf;
+            color: #fff; padding: 10px 20px; border-radius: 8px;
+            font-size: 14px; cursor: pointer;
         }
-        .ppt-table tr:hover td { background: #111852; }
-        .footer { text-align: center; margin-top: 48px; color: #4a5080; font-size: 12px; }
+        .nav button:hover { background: #2d3abf; }
+        .progress {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: #ffd700; transition: width 0.3s;
+        }
+        .page-num {
+            position: fixed; bottom: 28px; left: 32px;
+            color: #4a5080; font-size: 13px;
+        }
+        ul { text-align: left; max-width: 700px; }
+        ul li { font-size: 20px; color: #e2e8f0; margin: 12px 0; line-height: 1.6; }
+        ul li strong { color: #ffd700; }
     </style>
 </head>
 <body>
-<div class="container">
-<div class="breadcrumb"><a href="../index.html">蓝队培训文件</a> / <a href="./">26年全年数据分析</a> / 团队冲刺激励会</div>
-<h1>🔥 团队冲刺激励会</h1>
-<p class="subtitle">逐字稿 · 蓝队下半年冲刺动员</p>
 
-<div class="data-grid">
-    <div class="data-card"><div class="num">6110万</div><div class="label">全年目标</div></div>
-    <div class="data-card"><div class="num">2410.8万</div><div class="label">上半年完成</div></div>
-    <div class="data-card"><div class="num">3800万</div><div class="label">下半年目标</div></div>
-    <div class="data-card"><div class="num">900万</div><div class="label">缺口</div></div>
-    <div class="data-card"><div class="num">15万</div><div class="label">团队奖金池</div></div>
-    <div class="data-card"><div class="num">850万</div><div class="label">认领底线</div></div>
+<div class="progress" id="progress"></div>
+<div class="page-num" id="pageNum"></div>
+<div class="nav">
+    <button onclick="prev()">← 上一页</button>
+    <button onclick="next()">下一页 →</button>
 </div>
 
-<hr class="divider">
-
-<div class="section">
-    <div class="section-title">第一部分：抛出问题 · 直面现实</div>
-    <p class="speech">你们知道我们今年的目标是多少吗？</p>
-    <div class="highlight">6110万。</div>
-    <p class="speech">好，第二个问题——上半年目标多少？我们完成了多少？</p>
-    <p class="speech">上半年目标 <strong>2315万</strong>，我们干了 <strong>2410.8万</strong>。完成了，还超了。但是——你们觉得这个数字值得高兴吗？</p>
-    <p class="speech">那第三个问题来了。下半年的目标，多少？</p>
-    <div class="highlight">3800万。</div>
-    <p class="speech">好。那第四个问题，我来问一个你们心里可能都在想的问题——</p>
-    <p class="speech"><strong>分配到每个人的目标是多少？2900万。</strong></p>
-    <p class="speech">差了多少？</p>
-    <div class="highlight red">900万缺口。</div>
-    <p class="speech">谁能告诉我，这900万的缺口，是为什么？</p>
-    <p class="speech">销冠走了。然后呢？有人成长起来了吗？有人顶上来了吗？没有。甚至有人还在往下滑。新人呢？补充进来了吗？也没有。</p>
-    <p class="speech">现在市场什么情况？找工作的人很多，但招人一样很难。好的招不来，来的留不住。</p>
-    <p class="speech">那问题来了——<strong>目标，年前就定了，改不了。公司不可能为你一个人的难处去调目标。</strong></p>
-    <p class="speech">你怎么看？你打算怎么办？</p>
-    <p class="speech">你们觉得，这个目标，跟我们有没有关系？</p>
-    <p class="speech">有关系。那就别抱怨。抱怨解决不了任何问题。</p>
+<!-- Slide 1 -->
+<div class="slide active">
+    <h2>🔥 团队冲刺激励会</h2>
+    <h1>蓝队 · 下半年冲刺动员</h1>
+    <p class="sub">捷展贸易 · 国际定制事业部</p>
 </div>
 
-<hr class="divider">
-
-<div class="section">
-    <div class="section-title">第二部分：我们是谁 · 我们共担</div>
-    <p class="speech">你们告诉我，我们是什么？</p>
-    <div class="highlight cyan">一个团队。</div>
-    <p class="speech">不是一个一个的人，不是一个一个的销售。是一个整体。是一起成长、一起抗事、一起拿结果的集体。</p>
-    <p class="speech">既然是团队，就共进退。</p>
-    <p class="speech">我直接问你们一个问题，你们认真回答我——</p>
-    <p class="speech"><strong>如果我现在把目标往上加，你们怎么想？</strong></p>
-    <p class="speech">先别急着回答。我不是要压你们，我是想告诉你们一句话：</p>
-    <div class="highlight">目标从来不是用来完成的，是用来挑战的。</div>
-    <p class="speech">你不敢接的目标，才是你真正该接的目标。</p>
+<!-- Slide 2 -->
+<div class="slide">
+    <p class="sub">今年的目标是多少？</p>
+    <div class="big-num">6110万</div>
 </div>
 
-<hr class="divider">
-
-<div class="section">
-    <div class="section-title">第三部分：我能为大家争取什么 · 我们怎么分钱</div>
-    <p class="speech">好，前面说的都是压力。现在换一个角度。</p>
-    <p class="speech">作为队长，我能给你们争取什么？</p>
-    <p class="speech">我想了很久。也博弈了很久。最后我争取下来了——</p>
-    <div class="highlight green">15万。从团队利润里拿出来的15万，作为团队奖金。</div>
-    <p class="speech">但不是白给的。</p>
-    <p class="speech">7月到9月、10月到12月，分两个阶段。原来目标不变，在此基础上加一个<strong>冲刺目标</strong>。</p>
-    <p class="speech">达成，我们一起分钱。达不成，我们一起抗。</p>
-    <p class="speech">没有“你的事”和“我的事”，只有<strong>我们的事</strong>。</p>
-    <p class="speech">具体怎么分？按贡献、按共享。<strong>原来的提成制度不变</strong>，该1.3还是1.3，该多少还是多少，一分不少。</p>
-    <p class="speech">然后，我来给你们一个建议认领目标。我知道你们有压力，但我也知道你们能接住。</p>
-    <div class="highlight">850万。今年必须要拿下的850万。</div>
-    <p class="speech">拿下了，年终奖还有。拿不下，年终奖不用想了，我也不用想了，大家都不要想了。</p>
+<!-- Slide 3 -->
+<div class="slide">
+    <p class="sub">上半年我们干得怎么样？</p>
+    <div class="data-row">
+        <div class="data-card"><div class="num">2315万</div><div class="label">上半年目标</div></div>
+        <div class="data-card"><div class="num" style="color:#4ade80;">2410.8万</div><div class="label">实际完成 ✅</div></div>
+    </div>
+    <p class="sub">完成了，还超了。但是——<strong>下半年才是真战场。</strong></p>
 </div>
 
-<hr class="divider">
-
-<div class="section">
-    <div class="section-title">第四部分：最后一句话 · 我们值得更好的自己</div>
-    <p class="speech">这一刻，是我们共同进步、挑战自己的时刻。</p>
-    <p class="speech">我们有10000个客户，我们每天都在服务，大家一直都在说忙、忙、忙，但是忙出了什么？</p>
-    <p class="speech">高投入的客户，低回报。低投入的客户，反而更轻松。我们做得累，累在哪儿？</p>
-    <p class="speech"><strong>累在没有把精力放在对的人身上。</strong></p>
-    <p class="speech">所以我会做一件事——给大家做培训，持续地做，反复地做。</p>
-    <p class="speech">教你们怎么找大客户，怎么挖深，怎么把1个客户做成10个客户的量。</p>
-    <div class="highlight">我们已经不是去年那个团队了。今年，我们能做到。</div>
-    <div class="highlight green">6110万，我们一起干。<br>15万奖金，我们一起分。<br>更好的自己，我们一起成为。</div>
-    <p class="speech" style="font-size:20px;color:#ffd700;margin-top:20px;"><strong>准备好了吗？那就从今天开始。</strong></p>
+<!-- Slide 4 -->
+<div class="slide">
+    <p class="sub">下半年的目标？</p>
+    <div class="big-num">3800万</div>
 </div>
 
-<hr class="divider">
-
-<div class="section">
-    <div class="section-title">PPT内容精简版</div>
-    <table class="ppt-table">
-        <tr><th>页码</th><th>标题</th><th>核心内容</th></tr>
-        <tr><td>1</td><td>今年的目标是多少？</td><td>6110万</td></tr>
-        <tr><td>2</td><td>上半年我们干得怎么样？</td><td>目标2315万，完成2410.8万 ✅ 但下半年才是真战场</td></tr>
-        <tr><td>3</td><td>下半年目标？</td><td>3800万</td></tr>
-        <tr><td>4</td><td>分配到人的目标？</td><td>2900万，缺口900万，谁来填？</td></tr>
-        <tr><td>5</td><td>为什么有缺口？</td><td>销冠离职 + 无人顶上 + 新人进不来</td></tr>
-        <tr><td>6</td><td>目标能改吗？</td><td>不能。那我们怎么办？</td></tr>
-        <tr><td>7</td><td>我们是谁？</td><td>一个团队。共进退，共承担。</td></tr>
-        <tr><td>8</td><td>直接加目标？</td><td>你接不接？</td></tr>
-        <tr><td>9</td><td>我为大家争取了什么？</td><td>15万团队奖金（7-9月+10-12月）</td></tr>
-        <tr><td>10</td><td>提成变了吗？</td><td>不变！该1.3还是1.3</td></tr>
-        <tr><td>11</td><td>你要认领多少？</td><td>850万，是底线</td></tr>
-        <tr><td>12</td><td>年终奖？</td><td>达成目标才有，达不成全部归零</td></tr>
-        <tr><td>13</td><td>我们现在最大的问题</td><td>忙而无果，客户结构不合理，大客户挖掘不够</td></tr>
-        <tr><td>14</td><td>接下来怎么做？</td><td>我会做培训，教大家挖大客户</td></tr>
-        <tr><td>15</td><td>最后一句话</td><td>6110万一起干，15万奖金一起分！</td></tr>
-    </table>
+<!-- Slide 5 -->
+<div class="slide">
+    <p class="sub">分配到每个人的目标是多少？</p>
+    <div class="big-num">2900万</div>
+    <p class="sub">差了多少？</p>
+    <div class="big-num red">800万缺口</div>
 </div>
 
-<div class="footer">
-    捷展贸易 · 蓝队 · 2026年下半年冲刺动员
+<!-- Slide 6 -->
+<div class="slide">
+    <h2>为什么有缺口？</h2>
+    <ul>
+        <li>销冠走了</li>
+        <li>没有人成长起来顶上</li>
+        <li>新人补不进来</li>
+        <li>市场上好的招不来，来的留不住</li>
+    </ul>
+    <p class="sub" style="margin-top:24px;"><strong>目标年前就定了，改不了。公司不可能为你一个人的难处去调目标。</strong></p>
 </div>
 
+<!-- Slide 7 -->
+<div class="slide">
+    <p class="sub">我们是什么？</p>
+    <div class="big-num cyan">一个团队。</div>
+    <p class="sub">不是一个一个的人，不是一个一个的销售。<br>是一起成长、一起扛事、一起拿结果的集体。</p>
 </div>
+
+<!-- Slide 8 -->
+<div class="slide">
+    <div class="highlight-box">
+        <p><strong>目标从来不是用来完成的，是用来挑战的。</strong></p>
+        <p style="margin-top:12px;">你不敢接的目标，才是你真正该接的目标。</p>
+    </div>
+</div>
+
+<!-- Slide 9 -->
+<div class="slide">
+    <p class="sub">作为队长，我为大家争取了什么？</p>
+    <div class="big-num green">15万奖金</div>
+    <p class="sub">从团队利润里拿出来的15万，作为团队奖金。<br>7-9月 + 10-12月，分两阶段。<br><strong>原来的提成制度不变，一分不少。</strong></p>
+</div>
+
+<!-- Slide 10 -->
+<div class="slide">
+    <p class="sub">你要认领多少？</p>
+    <div class="big-num">850万</div>
+    <p class="sub">今年必须要拿下的850万。<br><strong>拿下了，年终奖还有。拿不下，年终奖不用想了。</strong></p>
+</div>
+
+<!-- Slide 11 -->
+<div class="slide">
+    <h2>我们现在最大的问题</h2>
+    <ul>
+        <li>忙而无果——高投入客户低回报</li>
+        <li><strong>累在没有把精力放在对的人身上</strong></li>
+        <li>大客户挖掘完全不够</li>
+    </ul>
+    <p class="sub" style="margin-top:24px;">我会持续做培训：<br>教你们怎么找大客户，怎么挖深，怎么把1个客户做成10个客户的量。</p>
+</div>
+
+<!-- Slide 12 -->
+<div class="slide">
+    <h2 style="color:#4ade80;">我们已经不是去年那个团队了。</h2>
+    <div class="highlight-box" style="border-left-color:#4ade80; text-align:center;">
+        <p style="font-size:28px;"><strong>6110万，我们一起干。</strong></p>
+        <p style="font-size:28px; margin-top:8px;"><strong>15万奖金，我们一起分。</strong></p>
+        <p style="font-size:28px; margin-top:8px;"><strong>更好的自己，我们一起成为。</strong></p>
+    </div>
+    <p class="sub" style="margin-top:24px; font-size:28px; color:#ffd700;"><strong>准备好了吗？那就从今天开始。</strong></p>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+function show(n) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, slides.length - 1));
+    slides[current].classList.add('active');
+    document.getElementById('progress').style.width = ((current + 1) / slides.length * 100) + '%';
+    document.getElementById('pageNum').textContent = (current + 1) + ' / ' + slides.length;
+}
+function next() { show(current + 1); }
+function prev() { show(current - 1); }
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') next();
+    if (e.key === 'ArrowLeft' || e.key === 'Backspace') prev();
+});
+document.addEventListener('click', e => {
+    if (e.target.tagName === 'BUTTON') return;
+    if (e.clientX > window.innerWidth / 2) next(); else prev();
+});
+show(0);
+</script>
 </body>
 </html>
