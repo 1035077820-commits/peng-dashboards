@@ -58,14 +58,14 @@ td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0}
 <!-- PAGE 1: 业务员同比 -->
 <div class="page" id="page1">
 <div class="kpis">
-<div class="kpi"><div class="lb">团队开单(26H1)</div><div class="vl">1573.6<small>万</small></div></div>
-<div class="kpi"><div class="lb">去年(25H1)</div><div class="vl">697.6<small>万</small></div></div>
+<div class="kpi"><div class="lb">团队开单(26上半年)</div><div class="vl">1573.6<small>万</small></div></div>
+<div class="kpi"><div class="lb">去年(25上半年)</div><div class="vl">697.6<small>万</small></div></div>
 <div class="kpi"><div class="lb">同比增长</div><div class="vl up">+125%</div></div>
 <div class="kpi"><div class="lb">骆铭卓缺口</div><div class="vl dn">296.3<small>万</small></div><div class="nt">离职后归零</div></div>
 </div>
 <div class="card"><h3>个人开单业绩对比（万元）</h3>
 <table>
-<tr><th>业务员</th><th>2026H1</th><th>2025H1</th><th>同比</th><th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th></tr>
+<tr><th>业务员</th><th>2026上半年</th><th>2025上半年</th><th>同比</th><th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th></tr>
 <tr><td><strong>彭培强</strong></td><td><strong>757.3</strong></td><td>264.5</td><td class="up">+186%</td><td>0.1</td><td>42.5</td><td>150.1</td><td>154.1</td><td>183.1</td><td>227.3</td></tr>
 <tr><td><strong>刘胜楠</strong></td><td><strong>221.9</strong></td><td>46.5</td><td class="up">+377%</td><td>7.3</td><td>18.1</td><td>43.7</td><td>26.6</td><td>54.1</td><td>72.1</td></tr>
 <tr><td><strong>潘嘉瑜</strong></td><td><strong>137.3</strong></td><td>23.7</td><td class="up">+480%</td><td>6.8</td><td>15.8</td><td>41.6</td><td>34.2</td><td>30.9</td><td>7.9</td></tr>
@@ -158,7 +158,7 @@ td{padding:6px;text-align:center;border-bottom:1px solid #f0f0f0}
 <script>
 function switchTab(n){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('active',i===n));if(n===1)setTimeout(initChart1,100);}
 var c1;
-function initChart1(){if(c1)return;c1=echarts.init(document.getElementById('chart1'));c1.setOption({tooltip:{trigger:'axis'},legend:{data:['2026H1','2025H1']},xAxis:{type:'category',data:['彭培强','刘胜楠','潘嘉瑜','刘晓霞','朱家豪','敬健浩','刘江滤','林梓仪','骆铭卓']},yAxis:{type:'value',name:'万'},series:[{name:'2026H1',type:'bar',data:[757.3,221.9,137.3,129.3,126.3,110.7,84.2,6.6,0],itemStyle:{color:'#2832c2'}},{name:'2025H1',type:'bar',data:[264.5,46.5,23.7,12.2,29.5,6.7,18.2,0,296.3],itemStyle:{color:'#faad14'}}]});}
+function initChart1(){if(c1)return;c1=echarts.init(document.getElementById('chart1'));c1.setOption({tooltip:{trigger:'axis'},legend:{data:['2026上半年','2025上半年']},xAxis:{type:'category',data:['彭培强','刘胜楠','潘嘉瑜','刘晓霞','朱家豪','敬健浩','刘江滤','林梓仪','骆铭卓']},yAxis:{type:'value',name:'万'},series:[{name:'2026上半年',type:'bar',data:[757.3,221.9,137.3,129.3,126.3,110.7,84.2,6.6,0],itemStyle:{color:'#2832c2'}},{name:'2025上半年',type:'bar',data:[264.5,46.5,23.7,12.2,29.5,6.7,18.2,0,296.3],itemStyle:{color:'#faad14'}}]});}
 window.addEventListener('resize',function(){if(c1)c1.resize();});
 </script>
 </body></html>
