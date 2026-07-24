@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>组织建设方案 · 金队/品牌出海</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;font-family:-apple-system,"PingFang SC",sans-serif;overflow:hidden;height:100vh}
+.slide{display:none;width:100vw;height:100vh;padding:60px 80px;position:relative;background:linear-gradient(135deg,#0d1033 0%,#111FBF 100%)}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+.slide::after{content:'';position:absolute;top:0;right:0;width:40%;height:100%;background:radial-gradient(ellipse at 80% 50%,rgba(255,255,255,0.03) 0%,transparent 70%)}
+
+/* Typography */
+h1{font-size:48px;color:#fff;font-weight:700;letter-spacing:-1px}
+h2{font-size:32px;color:#fff;font-weight:700;margin-bottom:24px}
+.subtitle{font-size:20px;color:#FFD700;margin-top:12px;font-weight:400}
+.tag{font-size:14px;color:rgba(255,255,255,0.5);margin-top:8px}
+.section-title{font-size:13px;color:#FFD700;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+
+/* Layout */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px;align-items:start}
+.card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;backdrop-filter:blur(10px)}
+.card h3{font-size:16px;color:#fff;margin-bottom:12px}
+.card p,.card li{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.8}
+.card ul{padding-left:16px}
+
+/* Tags */
+.badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;margin-right:6px}
+.badge-red{background:rgba(232,62,62,0.2);color:#ff6b6b;border:1px solid rgba(232,62,62,0.3)}
+.badge-green{background:rgba(46,125,50,0.2);color:#69db7c;border:1px solid rgba(46,125,50,0.3)}
+.badge-blue{background:rgba(40,50,194,0.2);color:#748ffc;border:1px solid rgba(40,50,194,0.3)}
+.badge-gold{background:rgba(255,215,0,0.15);color:#FFD700;border:1px solid rgba(255,215,0,0.3)}
+
+/* Problem items */
+.problem{display:flex;align-items:flex-start;margin-bottom:14px}
+.problem .icon{font-size:18px;margin-right:10px;flex-shrink:0}
+.problem .text{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.6}
+.problem .text strong{color:#ff6b6b}
+
+/* Person card */
+.person{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px}
+.person .name{font-size:18px;color:#fff;font-weight:700}
+.person .role{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px}
+.person .scores{font-size:11px;color:#748ffc;margin-top:6px}
+.person .section{margin-top:12px}
+.person .section-label{font-size:11px;color:#FFD700;font-weight:600;margin-bottom:4px}
+.person .section-text{font-size:12px;color:rgba(255,255,255,0.7);line-height:1.7}
+
+/* Timeline */
+.timeline-item{display:flex;margin-bottom:24px}
+.timeline-month{width:60px;font-size:20px;font-weight:700;color:#FFD700;flex-shrink:0}
+.timeline-content{padding-left:20px;border-left:2px solid rgba(255,215,0,0.3)}
+.timeline-content li{font-size:14px;color:rgba(255,255,255,0.8);line-height:2;list-style:none}
+.timeline-content li::before{content:'•';color:#FFD700;margin-right:8px}
+
+/* Nav */
+.nav{position:fixed;bottom:30px;right:40px;display:flex;gap:8px;z-index:100}
+.nav button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#fff;font-size:16px;cursor:pointer;transition:all .2s}
+.nav button:hover{background:rgba(255,255,255,0.15)}
+.page-num{position:fixed;bottom:36px;left:40px;font-size:12px;color:rgba(255,255,255,0.4);z-index:100}
+.incentive-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px}
+.incentive-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:16px}
+.incentive-card h4{font-size:14px;color:#FFD700;margin-bottom:8px}
+.incentive-card li{font-size:12px;color:rgba(255,255,255,0.7);line-height:1.8;list-style:none}
+.incentive-card li::before{content:'→ ';color:#748ffc}
+.goal{margin-top:20px;padding:12px 16px;background:rgba(46,125,50,0.1);border:1px solid rgba(46,125,50,0.2);border-radius:8px;font-size:13px;color:#69db7c}
+</style></head><body>
+
+<!-- Slide 1: Cover -->
+<div class="slide active">
+<h1>组织建设方案</h1>
+<div class="subtitle">文化破冰 · 业绩激励 · 人才加固</div>
+<div class="tag">金队 / 品牌出海 · 2026下半年</div>
+</div>
+
+<!-- Slide 2: Problems -->
+<div class="slide">
+<h2>现状问题</h2>
+<div class="two-col">
+<div>
+<div class="section-title">部门文化</div>
+<div class="problem"><div class="icon">❌</div><div class="text"><strong>不敢说</strong> — 开会不提意见，有想法不表达，怕说错被否定</div></div>
+<div class="problem"><div class="icon">❌</div><div class="text"><strong>怕担责</strong> — 不敢做决定，什么都等领导拍板，效率低</div></div>
+<div class="problem"><div class="icon">❌</div><div class="text"><strong>缺势气</strong> — 激励感知弱，缺乏正向竞争和认可</div></div>
+<div style="margin-top:20px;padding:12px 16px;background:rgba(232,62,62,0.08);border:1px solid rgba(232,62,62,0.15);border-radius:8px">
+<p style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.8">→ 氛围沉闷 · 创新停滞 · 人才流失隐患 · 目标感弱<br>→ 有客户不敢推 · 有机会不敢抢 · 有问题不敢说</p>
+</div>
+</div>
+<div>
+<div class="section-title">核心团队</div>
+<div class="card" style="margin-bottom:12px"><h3>林晓虹 <span class="badge badge-gold">3.65分</span></h3><p>短板：管理魄力不够</p></div>
+<div class="card" style="margin-bottom:12px"><h3>梁贵金 <span class="badge badge-blue">2.65分</span></h3><p>短板：少提创新建议，管日常OK但缺深度，TK转型期专业还在建设中</p></div>
+<div class="card"><h3>黄皓挺 <span class="badge badge-blue">2.65分</span></h3><p>短板：偶尔提建议少主动，还是"自己干"模式，沟通不够主动</p></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 3: Solutions -->
+<div class="slide">
+<h2>解决方案</h2>
+<div class="two-col">
+<div>
+<div class="section-title">文化活动</div>
+<div class="card" style="margin-bottom:12px"><h3>① 开放麦活动（月度15号）</h3><p>大家一起根据不一样的命题提出自己的想法（不局限工作）<br><span style="color:#748ffc">   破冰→敢说→有创意→团队协作</span></p></div>
+<div class="card" style="margin-bottom:12px"><h3>② 团队半年团建（八月中下旬）</h3><p>凝聚团队力，促进沟通与协作</p></div>
+<div class="card"><h3>③ 疑狂提案</h3><p>释放创意，最直接的创意激发器（设奖励机制）</p></div>
+<div class="goal">🎯 目标：团队变得敢表达、有激情、有归属</div>
+</div>
+<div>
+<div class="section-title">业绩激励</div>
+<div class="incentive-grid">
+<div class="incentive-card"><h4>金队</h4><ul><li>月度大单奖</li><li>季度超额奖</li><li>最佳转化奖</li><li>个人里程碑</li></ul></div>
+<div class="incentive-card"><h4>独立站</h4><ul><li>季度超额奖</li><li>团队协作奖</li></ul></div>
+<div class="incentive-card"><h4>TK</h4><ul><li>季度超额奖</li><li>团队协作奖</li></ul></div>
+</div>
+<div class="goal">🎯 目标：让该拿结果的人拿到结果，让拿到结果的人得到回报</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 4: Core Team -->
+<div class="slide">
+<h2>核心团队发展</h2>
+<div class="three-col">
+<div class="person">
+<div class="name">林晓虹</div>
+<div class="role">独立站主管 · M3 · 6年</div>
+<div class="scores">执行5 | 专业4 | 创造3 | 管理3</div>
+<div class="section"><div class="section-label">✅ 优势</div><div class="section-text">执行力拉满，自驱力强<br>“给方向就能跑起来”</div></div>
+<div class="section"><div class="section-label">⚠️ 短板</div><div class="section-text">管理魄力不够</div></div>
+<div class="section"><div class="section-label">🎯 发展方向</div><div class="section-text">先建专业壁垒→再要管理魄力<br>专业能力→业绩结果→管理权威<br>管理权威不是授予的，是打出来的</div></div>
+</div>
+<div class="person">
+<div class="name">梁贵金</div>
+<div class="role">TK运营主管 · M1 · 5.1年</div>
+<div class="scores">执行4 | 专业3 | 创造2 | 管理2</div>
+<div class="section"><div class="section-label">✅ 优势</div><div class="section-text">执行力强，给目标会想办法<br>有自驱力提升专业</div></div>
+<div class="section"><div class="section-label">⚠️ 短板</div><div class="section-text">创造力2：少提创新建议<br>管理力2：管日常OK但缺深度<br>TK转型期，专业还在建设中</div></div>
+<div class="section"><div class="section-label">🎯 发展方向</div><div class="section-text">TK方向吃透→理解平台逻辑<br>执行之余多输出策略思考<br>从BD方向补充人才</div></div>
+</div>
+<div class="person">
+<div class="name">黄皓挺</div>
+<div class="role">国际站主管 · M1 · 3.8年</div>
+<div class="scores">执行4 | 专业3 | 创造2 | 管理2</div>
+<div class="section"><div class="section-label">✅ 优势</div><div class="section-text">理工思维，擅长数据分析<br>执行力强</div></div>
+<div class="section"><div class="section-label">⚠️ 短板</div><div class="section-text">创造力2：偶尔提建议，少主动<br>管理力2：还是“自己干”模式<br>沟通不够主动（闷头做）</div></div>
+<div class="section"><div class="section-label">🎯 发展方向</div><div class="section-text">“自己干”→“带人拿结果”<br>主动沟通+汇报能力提升</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 5: Schedule -->
+<div class="slide">
+<h2>工作安排</h2>
+<div style="margin-top:40px">
+<div class="timeline-item">
+<div class="timeline-month">7月</div>
+<div class="timeline-content">
+<li>7月31日启动第一场开放麦活动（公司作战室）</li>
+<li>确认并同步团队业绩奖励机制，八月份开始执行</li>
+</div>
+</div>
+<div class="timeline-item">
+<div class="timeline-month">8月</div>
+<div class="timeline-content">
+<li>完善和确认团建方案</li>
+<li>推进招聘进度（社媒运营 + 亚马逊运营各面试5名）</li>
+</div>
+</div>
+</div>
+</div>
+
+<div class="nav"><button onclick="go(-1)">←</button><button onclick="go(1)">→</button></div>
+<div class="page-num" id="pn">1 / 5</div>
+<script>
+var cur=0,slides=document.querySelectorAll('.slide');
+function go(d){slides[cur].classList.remove('active');cur=Math.max(0,Math.min(slides.length-1,cur+d));slides[cur].classList.add('active');document.getElementById('pn').textContent=(cur+1)+' / '+slides.length;}
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' ')go(1);if(e.key==='ArrowLeft')go(-1);});
+document.addEventListener('click',function(e){if(e.target.tagName!=='BUTTON')go(1);});
+</script>
+</body></html>
