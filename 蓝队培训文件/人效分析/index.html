@@ -196,3 +196,30 @@ function initChart1(){if(c1)return;c1=echarts.init(document.getElementById('char
 window.addEventListener('resize',function(){if(c1)c1.resize();});
 </script>
 </body></html>
+<style>
+.save-btn{position:fixed;bottom:20px;right:20px;padding:10px 20px;background:#2832c2;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;z-index:999;box-shadow:0 2px 8px rgba(40,50,194,0.3)}
+.save-btn:hover{background:#1a22a0}
+.save-msg{position:fixed;bottom:60px;right:20px;padding:8px 14px;background:#52c41a;color:#fff;border-radius:4px;font-size:12px;z-index:999;display:none}
+</style>
+<button class="save-btn" onclick="saveAll()">💾 保存修改</button>
+<div class="save-msg" id="saveMsg">✅ 已保存到本地</div>
+<script>
+(function(){
+  var key='blue_hr_edits';
+  var saved=JSON.parse(localStorage.getItem(key)||'{}');
+  var editables=document.querySelectorAll('[contenteditable]');
+  editables.forEach(function(el,i){
+    if(saved[i])el.innerHTML=saved[i];
+  });
+})();
+function saveAll(){
+  var key='blue_hr_edits';
+  var editables=document.querySelectorAll('[contenteditable]');
+  var data={};
+  editables.forEach(function(el,i){data[i]=el.innerHTML;});
+  localStorage.setItem(key,JSON.stringify(data));
+  var msg=document.getElementById('saveMsg');
+  msg.style.display='block';
+  setTimeout(function(){msg.style.display='none';},2000);
+}
+</script>
