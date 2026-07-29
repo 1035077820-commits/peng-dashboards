@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>客户背调 · 中古奢品</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;font-family:"PingFang SC","Noto Sans SC",sans-serif;background:#0d1117}.viewport{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}.stage{width:1920px;height:1080px;position:relative;transform-origin:center center}.slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s ease}.slide.active{opacity:1;visibility:visible;pointer-events:auto}:root{--bg:#0d1117;--card:#161b22;--accent:#58a6ff;--gold:#ffd700;--text:#e6edf3;--muted:#8b949e;--border:#30363d}.slide{background:var(--bg);padding:80px;display:flex;flex-direction:column;justify-content:center}h1{font-size:64px;color:var(--text);margin-bottom:16px;font-weight:800}h2{font-size:42px;color:var(--accent);margin-bottom:24px;font-weight:700}.subtitle{font-size:28px;color:var(--muted);margin-top:12px}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px}.info-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px}.info-item .label{font-size:16px;color:var(--muted);margin-bottom:6px}.info-item .value{font-size:22px;color:var(--text);font-weight:600}.info-item .value.unknown{color:#f85149;font-style:italic}.badge{display:inline-block;background:#238636;color:#fff;padding:6px 16px;border-radius:20px;font-size:18px;margin:8px 4px}.badge.warn{background:#f85149}.badge.info{background:var(--accent)}ul{list-style:none;margin-top:16px}ul li{font-size:22px;color:var(--text);padding:8px 0;border-bottom:1px solid var(--border);line-height:1.6}ul li:last-child{border:none}ul li::before{content:"•";color:var(--accent);margin-right:12px;font-weight:bold}.nav{position:fixed;bottom:24px;right:32px;display:flex;gap:12px;z-index:100}.nav button{background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer}.nav button:hover{background:var(--border)}.page-num{position:fixed;bottom:28px;left:32px;color:var(--muted);font-size:13px}.section-title{font-size:20px;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}</style>
+</head>
+<body>
+<div class="viewport"><div class="stage" id="stage">
+<div class="slide active">
+<div class="section-title">客户背调报告</div>
+<h1>中古奢品</h1>
+<p class="subtitle">供销一体</p>
+<p class="subtitle" style="margin-top:32px;color:var(--muted)">出席人：李旭（老板）</p>
+<p style="position:absolute;bottom:80px;right:80px;color:var(--muted);font-size:16px">捷展集团 · 蓝队 · 2026年7月</p>
+</div>
+<div class="slide">
+<h2>📋 基本信息</h2>
+<div class="info-grid">
+<div class="info-item"><div class="label">可能关联公司</div><div class="value">中古奢品（广州）技术服务有限公司（法人李冬朝）</div></div>
+<div class="info-item"><div class="label">曾用名</div><div class="value">中古奢品（广州）商贸有限公司</div></div>
+<div class="info-item"><div class="label">另一关联</div><div class="value">中古奢品（佛山）科技有限公司（法人张海江）</div></div>
+<div class="info-item"><div class="label">经营范围</div><div class="value">服装服饰零售与批发、二手奢侈品鉴定/回收</div></div>
+<div class="info-item"><div class="label">所在城市</div><div class="value">广州 / 佛山</div></div>
+<div class="info-item"><div class="label">出席人关联</div><div class="value unknown">❓ 李旭与法人李冬朝/张海江关系不明</div></div>
+</div>
+</div>
+<div class="slide">
+<h2>🎨 业务推断</h2>
+<ul>
+<li>从"中古奢品"名称推断：中古风/复古奢华/vintage潮流方向</li>
+<li>经营范围含服装零售批发 — 不只是二手奢侈品</li>
+<li>可能定位：中古风格的新品服饰（非纯二手）</li>
+<li>公司从"商贸"改名"技术服务" — 可能在做电商/平台转型</li>
+</ul>
+<h2 style="margin-top:40px">📝 面谈确认</h2>
+<ul>
+<li>是做中古二手还是中古风格新品？</li>
+<li>主要销售平台？（得物/闲鱼/淘宝？）</li>
+<li>对服装代工的具体需求是什么品类？</li>
+</ul>
+</div>
+<div class="slide">
+<h2>💡 合作建议</h2>
+<ul>
+<li><strong>客户类型预判：</strong>A.品牌商 或 E.网商</li>
+<li><strong>切入点：</strong>如果做中古风新品，捷展的做旧/水洗/复古工艺非常匹配</li>
+<li><strong>样品方向：</strong>复古做旧TEE、vintage风卫衣、重工水洗裤</li>
+<li><strong>待确认：</strong>李旭与公司的具体角色、实际业务模式、采购需求</li>
+</ul>
+</div>
+</div></div>
+<div class="nav"><button onclick="prev()">← 上一页</button><button onclick="next()">下一页 →</button></div>
+<div class="page-num" id="pageNum"></div>
+<script>const slides=document.querySelectorAll('.slide');let cur=0;function show(i){slides[cur].classList.remove('active');cur=i;slides[cur].classList.add('active');document.getElementById('pageNum').textContent=(cur+1)+' / '+slides.length;}function next(){if(cur<slides.length-1)show(cur+1)}function prev(){if(cur>0)show(cur-1)}document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev()});show(0);function scaleStage(){const vw=window.innerWidth,vh=window.innerHeight,s=Math.min(vw/1920,vh/1080);document.getElementById('stage').style.transform='scale('+s+')';}scaleStage();window.addEventListener('resize',scaleStage);</script>
+</body></html>

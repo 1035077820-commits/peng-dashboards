@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>客户背调 · 云梵</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;font-family:"PingFang SC","Noto Sans SC",sans-serif;background:#0d1117}.viewport{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}.stage{width:1920px;height:1080px;position:relative;transform-origin:center center}.slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s ease}.slide.active{opacity:1;visibility:visible;pointer-events:auto}:root{--bg:#0d1117;--card:#161b22;--accent:#58a6ff;--gold:#ffd700;--text:#e6edf3;--muted:#8b949e;--border:#30363d}.slide{background:var(--bg);padding:80px;display:flex;flex-direction:column;justify-content:center}h1{font-size:64px;color:var(--text);margin-bottom:16px;font-weight:800}h2{font-size:42px;color:var(--accent);margin-bottom:24px;font-weight:700}.subtitle{font-size:28px;color:var(--muted);margin-top:12px}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px}.info-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px}.info-item .label{font-size:16px;color:var(--muted);margin-bottom:6px}.info-item .value{font-size:22px;color:var(--text);font-weight:600}.info-item .value.unknown{color:#f85149;font-style:italic}.badge{display:inline-block;background:#238636;color:#fff;padding:6px 16px;border-radius:20px;font-size:18px;margin:8px 4px}.badge.warn{background:#f85149}.badge.info{background:var(--accent)}ul{list-style:none;margin-top:16px}ul li{font-size:22px;color:var(--text);padding:8px 0;border-bottom:1px solid var(--border);line-height:1.6}ul li:last-child{border:none}ul li::before{content:"•";color:var(--accent);margin-right:12px;font-weight:bold}.nav{position:fixed;bottom:24px;right:32px;display:flex;gap:12px;z-index:100}.nav button{background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer}.nav button:hover{background:var(--border)}.page-num{position:fixed;bottom:28px;left:32px;color:var(--muted);font-size:13px}.section-title{font-size:20px;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}</style>
+</head>
+<body>
+<div class="viewport"><div class="stage" id="stage">
+<div class="slide active">
+<div class="section-title">客户背调报告</div>
+<h1>云梵</h1>
+<p class="subtitle">供销一体</p>
+<p class="subtitle" style="margin-top:32px;color:var(--muted)">出席人：陈世旗（老板）、张纲（合伙人）</p>
+<p style="position:absolute;bottom:80px;right:80px;color:var(--muted);font-size:16px">捷展集团 · 蓝队 · 2026年7月</p>
+</div>
+<div class="slide">
+<h2>⚠️ 背调结果：信息极度匮乏</h2>
+<div class="info-grid">
+<div class="info-item"><div class="label">公司全名</div><div class="value unknown">❓ 网上查不到"云梵 服装"相关企业</div></div>
+<div class="info-item"><div class="label">所在城市</div><div class="value unknown">❓ 未知</div></div>
+<div class="info-item"><div class="label">规模</div><div class="value unknown">❓ 未知</div></div>
+<div class="info-item"><div class="label">线上店铺</div><div class="value unknown">❓ 未知</div></div>
+<div class="info-item"><div class="label">出席人</div><div class="value">陈世旗（老板）、张纲（合伙人）</div></div>
+<div class="info-item"><div class="label">可能原因</div><div class="value">可能是新公司/内部简称/品牌名≠注册名</div></div>
+</div>
+</div>
+<div class="slide">
+<h2>📝 面谈必须确认</h2>
+<ul>
+<li><strong>公司工商注册全名？</strong></li>
+<li>公司做什么品类？什么平台？</li>
+<li>团队规模？月出货量/GMV？</li>
+<li>陈世旗和张纲各管什么？</li>
+<li>现有供应商？有什么痛点？</li>
+<li>对工厂的核心需求？</li>
+</ul>
+</div>
+<div class="slide">
+<h2>💡 策略建议</h2>
+<ul>
+<li><strong>风险等级：</strong>中高（信息完全空白）</li>
+<li><strong>面谈优先级：</strong>先摸清实体再决定投入</li>
+<li><strong>准备：</strong>带通用样品，面谈中根据需求调整</li>
+<li><strong>注意：</strong>双人架构（老板+合伙人），了解决策链</li>
+</ul>
+</div>
+</div></div>
+<div class="nav"><button onclick="prev()">← 上一页</button><button onclick="next()">下一页 →</button></div>
+<div class="page-num" id="pageNum"></div>
+<script>const slides=document.querySelectorAll('.slide');let cur=0;function show(i){slides[cur].classList.remove('active');cur=i;slides[cur].classList.add('active');document.getElementById('pageNum').textContent=(cur+1)+' / '+slides.length;}function next(){if(cur<slides.length-1)show(cur+1)}function prev(){if(cur>0)show(cur-1)}document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev()});show(0);function scaleStage(){const vw=window.innerWidth,vh=window.innerHeight,s=Math.min(vw/1920,vh/1080);document.getElementById('stage').style.transform='scale('+s+')';}scaleStage();window.addEventListener('resize',scaleStage);</script>
+</body></html>
