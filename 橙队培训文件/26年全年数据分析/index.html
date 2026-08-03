@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团队冲刺激励会 · 橙队</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif; background: #1a0a00; }
+        .slide { width: 100vw; height: 100vh; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 60px 80px; text-align: center; position: absolute; top: 0; left: 0; animation: fadeIn 0.4s ease; }
+        .slide.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { font-size: 72px; color: #fff; margin-bottom: 20px; }
+        h2 { font-size: 48px; color: #ff8c00; margin-bottom: 24px; }
+        .big-num { font-size: 128px; font-weight: 900; color: #ff8c00; margin: 24px 0; }
+        .big-num.red { color: #ff4d4f; }
+        .big-num.green { color: #4ade80; }
+        .sub { font-size: 28px; color: #e8c8a0; margin-top: 16px; line-height: 1.8; }
+        .sub strong { color: #fff; }
+        .highlight-box { background: linear-gradient(135deg, #3d1f00, #5e2f0030); border-left: 4px solid #ff8c00; border-radius: 12px; padding: 24px 32px; margin: 20px 0; text-align: left; max-width: 800px; }
+        .highlight-box p { font-size: 28px; color: #e2e8f0; line-height: 1.8; }
+        .highlight-box strong { color: #ff8c00; }
+        .data-row { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin: 24px 0; }
+        .data-card { background: #2d1800; border: 1px solid #5e3a00; border-radius: 12px; padding: 32px 40px; min-width: 220px; }
+        .data-card .num { font-size: 64px; font-weight: 800; color: #ff8c00; }
+        .data-card .label { font-size: 20px; color: #b8956d; margin-top: 8px; }
+        .nav { position: fixed; bottom: 24px; right: 32px; display: flex; gap: 12px; z-index: 100; }
+        .nav button { background: #2d1800; border: 1px solid #5e3a00; color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+        .nav button:hover { background: #5e3a00; }
+        .progress { position: fixed; top: 0; left: 0; height: 3px; background: #ff8c00; transition: width 0.3s; }
+        .page-num { position: fixed; bottom: 28px; left: 32px; color: #5e3a00; font-size: 13px; }
+        ul { text-align: left; max-width: 700px; }
+        ul li { font-size: 26px; color: #e2e8f0; margin: 16px 0; line-height: 1.7; }
+        ul li strong { color: #ff8c00; }
+        .data-table { border-collapse: collapse; margin: 20px auto; }
+        .data-table th { background: #2d1800; color: #ff8c00; padding: 12px 18px; font-size: 16px; border: 1px solid #5e3a00; }
+        .data-table td { padding: 10px 18px; font-size: 18px; color: #e2e8f0; border: 1px solid #5e3a00; text-align: center; }
+        .data-table td:first-child { text-align: left; color: #fff; font-weight: 600; }
+        .data-table .hl { color: #ff8c00; font-weight: 800; font-size: 20px; }
+        .data-table .total td { background: #2d1800; color: #ff8c00; font-weight: 800; }
+    </style>
+<script>(function(){var h='3ada92f28b4ceda38562ebf047c6ff05400d4c572352a1142eedfef67d21e662';var k=localStorage.getItem('peng_dash_key');if(k===h)return;var p=prompt('请输入访问密码：');if(!p){document.body.innerHTML='<h1 style="text-align:center;margin-top:40vh;color:#fff">需要密码才能访问</h1>';return;}var s=Array.from(new Uint8Array(new TextEncoder().encode(p)));crypto.subtle.digest('SHA-256',new Uint8Array(s)).then(function(buf){var hash=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');if(hash===h){localStorage.setItem('peng_dash_key',h)}else{document.body.innerHTML='<h1 style="text-align:center;margin-top:40vh;color:#fff">密码错误</h1>'}})})();</script>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="page-num" id="pageNum"></div>
+<div class="nav">
+    <button onclick="prev()">← 上一页</button>
+    <button onclick="next()">下一页 →</button>
+</div>
+
+<!-- Slide 1 -->
+<div class="slide active">
+    <h2>🔥 团队冲刺激励会</h2>
+    <h1>橙队 · 下半年冲刺动员</h1>
+</div>
+
+<!-- Slide 2 -->
+<div class="slide">
+    <p class="sub">今年橙队的目标是多少？</p>
+    <div class="big-num step" style="opacity:0">2948.5万</div>
+    <p class="sub step" style="opacity:0">（上半年1102.6万 + 下半年1845.9万）</p>
+</div>
+
+<!-- Slide 3 -->
+<div class="slide">
+    <p class="sub">上半年我们干得怎么样？</p>
+    <div class="data-row step" style="opacity:0">
+        <div class="data-card"><div class="num">1102.6万</div><div class="label">上半年完成</div></div>
+        <div class="data-card"><div class="num" style="color:#e8c8a0">18.72万</div><div class="label">月均人效</div></div>
+    </div>
+    <p class="sub step" style="opacity:0">跟去年持平（去年1102.2万），但人效下降了8.3%<br><strong>下半年必须把人效拉上去。</strong></p>
+</div>
+
+<!-- Slide 4 -->
+<div class="slide">
+    <p class="sub">下半年的目标？</p>
+    <div class="big-num step" style="opacity:0">1845.9万</div>
+    <p class="sub step" style="opacity:0">7人团队，月均人效≥43万<br>较上半年<strong>提升130%</strong></p>
+</div>
+
+<!-- Slide 5 -->
+<div class="slide">
+    <p class="sub">保底目标 vs 挑战目标</p>
+    <div class="data-row step" style="opacity:0">
+        <div class="data-card"><div class="num">1320.9万</div><div class="label">保底目标</div></div>
+        <div class="data-card"><div class="num" style="color:#ff4d4f">525万</div><div class="label">新人缺口</div></div>
+        <div class="data-card"><div class="num" style="color:#4ade80">1845.9万</div><div class="label">挑战目标</div></div>
+    </div>
+    <p class="sub step" style="opacity:0"><strong>不增员，现有7人扛起挑战目标。</strong></p>
+</div>
+
+<!-- Slide 6 -->
+<div class="slide">
+    <h2>为什么有525万缺口？</h2>
+    <ul>
+        <li>每招一个人 = 2-3个月工资白烧</li>
+        <li>新人独立产出周期3-6个月</li>
+        <li>新人工资未产出期浪费：<strong>8~9万</strong></li>
+        <li>结论：<strong>不增员，靠现有团队突破</strong></li>
+    </ul>
+</div>
+
+<!-- Slide 7 -->
+<div class="slide">
+    <h2>📊 缺口分摊到个人</h2>
+    <table class="data-table step" style="opacity:0">
+        <tr><th>业务员</th><th>原下半年目标</th><th>挑战目标</th><th>新增缺口</th><th>增幅</th></tr>
+        <tr><td>玉珠</td><td>286万</td><td>493万</td><td class="hl">+207万</td><td>72.4%</td></tr>
+        <tr><td>冯冯</td><td>519万</td><td>665万</td><td class="hl">+146万</td><td>28.1%</td></tr>
+        <tr><td>正瑶</td><td>265万</td><td>359万</td><td class="hl">+94万</td><td>35.5%</td></tr>
+        <tr><td>阿乐</td><td>250.9万</td><td>329万</td><td class="hl">+78万</td><td>31.0%</td></tr>
+        <tr class="total"><td>合计</td><td>1320.9万</td><td>1845.9万</td><td class="hl">+525万</td><td>39.7%</td></tr>
+    </table>
+</div>
+
+<!-- Slide 8 -->
+<div class="slide">
+    <h2>📋 7-12月 月度挑战目标（万元）</h2>
+    <table class="data-table step" style="opacity:0">
+        <tr><th>业务员</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th><th>合计</th></tr>
+        <tr><td>正瑶</td><td>50</td><td>55.5</td><td>61</td><td>65</td><td>74</td><td>53.6</td><td class="hl">359</td></tr>
+        <tr><td>冯冯</td><td>144</td><td>69.5</td><td>80</td><td>114</td><td>136.6</td><td>121</td><td class="hl">665</td></tr>
+        <tr><td>玉珠</td><td>49.5</td><td>68.5</td><td>83</td><td>94</td><td>107.5</td><td>90.5</td><td class="hl">493</td></tr>
+        <tr><td>阿乐</td><td>46</td><td>47</td><td>62</td><td>63.8</td><td>61.2</td><td>48.75</td><td class="hl">329</td></tr>
+        <tr class="total"><td>合计</td><td>289.5</td><td>240.5</td><td>286</td><td>336.8</td><td>379.3</td><td>313.8</td><td class="hl">1845.9</td></tr>
+    </table>
+</div>
+
+<!-- Slide 9 -->
+<div class="slide">
+    <h2>🎯 关键指标</h2>
+    <div class="data-row">
+        <div class="data-card"><div class="num">≥43万</div><div class="label">月均人效目标</div></div>
+        <div class="data-card"><div class="num">≤6%</div><div class="label">人力成本占比</div></div>
+        <div class="data-card"><div class="num">7人</div><div class="label">团队规模不变</div></div>
+    </div>
+</div>
+
+<!-- Slide 10 -->
+<div class="slide">
+    <h2 style="color:#4ade80;">我们不需要更多人，我们需要每个人都更强。</h2>
+    <div class="highlight-box" style="border-left-color:#ff8c00; text-align:center;">
+        <p style="font-size:28px;"><strong>1845.9万，橙队一起干。</strong></p>
+        <p style="font-size:28px; margin-top:8px;"><strong>人效43万，每个人都是顶梁柱。</strong></p>
+        <p style="font-size:28px; margin-top:8px;"><strong>不加人，加能力。不换人，换打法。</strong></p>
+    </div>
+    <p class="sub" style="margin-top:24px; font-size:28px; color:#ff8c00;"><strong>从今天开始，每一天都在冲。</strong></p>
+</div>
+
+<script>
+const slides=document.querySelectorAll('.slide');let cur=0;
+function show(i){slides[cur].classList.remove('active');cur=i;slides[cur].classList.add('active');document.getElementById('pageNum').textContent=(cur+1)+' / '+slides.length;document.getElementById('progress').style.width=((cur+1)/slides.length*100)+'%';setTimeout(()=>{document.querySelectorAll('.slide.active .step').forEach((el,idx)=>{setTimeout(()=>{el.style.opacity='1';el.style.transition='opacity 0.5s'},idx*400)})},100);}
+function next(){if(cur<slides.length-1)show(cur+1)}
+function prev(){if(cur>0)show(cur-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev()});
+show(0);
+</script>
+</body>
+</html>
