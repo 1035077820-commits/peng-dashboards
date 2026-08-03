@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>捷展投放7月数据看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC",sans-serif;background:#f8faf9;color:#1a1a1a;line-height:1.6;padding:24px}
+.container{max-width:1400px;margin:0 auto}
+.header{text-align:center;margin-bottom:32px}
+.header h1{font-size:28px;font-weight:700;color:#1e40af;margin-bottom:4px}
+.header p{font-size:14px;color:#6b7280}
+.overview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:32px}
+.overview-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08);text-align:center}
+.overview-card .label{font-size:12px;color:#6b7280;margin-bottom:8px;font-weight:500}
+.overview-card .value{font-size:28px;font-weight:700;color:#1e40af}
+.overview-card .unit{font-size:12px;color:#6b7280;margin-top:4px}
+.section-title{font-size:18px;font-weight:700;color:#1e40af;margin:28px 0 16px;padding-bottom:8px;border-bottom:2px solid #dbeafe}
+.account-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:32px}
+.account-card{background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.account-card .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.account-card .name{font-size:20px;font-weight:700}
+.account-card .platform{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.platform-xhs{background:#ffe4e6;color:#be123c}
+.platform-tx{background:#dbeafe;color:#1e40af}
+.metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.metric{background:#f8fafc;border-radius:8px;padding:12px;text-align:center}
+.metric .m-val{font-size:20px;font-weight:700;color:#1e40af}
+.metric .m-label{font-size:11px;color:#6b7280}
+.compare-section{background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:32px}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.chart-box{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:20px}
+.chart-box h3{font-size:14px;font-weight:600;color:#374151;margin-bottom:12px}
+.plan-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+.plan-table th{background:#eff6ff;color:#1e40af;font-weight:600;padding:8px 10px;text-align:center;border-bottom:2px solid #bfdbfe}
+.plan-table td{padding:8px 10px;text-align:center;border-bottom:1px solid #f3f4f6}
+.plan-table tr:hover td{background:#f0f9ff}
+.tag-good{color:#047857;font-weight:700}
+.tag-warn{color:#d97706;font-weight:700}
+.tag-bad{color:#dc2626;font-weight:700}
+.insight-box{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:16px;margin-top:16px}
+.insight-box h4{font-size:13px;color:#92400e;margin-bottom:8px}
+.insight-box p{font-size:13px;color:#78350f;line-height:1.8}
+.boom-section{background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:32px}
+.boom-card{background:#f0fdf4;border-radius:10px;padding:16px;margin-bottom:12px}
+.boom-card h4{font-size:14px;color:#065f46;margin-bottom:8px}
+.boom-card .detail{font-size:12px;color:#374151;line-height:1.8}
+@media(max-width:768px){.overview-grid{grid-template-columns:repeat(2,1fr)}.account-grid,.compare-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>📊 捷展投放7月数据看板</h1>
+<p>2026年7月 · 4个账号全渠道数据汇总</p>
+</div>
+
+<!-- Total Overview -->
+<div class="overview-grid">
+<div class="overview-card"><div class="label">总消费</div><div class="value">9,429</div><div class="unit">元</div></div>
+<div class="overview-card"><div class="label">总留资</div><div class="value">189</div><div class="unit">人</div></div>
+<div class="overview-card"><div class="label">总进线</div><div class="value">338</div><div class="unit">人</div></div>
+<div class="overview-card"><div class="label">平均留资成本</div><div class="value">49.9</div><div class="unit">元/人</div></div>
+<div class="overview-card"><div class="label">平均进线成本</div><div class="value">27.9</div><div class="unit">元/人</div></div>
+</div>
+
+<!-- Account Comparison -->
+<h2 class="section-title">📈 账号竖向对比</h2>
+<div class="compare-section">
+<div class="compare-grid">
+<div><canvas id="spendChart"></canvas></div>
+<div><canvas id="costChart"></canvas></div>
+</div>
+<div class="compare-grid" style="margin-top:16px">
+<div><canvas id="leadsChart"></canvas></div>
+<div><canvas id="effChart"></canvas></div>
+</div>
+</div>
+
+<!-- Account Cards -->
+<h2 class="section-title">🏷️ 各账号详情</h2>
+<div class="account-grid">
+<!-- 代工厂 -->
+<div class="account-card" style="border-left:4px solid #ef4444">
+<div class="card-header"><div class="name">代工厂号</div><span class="platform platform-xhs">小红书</span></div>
+<div class="metrics-row">
+<div class="metric"><div class="m-val">7,939</div><div class="m-label">消费(元)</div></div>
+<div class="metric"><div class="m-val">163</div><div class="m-label">留资人数</div></div>
+<div class="metric"><div class="m-val">289</div><div class="m-label">进线人数</div></div>
+</div>
+<div class="metrics-row">
+<div class="metric"><div class="m-val tag-warn">48.4</div><div class="m-label">留资成本</div></div>
+<div class="metric"><div class="m-val tag-good">27.5</div><div class="m-label">进线成本</div></div>
+<div class="metric"><div class="m-val">6.73%</div><div class="m-label">点击率</div></div>
+</div>
+<table class="plan-table">
+<tr><th>计划</th><th>消费</th><th>留资</th><th>成本</th><th>进线</th><th>进线成本</th></tr>
+<tr><td>OK哥5.5女留资51元</td><td>3,093</td><td>56</td><td class="tag-warn">55.2</td><td>116</td><td class="tag-good">26.7</td></tr>
+<tr><td>7.14男留资40元</td><td>2,033</td><td>42</td><td class="tag-warn">48.4</td><td>61</td><td>33.3</td></tr>
+<tr><td>7.20女留资40元</td><td>1,161</td><td>27</td><td class="tag-good">43.0</td><td>45</td><td class="tag-good">25.8</td></tr>
+<tr><td>7.22女留资38元</td><td>1,075</td><td>27</td><td class="tag-good">39.8</td><td>41</td><td class="tag-good">26.2</td></tr>
+<tr><td>7.22男留资38元</td><td>578</td><td>11</td><td class="tag-warn">48.1</td><td>26</td><td class="tag-good">22.2</td></tr>
+</table>
+<div class="insight-box">
+<h4>💡 分析</h4>
+<p>• 7.22女留资38元计划成本最优(39.8)，建议放量<br>
+• OK哥5.5老计划仍在跑，进线成本低(26.7)但留资成本偏高(55.2)<br>
+• 整体进线转化率优秀(289进线/163留资=1.77倍)</p>
+</div>
+</div>
+
+<!-- 大号 -->
+<div class="account-card" style="border-left:4px solid #8b5cf6">
+<div class="card-header"><div class="name">大号</div><span class="platform platform-xhs">小红书</span></div>
+<div class="metrics-row">
+<div class="metric"><div class="m-val">1,223</div><div class="m-label">消费(元)</div></div>
+<div class="metric"><div class="m-val">21</div><div class="m-label">留资人数</div></div>
+<div class="metric"><div class="m-val">39</div><div class="m-label">进线人数</div></div>
+</div>
+<div class="metrics-row">
+<div class="metric"><div class="m-val tag-bad">58.2</div><div class="m-label">留资成本</div></div>
+<div class="metric"><div class="m-val tag-good">31.4</div><div class="m-label">进线成本</div></div>
+<div class="metric"><div class="m-val">6.11%</div><div class="m-label">点击率</div></div>
+</div>
+<table class="plan-table">
+<tr><th>计划</th><th>消费</th><th>留资</th><th>成本</th><th>进线</th><th>进线成本</th></tr>
+<tr><td>5.13留资男50元不拓展</td><td>1,223</td><td>21</td><td class="tag-bad">58.2</td><td>39</td><td>31.4</td></tr>
+</table>
+<div class="insight-box">
+<h4>💡 分析</h4>
+<p>• 仅1条计划在跑，素材老化风险高<br>
+• 留资成本58.2偏高，需新建计划测试<br>
+• 进线/留资比=1.86倍，私信承接能力强</p>
+</div>
+</div>
+
+<!-- 潮牌定制 -->
+<div class="account-card" style="border-left:4px solid #f59e0b">
+<div class="card-header"><div class="name">潮牌定制号</div><span class="platform platform-xhs">小红书</span></div>
+<div class="metrics-row">
+<div class="metric"><div class="m-val">267</div><div class="m-label">消费(元)</div></div>
+<div class="metric"><div class="m-val">5</div><div class="m-label">留资人数</div></div>
+<div class="metric"><div class="m-val">10</div><div class="m-label">进线人数</div></div>
+</div>
+<div class="metrics-row">
+<div class="metric"><div class="m-val tag-warn">53.4</div><div class="m-label">留资成本</div></div>
+<div class="metric"><div class="m-val tag-good">26.7</div><div class="m-label">进线成本</div></div>
+<div class="metric"><div class="m-val tag-bad">2.9%</div><div class="m-label">点击率</div></div>
+</div>
+<table class="plan-table">
+<tr><th>计划</th><th>消费</th><th>留资</th><th>成本</th><th>进线</th><th>进线成本</th></tr>
+<tr><td>7.25女留资50元</td><td>136</td><td>2</td><td>68.1</td><td>4</td><td>34.0</td></tr>
+<tr><td>7.25男留资50元</td><td>106</td><td>3</td><td class="tag-good">35.4</td><td>6</td><td class="tag-good">17.7</td></tr>
+<tr><td>7.30女留资60元</td><td>17</td><td>0</td><td>-</td><td>0</td><td>-</td></tr>
+<tr><td>7.28女留资50元</td><td>8</td><td>0</td><td>-</td><td>0</td><td>-</td></tr>
+</table>
+<div class="insight-box">
+<h4>💡 分析</h4>
+<p>• 7月下旬刚起量，数据量较小<br>
+• 7.25男留资计划表现最好(成本35.4)，可加大预算<br>
+• 点击率仅2.9%，需优化素材吸引力</p>
+</div>
+</div>
+
+<!-- 腾讯营销 -->
+<div class="account-card" style="border-left:4px solid #0ea5e9">
+<div class="card-header"><div class="name">腾讯营销</div><span class="platform platform-tx">视频号</span></div>
+<div class="metrics-row">
+<div class="metric"><div class="m-val">810</div><div class="m-label">花费(元)</div></div>
+<div class="metric"><div class="m-val">6</div><div class="m-label">线索人数</div></div>
+<div class="metric"><div class="m-val">0</div><div class="m-label">加企微</div></div>
+</div>
+<div class="metrics-row">
+<div class="metric"><div class="m-val tag-bad">135</div><div class="m-label">线索成本</div></div>
+<div class="metric"><div class="m-val">0%</div><div class="m-label">加微率</div></div>
+<div class="metric"><div class="m-val">-</div><div class="m-label">加微成本</div></div>
+</div>
+<table class="plan-table">
+<tr><th>广告</th><th>花费</th><th>线索</th><th>线索成本</th><th>加企微</th></tr>
+<tr><td>留资07_08十三地区2亿人</td><td>681</td><td>4</td><td class="tag-bad">170.3</td><td>0</td></tr>
+<tr><td>716视频号-企微-起量</td><td>107</td><td>0</td><td>-</td><td>0</td></tr>
+<tr><td>留资07_08十二区域男女</td><td>17</td><td>2</td><td class="tag-good">8.3</td><td>0</td></tr>
+<tr><td>716视频号-企微-表单</td><td>5</td><td>0</td><td>-</td><td>0</td></tr>
+</table>
+<div class="insight-box">
+<h4>💡 分析</h4>
+<p>• 整体效果差：花810元仅获6条线索，0加微<br>
+• 表单留资路径没跑通，需重新调整链路<br>
+• 建议：暂停低效计划，集中预算在小红书渠道</p>
+</div>
+</div>
+</div>
+
+<!-- Boom Plan -->
+<h2 class="section-title">🚀 爆款计划拆解</h2>
+<div class="boom-section">
+<div class="boom-card">
+<h4>🥇 TOP1: 代工厂 - OK哥5.5女留资51元（月消费3,093元）</h4>
+<div class="detail">
+• 留资56人 | 进线116人 | 留资成本55.2 | 进线成本26.7<br>
+• 进线/留资比1.77 → 私信承接话术好<br>
+• 老计划持续跑量，已是成熟稳定流量源<br>
+• ⚠️ 留资成本偏高，建议观察是否继续上升
+</div>
+</div>
+<div class="boom-card">
+<h4>🥈 TOP2: 代工厂 - 7.14男留资40元（月消费2,033元）</h4>
+<div class="detail">
+• 留资42人 | 进线61人 | 留资成本48.4 | 进线成本33.3<br>
+• 新计划起量快，2周消耗2000+<br>
+• 男性定向效果稍弱于女性，进线成本略高
+</div>
+</div>
+<div class="boom-card">
+<h4>🥉 TOP3: 代工厂 - 7.22女留资38元（月消费1,075元）</h4>
+<div class="detail">
+• 留资27人 | 进线41人 | 留资成本39.8 | 进线成本26.2<br>
+• 🌟 全场最优留资成本！仅39.8元<br>
+• 起量仅10天就跑出1000+，潜力巨大<br>
+• ✅ 建议：加预算到日消500+，观察成本是否稳定
+</div>
+</div>
+<div class="boom-card" style="background:#fef2f2">
+<h4>⚠️ 需关注: 大号 - 5.13留资男50元（已跑2个多月）</h4>
+<div class="detail">
+• 留资成本58.2 — 全场最高<br>
+• 素材从5月跑到7月，严重老化<br>
+• 🔴 建议：立即新建2-3条计划，用新素材测试降低成本
+</div>
+</div>
+</div>
+
+<!-- Summary -->
+<h2 class="section-title">📋 总结与建议</h2>
+<div class="compare-section">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div style="background:#f0fdf4;border-radius:10px;padding:20px">
+<h4 style="color:#065f46;margin-bottom:12px">✅ 做得好的</h4>
+<p style="font-size:13px;line-height:2;color:#374151">
+• 代工厂号是绝对主力，贡献84%消费和86%留资<br>
+• 进线成本整体控制在27-31元，表现优秀<br>
+• 7.22新计划成本优化明显(39.8 vs 老计划55.2)<br>
+• 女性定向整体优于男性
+</p>
+</div>
+<div style="background:#fef2f2;border-radius:10px;padding:20px">
+<h4 style="color:#991b1b;margin-bottom:12px">⚠️ 需改进的</h4>
+<p style="font-size:13px;line-height:2;color:#374151">
+• 大号仅1条计划在跑，风险极高<br>
+• 潮牌定制号量太小，需加大投入<br>
+• 腾讯视频号ROI极低，建议暂停或调整<br>
+• 整体过于依赖代工厂单一账号
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+const accounts = ['代工厂', '大号', '潮牌定制', '腾讯营销'];
+const colors = ['#ef4444','#8b5cf6','#f59e0b','#0ea5e9'];
+const bgColors = colors.map(c => c + '40');
+
+// Spend comparison
+new Chart(document.getElementById('spendChart'), {
+    type: 'bar',
+    data: {
+        labels: accounts,
+        datasets: [{
+            label: '消费(元)',
+            data: [7939, 1223, 267, 810],
+            backgroundColor: bgColors,
+            borderColor: colors,
+            borderWidth: 2
+        }]
+    },
+    options: { responsive: true, plugins: { title: { display: true, text: '💰 各账号消费对比' }, legend: { display: false } } }
+});
+
+// Cost comparison
+new Chart(document.getElementById('costChart'), {
+    type: 'bar',
+    data: {
+        labels: accounts,
+        datasets: [
+            { label: '留资成本', data: [48.4, 58.2, 53.4, 135], backgroundColor: '#fca5a580', borderColor: '#ef4444', borderWidth: 1 },
+            { label: '进线成本', data: [27.5, 31.4, 26.7, null], backgroundColor: '#86efac80', borderColor: '#16a34a', borderWidth: 1 }
+        ]
+    },
+    options: { responsive: true, plugins: { title: { display: true, text: '💲 成本对比(元/人)' } } }
+});
+
+// Leads comparison
+new Chart(document.getElementById('leadsChart'), {
+    type: 'bar',
+    data: {
+        labels: accounts,
+        datasets: [
+            { label: '留资', data: [163, 21, 5, 6], backgroundColor: '#bfdbfe80', borderColor: '#2563eb', borderWidth: 1 },
+            { label: '进线', data: [289, 39, 10, 0], backgroundColor: '#bbf7d080', borderColor: '#16a34a', borderWidth: 1 }
+        ]
+    },
+    options: { responsive: true, plugins: { title: { display: true, text: '👥 留资/进线对比' } } }
+});
+
+// Efficiency radar
+new Chart(document.getElementById('effChart'), {
+    type: 'radar',
+    data: {
+        labels: ['消费占比', '留资占比', '成本效率', '点击率', '进线率'],
+        datasets: [
+            { label: '代工厂', data: [84, 86, 75, 90, 85], borderColor: '#ef4444', backgroundColor: '#ef444420' },
+            { label: '大号', data: [13, 11, 50, 82, 70], borderColor: '#8b5cf6', backgroundColor: '#8b5cf620' },
+            { label: '潮牌定制', data: [3, 3, 55, 40, 60], borderColor: '#f59e0b', backgroundColor: '#f59e0b20' }
+        ]
+    },
+    options: { responsive: true, plugins: { title: { display: true, text: '🎯 效率雷达图' } }, scales: { r: { beginAtZero: true, max: 100 } } }
+});
+</script>
+</body>
+</html>
