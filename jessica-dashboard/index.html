@@ -68,6 +68,20 @@ h1{font-size:28px;font-weight:800;text-align:center;margin-bottom:8px;color:#fff
 <div class="chart-box"><h3>💰 每日消费趋势</h3><canvas id="spendChart"></canvas></div>
 <div class="chart-box"><h3>🎯 渠道留资占比</h3><canvas id="pieChart"></canvas></div>
 <div class="chart-box"><h3>📊 渠道留资成本对比</h3><canvas id="costChart"></canvas></div>
+<div class="chart-box"><h3>📅 每周留资对比</h3><canvas id="weeklyLeadsChart"></canvas></div>
+<div class="chart-box"><h3>💸 每周消费与成本</h3><canvas id="weeklyCostChart"></canvas></div>
+<div class="chart-box full-width"><h3>📅 周数据明细</h3>
+<table class="channel-table">
+<thead><tr><th>周次</th><th>天数</th><th>总留资</th><th>总消费</th><th>平均成本</th><th>红代工</th><th>海外</th><th>红大号</th><th>抖音</th><th>环比</th></tr></thead>
+<tbody>
+<tr><td>W1 (7/1-6)</td><td>6</td><td><strong>27</strong></td><td>¥1,240</td><td>¥45.9</td><td>19</td><td>17</td><td>6</td><td>2</td><td>-</td></tr>
+<tr><td>W2 (7/7-13)</td><td>7</td><td><strong>49</strong></td><td>¥2,576</td><td>¥52.6</td><td>27</td><td>31</td><td>13</td><td>9</td><td><span style="color:#4ade80">+81%↑</span></td></tr>
+<tr><td>W3 (7/14-20)</td><td>7</td><td><strong>44</strong></td><td>¥2,322</td><td>¥52.8</td><td>38</td><td>26</td><td>2</td><td>4</td><td><span style="color:#f87171">-10%↓</span></td></tr>
+<tr><td>W4 (7/21-27)</td><td>7</td><td><strong>43</strong></td><td>¥1,944</td><td>¥45.2</td><td>40</td><td>34</td><td>0</td><td>3</td><td><span style="color:#f87171">-2%↓</span></td></tr>
+<tr><td>W5 (7/28-31)</td><td>4</td><td><strong>38</strong></td><td>¥1,892</td><td>¥49.8</td><td>37</td><td>18</td><td>0</td><td>1</td><td><span style="color:#4ade80">+日均↑</span></td></tr>
+</tbody>
+</table>
+</div>
 <div class="chart-box full-width"><h3>🏢 渠道明细</h3>
 <table class="channel-table">
 <thead><tr><th>渠道</th><th>留资数</th><th>询盘数</th><th>获客消费</th><th>留资成本</th><th>占比</th></tr></thead>
@@ -123,6 +137,20 @@ new Chart(document.getElementById('pieChart'),{type:'doughnut',data:{labels:['�
 
 // Cost comparison bar
 new Chart(document.getElementById('costChart'),{type:'bar',data:{labels:['红书代工','红书大号','腾讯广告','抖音大号','海外'],datasets:[{label:'留资成本(元)',data:[49.31,58.23,0,0,0],backgroundColor:['#f59e0b','#4ade80','#a78bfa','#f87171','#38bdf8']}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'}},y:{ticks:{color:'#94a3b8'}}}}});
+
+// Weekly leads comparison
+new Chart(document.getElementById('weeklyLeadsChart'),{type:'bar',data:{labels:['W1','W2','W3','W4','W5'],datasets:[
+{label:'红书代工',data:[19,27,38,40,37],backgroundColor:'#f59e0b'},
+{label:'海外',data:[17,31,26,34,18],backgroundColor:'#38bdf8'},
+{label:'红书大号',data:[6,13,2,0,0],backgroundColor:'#4ade80'},
+{label:'抖音大号',data:[2,9,4,3,1],backgroundColor:'#f87171'}
+]},options:{responsive:true,plugins:{legend:{labels:{color:'#94a3b8'}}},scales:{x:{stacked:true,ticks:{color:'#64748b'}},y:{stacked:true,ticks:{color:'#64748b'}}}}});
+
+// Weekly cost comparison
+new Chart(document.getElementById('weeklyCostChart'),{type:'line',data:{labels:['W1','W2','W3','W4','W5'],datasets:[
+{label:'周消费(元)',data:[1240,2576,2322,1944,1892],borderColor:'#f87171',backgroundColor:'#f8717130',fill:true,tension:0.3,yAxisID:'y'},
+{label:'留资成本(元)',data:[45.9,52.6,52.8,45.2,49.8],borderColor:'#fbbf24',tension:0.3,yAxisID:'y1'}
+]},options:{responsive:true,plugins:{legend:{labels:{color:'#94a3b8'}}},scales:{x:{ticks:{color:'#64748b'}},y:{type:'linear',position:'left',ticks:{color:'#f87171'}},y1:{type:'linear',position:'right',ticks:{color:'#fbbf24'},grid:{drawOnChartArea:false}}}}});
 }
 
 </script>
