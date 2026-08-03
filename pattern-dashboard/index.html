@@ -1,82 +1,698 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>纸样师数据看板 · 3-7月</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,"PingFang SC",sans-serif;background:#ffffff;color:#1e293b;min-height:100vh;padding:24px}.container{max-width:1200px;margin:0 auto}h1{font-size:26px;font-weight:800;text-align:center;color:#1e293b;margin-bottom:6px}.subtitle{text-align:center;color:#64748b;font-size:13px;margin-bottom:28px}h2{font-size:17px;color:#1e293b;margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid #e2e8f0}.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}.kpi-card{background:#fff;border-radius:10px;padding:16px;border:1px solid #e2e8f0;text-align:center;box-shadow:0 1px 3px #0001}.kpi-card .name{font-size:14px;color:#64748b;margin-bottom:4px}.kpi-card .val{font-size:28px;font-weight:800}.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}.chart-box{background:#fff;border-radius:10px;padding:16px;border:1px solid #e2e8f0;box-shadow:0 1px 3px #0001}.chart-box.full{grid-column:1/-1}.chart-box h3{font-size:14px;color:#1e293b;margin-bottom:10px}table{width:100%;border-collapse:collapse}th{text-align:center;padding:8px;background:#f1f5f9;color:#475569;font-size:12px}td{padding:8px;border-bottom:1px solid #f1f5f9;font-size:13px;text-align:center}.good{color:#16a34a}.warn{color:#d97706}.bad{color:#dc2626}@media(max-width:768px){.chart-grid{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纸样师个人数据看板（3-7月）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+            background: #f8faf9;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* Overview Cards */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .overview-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+            text-align: center;
+        }
+
+        .overview-card .label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .overview-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #065f46;
+        }
+
+        .overview-card .unit {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* Person Cards */
+        .person-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .person-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+        }
+
+        .person-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .person-card .name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .person-card .total {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .person-card .total span {
+            font-size: 20px;
+            font-weight: 700;
+            color: #065f46;
+        }
+
+        .person-card .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .tag-green {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .tag-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .tag-yellow {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .tag-purple {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+
+        /* Bar Chart */
+        .chart-section {
+            margin-bottom: 16px;
+        }
+
+        .chart-section .section-title {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            height: 80px;
+            padding: 0 8px;
+        }
+
+        .bar-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .bar {
+            width: 100%;
+            max-width: 40px;
+            background: #10b981;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.3s ease;
+            position: relative;
+        }
+
+        .bar-value {
+            font-size: 11px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        .bar-label {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 6px;
+        }
+
+        /* Error Rate Blocks */
+        .error-rate-section {
+            margin-bottom: 12px;
+        }
+
+        .error-rate-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .error-rate-label {
+            font-size: 11px;
+            color: #6b7280;
+            width: 70px;
+            flex-shrink: 0;
+        }
+
+        .error-blocks {
+            display: flex;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .error-block {
+            flex: 1;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .error-low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .error-mid {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .error-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .error-zero {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        /* Table */
+        .table-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+            overflow-x: auto;
+        }
+
+        .table-section h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 16px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table th {
+            background: #ecfdf5;
+            color: #065f46;
+            font-weight: 600;
+            padding: 10px 12px;
+            text-align: center;
+            border-bottom: 2px solid #a7f3d0;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 10px 12px;
+            text-align: center;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .data-table tr:hover td {
+            background: #f0fdf4;
+        }
+
+        .data-table .month-header {
+            background: #f0fdf4;
+            font-weight: 700;
+            color: #065f46;
+            text-align: left;
+            padding: 10px 12px;
+        }
+
+        .rate-cell {
+            font-weight: 600;
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+
+        .rate-good {
+            color: #047857;
+        }
+
+        .rate-warn {
+            color: #d97706;
+        }
+
+        .rate-bad {
+            color: #dc2626;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .person-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .overview-card .value {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bar-chart {
+                height: 60px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-<h1>📐 纸样师绩效看板</h1>
-<p class="subtitle">2026年3-7月 · 头复版&大货出错率追踪</p>
-<div class="kpi-row">
-<div class="kpi-card"><div class="name">刘永辉</div><div class="val" style="color:#38bdf8">667款</div><div style="font-size:11px;color:#64748b">月均133 | 头版错率0.8%↓</div></div>
-<div class="kpi-card"><div class="name">施从富</div><div class="val" style="color:#a78bfa">658款</div><div style="font-size:11px;color:#64748b">月均132 | 头版错率2.5%</div></div>
-<div class="kpi-card"><div class="name">罗银</div><div class="val" style="color:#4ade80">576款</div><div style="font-size:11px;color:#64748b">月均115 | 头版错率1.2%</div></div>
-<div class="kpi-card"><div class="name">曾映辉</div><div class="val" style="color:#fbbf24">524款</div><div style="font-size:11px;color:#64748b">月均105 | 头版错率4.9%⚠️</div></div>
-</div>
-<div class="chart-grid">
-<div class="chart-box"><h3>📈 工作量趋势</h3><canvas id="workload"></canvas></div>
-<div class="chart-box"><h3>⚠️ 头复版出错率(%)</h3><canvas id="errorRate"></canvas></div>
-<div class="chart-box"><h3>📦 大货放码出错率(%)</h3><canvas id="bulkError"></canvas></div>
-<div class="chart-box"><h3>🏆 综合评分雷达图</h3><canvas id="radar"></canvas></div>
-<!-- PLACEHOLDER_TABLE -->
-</div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>纸样师个人数据看板（3-7月）</h1>
+            <p>纸样部月度数据统计 · 2026年</p>
+        </div>
 
-<h2>📝 综合分析</h2>
-<div class="chart-box full" style="line-height:2;font-size:14px;color:#334155">
-<p><strong>① 工作量分析</strong></p>
-<p>• 刘永辉和施从富工作量最大（5个月合计667、658款），刘永辉7月飙到186款。</p>
-<p>• 曾映辉工作量最小（524款），但仍保持月均100+。</p>
-<br>
-<p><strong>② 头复版出错率趋势</strong></p>
-<p>• <span style="color:#0284c7">刘永辉</span>：从3月5.3%持续下降到7月0.8%，表现最稳定 ✅</p>
-<p>• <span style="color:#7c3aed">施从富</span>：3-5月控制得很好，6月起3.8%需关注</p>
-<p>• <span style="color:#16a34a">罗银</span>：整体稳定，6月波动后7月回落</p>
-<p>• <span style="color:#d97706">曾映辉</span>：6月出错率飙到10.1% 🔴，7月略降但4.9%，仍需重点跟进</p>
-<br>
-<p><strong>③ 大货放码出错率</strong></p>
-<p>• 曾映辉大货错率从3月27.6%降到7月2.7%，改善明显 ✅</p>
-<p>• 刘永辉、6施从富7月均为0%，大货质量很好</p>
-<br>
-<p><strong>④ 建议</strong></p>
-<p>• 曾映辉头版出错连续两月高于4%，建议安排师傅review或减量聚焦质量</p>
-<p>• 刘永辉产能持续攀升（97→186），注意是否接近产能天花板</p>
-<p>• 范师傅审版比例不均，建议统一审版标准</p>
-</div>
-</div>
-<script>
-const M=['3月','4月','5月','6月','7月'];
-const C={lyh:'#38bdf8',ly:'#4ade80',zyh:'#fbbf24',scf:'#a78bfa'};
-const opt={responsive:true,plugins:{legend:{labels:{color:'#475569',font:{size:11}}}},scales:{x:{ticks:{color:'#64748b'}},y:{ticks:{color:'#64748b'}}}};
-new Chart(document.getElementById('workload'),{type:'line',data:{labels:M,datasets:[
-{label:'刘永辉',data:[97,119,138,127,186],borderColor:C.lyh,tension:.3},
-{label:'罗银',data:[103,117,108,132,116],borderColor:C.ly,tension:.3},
-{label:'曾映辉',data:[113,102,94,97,118],borderColor:C.zyh,tension:.3},
-{label:'施从富',data:[114,137,122,132,153],borderColor:C.scf,tension:.3}
-]},options:opt});
-new Chart(document.getElementById('errorRate'),{type:'line',data:{labels:M,datasets:[
-{label:'刘永辉',data:[5.3,1.1,1.0,1.9,0.8],borderColor:C.lyh,tension:.3},
-{label:'罗银',data:[0,0,1.1,2.7,1.2],borderColor:C.ly,tension:.3},
-{label:'曾映辉',data:[0,1.8,0,10.1,4.9],borderColor:C.zyh,tension:.3},
-{label:'施从富',data:[0,0,1.0,3.8,2.5],borderColor:C.scf,tension:.3}
-]},options:opt});
-new Chart(document.getElementById('bulkError'),{type:'bar',data:{labels:M,datasets:[
-{label:'刘永辉',data:[14.3,10.7,0,0,0],backgroundColor:C.lyh+'80'},
-{label:'罗银',data:[3.1,7.4,11.8,0,0],backgroundColor:C.ly+'80'},
-{label:'曾映辉',data:[27.6,17.0,25.0,5.6,2.7],backgroundColor:C.zyh+'80'},
-{label:'施从富',data:[12.2,5.6,12.0,7.4,0],backgroundColor:C.scf+'80'}
-]},options:opt});
-new Chart(document.getElementById('radar'),{type:'radar',data:{labels:['工作量','头版准确率','大货准确率','稳定性','进步趋势'],datasets:[
-{label:'刘永辉',data:[95,95,85,90,95],borderColor:C.lyh,backgroundColor:C.lyh+'20'},
-{label:'罗银',data:[75,90,70,85,80],borderColor:C.ly,backgroundColor:C.ly+'20'},
-{label:'曾映辉',data:[70,60,65,50,70],borderColor:C.zyh,backgroundColor:C.zyh+'20'},
-{label:'施从富',data:[90,80,75,75,85],borderColor:C.scf,backgroundColor:C.scf+'20'}
-]},options:{responsive:true,plugins:{legend:{labels:{color:'#475569'}}},scales:{r:{grid:{color:'#e2e8f0'},ticks:{color:'#64748b'},pointLabels:{color:'#475569'}}}}});
-</script>
+        <!-- Overview Cards -->
+        <div class="overview-grid" id="overviewGrid"></div>
+
+        <!-- Person Cards -->
+        <div class="person-grid" id="personGrid"></div>
+
+        <!-- Comparison Section -->
+        <div class="table-section" style="margin-bottom:20px;">
+            <h2>📊 人员横向对比</h2>
+            <div id="comparisonSection"></div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-section">
+            <h2>📋 数据明细表</h2>
+            <table class="data-table" id="dataTable"></table>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const data = {
+            '3月': [
+                { name: '刘永辉', total: 97, headCount: 76, headError: 4, headRate: 5.26, gradeCount: 21, gradeError: 3, gradeRate: 14.29 },
+                { name: '罗银', total: 103, headCount: 71, headError: 0, headRate: 0, gradeCount: 32, gradeError: 1, gradeRate: 3.13 },
+                { name: '曾映辉', total: 113, headCount: 84, headError: 0, headRate: 0, gradeCount: 29, gradeError: 8, gradeRate: 27.59 },
+                { name: '施从富', total: 114, headCount: 73, headError: 0, headRate: 0, gradeCount: 41, gradeError: 5, gradeRate: 12.20 }
+            ],
+            '4月': [
+                { name: '曾映辉', total: 102, headCount: 55, headError: 1, headRate: 1.82, gradeCount: 47, gradeError: 8, gradeRate: 17.02 },
+                { name: '罗银', total: 117, headCount: 90, headError: 0, headRate: 0, gradeCount: 27, gradeError: 2, gradeRate: 7.41 },
+                { name: '刘永辉', total: 119, headCount: 91, headError: 1, headRate: 1.10, gradeCount: 28, gradeError: 3, gradeRate: 10.71 },
+                { name: '施从富', total: 137, headCount: 101, headError: 0, headRate: 0, gradeCount: 36, gradeError: 2, gradeRate: 5.56 }
+            ],
+            '5月': [
+                { name: '曾映辉', total: 94, headCount: 78, headError: 0, headRate: 0, gradeCount: 16, gradeError: 4, gradeRate: 25 },
+                { name: '罗银', total: 108, headCount: 91, headError: 1, headRate: 1.10, gradeCount: 17, gradeError: 2, gradeRate: 11.76 },
+                { name: '施从富', total: 122, headCount: 97, headError: 1, headRate: 1.03, gradeCount: 25, gradeError: 3, gradeRate: 12 },
+                { name: '刘永辉', total: 138, headCount: 99, headError: 1, headRate: 1.01, gradeCount: 39, gradeError: 0, gradeRate: 0 }
+            ],
+            '6月': [
+                { name: '曾映辉', total: 97, headCount: 79, headError: 8, headRate: 10.13, gradeCount: 18, gradeError: 1, gradeRate: 5.56 },
+                { name: '刘永辉', total: 127, headCount: 105, headError: 2, headRate: 1.90, gradeCount: 22, gradeError: 0, gradeRate: 0 },
+                { name: '罗银', total: 132, headCount: 110, headError: 3, headRate: 2.73, gradeCount: 22, gradeError: 0, gradeRate: 0 },
+                { name: '施从富', total: 132, headCount: 105, headError: 4, headRate: 3.81, gradeCount: 27, gradeError: 2, gradeRate: 7.41 }
+            ]
+        };
+
+        const names = ['刘永辉', '罗银', '曾映辉', '施从富'];
+        const months = ['3月', '4月', '5月', '6月', '7月'];
+
+        // Aggregate per person
+        function getPersonData(name) {
+            const records = [];
+            for (const month of months) {
+                const record = data[month].find(d => d.name === name);
+                if (record) records.push({ month, ...record });
+            }
+            return records;
+        }
+
+        function getPersonTotal(name) {
+            return getPersonData(name).reduce((sum, r) => sum + r.total, 0);
+        }
+
+        // Overview
+        const totalOutput = names.reduce((sum, name) => sum + getPersonTotal(name), 0);
+
+        let totalHeadCount = 0, totalHeadError = 0, totalGradeCount = 0, totalGradeError = 0;
+        for (const month of months) {
+            for (const record of data[month]) {
+                totalHeadCount += record.headCount;
+                totalHeadError += record.headError;
+                totalGradeCount += record.gradeCount;
+                totalGradeError += record.gradeError;
+            }
+        }
+
+        const avgHeadRate = ((totalHeadError / totalHeadCount) * 100).toFixed(2);
+        const avgGradeRate = ((totalGradeError / totalGradeCount) * 100).toFixed(2);
+        const monthlyAvg = Math.round(totalOutput / months.length);
+
+        const overviewData = [
+            { label: months.length + '个月总产出', value: totalOutput, unit: '件' },
+            { label: '头复版平均出错率', value: avgHeadRate + '%', unit: '' },
+            { label: '放码平均出错率', value: avgGradeRate + '%', unit: '' },
+            { label: '月均总产出', value: monthlyAvg, unit: '件/月' }
+        ];
+
+        const overviewGrid = document.getElementById('overviewGrid');
+        overviewData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'overview-card';
+            card.innerHTML = `
+                <div class="label">${item.label}</div>
+                <div class="value">${item.value}</div>
+                <div class="unit">${item.unit}</div>
+            `;
+            overviewGrid.appendChild(card);
+        });
+
+        // Person Cards
+        function getRateClass(rate) {
+            if (rate === 0) return 'error-zero';
+            if (rate <= 3) return 'error-low';
+            if (rate <= 10) return 'error-mid';
+            return 'error-high';
+        }
+
+        function getTag(name) {
+            const records = getPersonData(name);
+            const total = getPersonTotal(name);
+            const headErrors = records.reduce((s, r) => s + r.headError, 0);
+            const gradeErrors = records.reduce((s, r) => s + r.gradeError, 0);
+
+            // Highest total output
+            const maxTotal = Math.max(...names.map(n => getPersonTotal(n)));
+            if (total === maxTotal) return { text: '🏆 产出王', class: 'tag-green' };
+
+            // Zero head errors
+            if (headErrors === 0) return { text: '✨ 头版零失误', class: 'tag-blue' };
+
+            // Lowest grade error
+            const gradeRates = names.map(n => {
+                const recs = getPersonData(n);
+                const gc = recs.reduce((s, r) => s + r.gradeCount, 0);
+                const ge = recs.reduce((s, r) => s + r.gradeError, 0);
+                return { name: n, rate: gc > 0 ? ge / gc : 0 };
+            });
+            gradeRates.sort((a, b) => a.rate - b.rate);
+            if (gradeRates[0].name === name) return { text: '🎯 放码精准', class: 'tag-purple' };
+
+            // Consistent improvement
+            if (records.length === 3 && records[2].total > records[0].total) {
+                return { text: '📈 持续进步', class: 'tag-yellow' };
+            }
+
+            return { text: '⭐ 稳定输出', class: 'tag-yellow' };
+        }
+
+        const personGrid = document.getElementById('personGrid');
+        const maxMonthlyOutput = Math.max(...Object.values(data).flat().map(d => d.total));
+
+        names.forEach(name => {
+            const records = getPersonData(name);
+            const total = getPersonTotal(name);
+            const tag = getTag(name);
+
+            // Bar chart HTML
+            const barsHtml = records.map(r => {
+                const height = Math.round((r.total / maxMonthlyOutput) * 60);
+                return `
+                    <div class="bar-item">
+                        <div class="bar-value">${r.total}</div>
+                        <div class="bar" style="height: ${height}px;"></div>
+                        <div class="bar-label">${r.month}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Error rate blocks
+            const headBlocks = records.map(r => {
+                const cls = getRateClass(r.headRate);
+                const display = r.headRate === 0 ? '0%' : r.headRate.toFixed(1) + '%';
+                return `<div class="error-block ${cls}">${r.month} ${display}</div>`;
+            }).join('');
+
+            const gradeBlocks = records.map(r => {
+                const cls = getRateClass(r.gradeRate);
+                const display = r.gradeRate === 0 ? '0%' : r.gradeRate.toFixed(1) + '%';
+                return `<div class="error-block ${cls}">${r.month} ${display}</div>`;
+            }).join('');
+
+            const card = document.createElement('div');
+            card.className = 'person-card';
+            card.innerHTML = `
+                <div class="card-header">
+                    <div>
+                        <div class="name">${name}</div>
+                        <span class="tag ${tag.class}">${tag.text}</span>
+                    </div>
+                    <div class="total">总产出 <span>${total}</span></div>
+                </div>
+                <div class="chart-section">
+                    <div class="section-title">月度产出趋势</div>
+                    <div class="bar-chart">${barsHtml}</div>
+                </div>
+                <div class="error-rate-section">
+                    <div class="section-title">出错率趋势</div>
+                    <div class="error-rate-row">
+                        <div class="error-rate-label">头复版</div>
+                        <div class="error-blocks">${headBlocks}</div>
+                    </div>
+                    <div class="error-rate-row">
+                        <div class="error-rate-label">放码</div>
+                        <div class="error-blocks">${gradeBlocks}</div>
+                    </div>
+                </div>
+            `;
+            personGrid.appendChild(card);
+        });
+
+        // Data Table
+        const dataTable = document.getElementById('dataTable');
+        let tableHtml = `
+            <thead>
+                <tr>
+                    <th>月份</th>
+                    <th>姓名</th>
+                    <th>总产出</th>
+                    <th>头复版</th>
+                    <th>头复版出错</th>
+                    <th>头复版出错率</th>
+                    <th>放码</th>
+                    <th>放码出错</th>
+                    <th>放码出错率</th>
+                </tr>
+            </thead>
+            <tbody>
+        `;
+
+        for (const month of months) {
+            tableHtml += `<tr><td colspan="9" class="month-header">📅 ${month}</td></tr>`;
+            // Sort by total descending within month
+            const sorted = [...data[month]].sort((a, b) => b.total - a.total);
+            for (const r of sorted) {
+                const headRateClass = r.headRate === 0 ? 'rate-good' : r.headRate <= 2 ? 'rate-warn' : 'rate-bad';
+                const gradeRateClass = r.gradeRate === 0 ? 'rate-good' : r.gradeRate <= 10 ? 'rate-warn' : 'rate-bad';
+                tableHtml += `
+                    <tr>
+                        <td>${month}</td>
+                        <td><strong>${r.name}</strong></td>
+                        <td>${r.total}</td>
+                        <td>${r.headCount}</td>
+                        <td>${r.headError}</td>
+                        <td class="rate-cell ${headRateClass}">${r.headRate.toFixed(2)}%</td>
+                        <td>${r.gradeCount}</td>
+                        <td>${r.gradeError}</td>
+                        <td class="rate-cell ${gradeRateClass}">${r.gradeRate.toFixed(2)}%</td>
+                    </tr>
+                `;
+            }
+        }
+
+        tableHtml += '</tbody>';
+        dataTable.innerHTML = tableHtml;
+
+        // === Comparison Section ===
+        const compSection = document.getElementById('comparisonSection');
+        
+        // Build comparison data
+        const compData = names.map(name => {
+            const records = getPersonData(name);
+            const total = getPersonTotal(name);
+            const headCount = records.reduce((s, r) => s + r.headCount, 0);
+            const headError = records.reduce((s, r) => s + r.headError, 0);
+            const gradeCount = records.reduce((s, r) => s + r.gradeCount, 0);
+            const gradeError = records.reduce((s, r) => s + r.gradeError, 0);
+            const headRate = headCount > 0 ? (headError / headCount * 100) : 0;
+            const gradeRate = gradeCount > 0 ? (gradeError / gradeCount * 100) : 0;
+            const monthlyData = records.map(r => r.total);
+            // Growth: last month vs first month
+            const growth = monthlyData.length >= 2 ? ((monthlyData[monthlyData.length-1] - monthlyData[0]) / monthlyData[0] * 100) : 0;
+            return { name, total, headRate, gradeRate, headError, gradeError, growth, monthlyData };
+        });
+
+        const maxTotal = Math.max(...compData.map(d => d.total));
+        const maxGradeRate = Math.max(...compData.map(d => d.gradeRate));
+
+        let compHtml = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+            <!-- Total Output Comparison -->
+            <div style="background:#f0fdf4; border-radius:10px; padding:20px;">
+                <div style="font-size:14px; font-weight:600; color:#065f46; margin-bottom:12px;">🏭 ${months.length}个月总产出对比</div>
+                ${compData.sort((a,b) => b.total - a.total).map((d, i) => {
+                    const barWidth = Math.round(d.total / maxTotal * 100);
+                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  ';
+                    return `<div style="display:flex; align-items:center; margin-bottom:10px;">
+                        <span style="width:24px; font-size:14px;">${medal}</span>
+                        <span style="width:60px; font-size:13px; font-weight:600;">${d.name}</span>
+                        <div style="flex:1; height:24px; background:#d1fae5; border-radius:6px; overflow:hidden; margin:0 10px;">
+                            <div style="height:100%; width:${barWidth}%; background:#10b981; border-radius:6px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px;">
+                                <span style="font-size:11px; color:#fff; font-weight:700;">${d.total}</span>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+            <!-- Error Rate Comparison -->
+            <div style="background:#fef2f2; border-radius:10px; padding:20px;">
+                <div style="font-size:14px; font-weight:600; color:#991b1b; margin-bottom:12px;">⚠️ 放码出错率对比（越低越好）</div>
+                ${compData.sort((a,b) => a.gradeRate - b.gradeRate).map((d, i) => {
+                    const barWidth = maxGradeRate > 0 ? Math.round(d.gradeRate / maxGradeRate * 100) : 0;
+                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  ';
+                    const color = d.gradeRate <= 5 ? '#10b981' : d.gradeRate <= 12 ? '#f59e0b' : '#ef4444';
+                    return `<div style="display:flex; align-items:center; margin-bottom:10px;">
+                        <span style="width:24px; font-size:14px;">${medal}</span>
+                        <span style="width:60px; font-size:13px; font-weight:600;">${d.name}</span>
+                        <div style="flex:1; height:24px; background:#fee2e2; border-radius:6px; overflow:hidden; margin:0 10px;">
+                            <div style="height:100%; width:${barWidth}%; background:${color}; border-radius:6px; display:flex; align-items:center; justify-content:flex-end; padding-right:8px;">
+                                <span style="font-size:11px; color:#fff; font-weight:700;">${d.gradeRate.toFixed(1)}%</span>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>
+        <!-- Growth Comparison -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div style="background:#eff6ff; border-radius:10px; padding:20px;">
+                <div style="font-size:14px; font-weight:600; color:#1e40af; margin-bottom:12px;">📈 产出增长率（5月 vs 3月）</div>
+                ${compData.sort((a,b) => b.growth - a.growth).map(d => {
+                    const arrow = d.growth > 0 ? '↑' : d.growth < 0 ? '↓' : '→';
+                    const color = d.growth > 0 ? '#10b981' : d.growth < 0 ? '#ef4444' : '#6b7280';
+                    return `<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; padding:8px 12px; background:#fff; border-radius:8px;">
+                        <span style="font-size:13px; font-weight:600;">${d.name}</span>
+                        <span style="font-size:14px; font-weight:700; color:${color};">${arrow} ${d.growth > 0 ? '+' : ''}${d.growth.toFixed(1)}%</span>
+                    </div>`;
+                }).join('')}
+            </div>
+            <div style="background:#faf5ff; border-radius:10px; padding:20px;">
+                <div style="font-size:14px; font-weight:600; color:#6b21a8; margin-bottom:12px;">🎯 头复版出错率对比（越低越好）</div>
+                ${compData.sort((a,b) => a.headRate - b.headRate).map((d, i) => {
+                    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  ';
+                    const display = d.headRate === 0 ? '0%（零失误）' : d.headRate.toFixed(2) + '%';
+                    const color = d.headRate === 0 ? '#10b981' : d.headRate <= 1.5 ? '#f59e0b' : '#ef4444';
+                    return `<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; padding:8px 12px; background:#fff; border-radius:8px;">
+                        <span style="font-size:13px;"><span style="margin-right:4px;">${medal}</span><strong>${d.name}</strong></span>
+                        <span style="font-size:13px; font-weight:700; color:${color};">${display}</span>
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>
+        `;
+        compSection.innerHTML = compHtml;
+    </script>
 </body>
 </html>
