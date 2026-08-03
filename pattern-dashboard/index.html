@@ -674,7 +674,7 @@
         <!-- Growth Comparison -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
             <div style="background:#eff6ff; border-radius:10px; padding:20px;">
-                <div style="font-size:14px; font-weight:600; color:#1e40af; margin-bottom:12px;">📈 产出增长率（5月 vs 3月）</div>
+                <div style="font-size:14px; font-weight:600; color:#1e40af; margin-bottom:12px;">📈 产出增长率（7月 vs 3月）</div>
                 ${compData.sort((a,b) => b.growth - a.growth).map(d => {
                     const arrow = d.growth > 0 ? '↑' : d.growth < 0 ? '↓' : '→';
                     const color = d.growth > 0 ? '#10b981' : d.growth < 0 ? '#ef4444' : '#6b7280';
