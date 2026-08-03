@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>捷展账号矩阵看板 · 7月</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,"PingFang SC",sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}.container{max-width:1400px;margin:0 auto;padding:24px}h1{font-size:26px;font-weight:800;text-align:center;color:#fff;margin-bottom:6px}.subtitle{text-align:center;color:#64748b;font-size:13px;margin-bottom:28px}h2{font-size:18px;color:#f8fafc;margin:28px 0 14px;padding-bottom:6px;border-bottom:1px solid #334155}.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}.kpi-card{background:#1e293b;border-radius:10px;padding:14px;border:1px solid #334155;text-align:center}.kpi-card .label{font-size:11px;color:#94a3b8;margin-bottom:4px}.kpi-card .value{font-size:22px;font-weight:800;color:#fbbf24}.kpi-card .value.blue{color:#38bdf8}.kpi-card .value.green{color:#4ade80}.kpi-card .value.purple{color:#a78bfa}.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}.chart-box{background:#1e293b;border-radius:10px;padding:16px;border:1px solid #334155}.chart-box.full{grid-column:1/-1}.chart-box h3{font-size:14px;color:#f8fafc;margin-bottom:10px}table{width:100%;border-collapse:collapse}th{text-align:left;padding:8px 10px;background:#334155;color:#94a3b8;font-size:11px}td{padding:8px 10px;border-bottom:1px solid #1e293b;font-size:12px}tr:hover td{background:#1e293b80}.tag{display:inline-block;padding:2px 6px;border-radius:8px;font-size:10px;font-weight:600}.tag.xhs{background:#ff234420;color:#ff2344}.tag.dy{background:#1a1a1a;color:#fff;border:1px solid #444}.tag.sph{background:#07c16020;color:#07c160}@media(max-width:768px){.chart-grid{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}}#auth{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f172a;display:flex;align-items:center;justify-content:center;z-index:9999}#auth.hidden{display:none}#auth form{background:#1e293b;padding:40px;border-radius:16px;text-align:center;border:1px solid #334155}#auth input{background:#0f172a;border:1px solid #475569;color:#fff;padding:12px 16px;border-radius:8px;font-size:16px;width:200px;margin:16px 0}#auth button{background:#3b82f6;color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:14px;cursor:pointer}#auth .err{color:#f87171;font-size:13px;margin-top:8px;display:none}
+</style></head><body>
+<div id="auth"><form onsubmit="return checkPwd()"><h2 style="color:#fff;margin-bottom:8px">🔒 账号矩阵看板</h2><p style="color:#94a3b8;font-size:14px">请输入访问密码</p><input type="password" id="pwd" placeholder="密码" autofocus><br><button type="submit">进入</button><p class="err" id="err">密码错误</p></form></div>
+<div class="container" id="main" style="display:none">
+<h1>📊 捷展账号矩阵数据看板</h1><p class="subtitle">2026年7月 · OK哥 / 捷展大号 / 捷展詹姆斯 × 小红书 / 抖音 / 视频号</p>
+<div class="kpi-row">
+<div class="kpi-card"><div class="label">总发布</div><div class="value">110</div></div>
+<div class="kpi-card"><div class="label">总播放</div><div class="value blue">60,366</div></div>
+<div class="kpi-card"><div class="label">总点赞</div><div class="value green">853</div></div>
+<div class="kpi-card"><div class="label">总转发</div><div class="value purple">2,645</div></div>
+</div>
+<h2>📐 横向对比：各账号×平台</h2>
+<div class="chart-grid">
+<div class="chart-box"><h3>总播放量</h3><canvas id="c1"></canvas></div>
+<div class="chart-box"><h3>互动率(%)</h3><canvas id="c2"></canvas></div>
+</div>
+<h2>📊 竖向对比：账号间</h2>
+<div class="chart-grid">
+<div class="chart-box"><h3>各账号总播放</h3><canvas id="c3"></canvas></div>
+<div class="chart-box"><h3>各账号均播放</h3><canvas id="c4"></canvas></div>
+</div>
+<h2>📅 每周趋势</h2>
+<div class="chart-grid">
+<div class="chart-box"><h3>周播放量</h3><canvas id="c5"></canvas></div>
+<div class="chart-box"><h3>周发布数</h3><canvas id="c6"></canvas></div>
+</div>
+<h2>🔥 爆款内容拆解</h2>
+<div class="chart-box full" style="margin-bottom:16px"><h3>ok哥 · TOP5</h3><table><thead><tr><th>标题</th><th>平台</th><th>播放</th><th>赞</th><th>互动率</th></tr></thead><tbody>
+<tr><td>国内T0级明星潮牌，为什么要和捷展合作？ 第一次合作，他们只给了我们3天开发20</td><td><span class="tag dy">抖音</span></td><td><strong>6704</strong></td><td>161</td><td>2.4%</td></tr>
+<tr><td>国内T0级明星潮牌，为什么要和捷展合作？
+第一次合作，他们只给了我们3天开发20</td><td><span class="tag sph">视频号</span></td><td><strong>1508</strong></td><td>23</td><td>3.4%</td></tr>
+<tr><td>十年潮牌源头工厂，设计生产一条龙服务 A decade as a source </td><td><span class="tag sph">视频号</span></td><td><strong>1057</strong></td><td>9</td><td>1.0%</td></tr>
+<tr><td>头部内容电商团队，为什么和捷展合作?
+
+流量可以带来订单，但供应链决定能不能接住</td><td><span class="tag sph">视频号</span></td><td><strong>992</strong></td><td>19</td><td>3.0%</td></tr>
+<tr><td>高品质潮牌供应链，50件现货在仓！可贴牌改标</td><td><span class="tag sph">视频号</span></td><td><strong>949</strong></td><td>13</td><td>2.4%</td></tr>
+</tbody></table></div>
+<div class="chart-box full" style="margin-bottom:16px"><h3>捷展大号 · TOP5</h3><table><thead><tr><th>标题</th><th>平台</th><th>播放</th><th>赞</th><th>互动率</th></tr></thead><tbody>
+<tr><td>当空气学会储温，当热量学会呼吸
+在秋冬，重量就不再是必要的代价。
+捷展2026“</td><td><span class="tag sph">视频号</span></td><td><strong>2152</strong></td><td>35</td><td>21.0%</td></tr>
+<tr><td>捷展2026“Air&Fire轻热” 秋冬新品发布会VIP开放首日，好评不断！欢</td><td><span class="tag sph">视频号</span></td><td><strong>1698</strong></td><td>22</td><td>3.2%</td></tr>
+<tr><td>New Money Ease
+COMING SOON……
+#捷展运动科技T恤 #</td><td><span class="tag sph">视频号</span></td><td><strong>1573</strong></td><td>24</td><td>12.4%</td></tr>
+<tr><td>春夏爆卖10万件，跑调长T秋冬再冲一轮！
+
+3月上线，4月登顶1688速干T恤榜</td><td><span class="tag sph">视频号</span></td><td><strong>1569</strong></td><td>17</td><td>19.1%</td></tr>
+<tr><td>越野跑到底有什么魔力，国际大牌纷纷挤进来？
+
+越野跑，不再只是小众运动，而是运动</td><td><span class="tag sph">视频号</span></td><td><strong>1454</strong></td><td>19</td><td>7.8%</td></tr>
+</tbody></table></div>
+<div class="chart-box full" style="margin-bottom:16px"><h3>捷展詹姆斯 · TOP5</h3><table><thead><tr><th>标题</th><th>平台</th><th>播放</th><th>赞</th><th>互动率</th></tr></thead><tbody>
+<tr><td>服装下一个风口在哪儿? 留下你的看法</td><td><span class="tag dy">抖音</span></td><td><strong>1283</strong></td><td>13</td><td>1.1%</td></tr>
+<tr><td>服装人最懂服装ai 实战比技术程序员还强#服装ai #ai高清模特 #服装实战分</td><td><span class="tag dy">抖音</span></td><td><strong>1025</strong></td><td>11</td><td>1.3%</td></tr>
+<tr><td>静夜思白牌电商何去何从? 透支品牌和劣质产品泛滥加平台政策双重压力下会不会物极必</td><td><span class="tag dy">抖音</span></td><td><strong>960</strong></td><td>12</td><td>2.0%</td></tr>
+<tr><td>AI模特图最棘手的印花问题已经被解决 秘诀就是我们的提示词和一个非常好用的一站式</td><td><span class="tag dy">抖音</span></td><td><strong>727</strong></td><td>2</td><td>0.6%</td></tr>
+<tr><td>工作流AI模型 基本我们给做跨境多国家做平台的客人都分享了这一套工作流跟AI的模</td><td><span class="tag dy">抖音</span></td><td><strong>633</strong></td><td>5</td><td>0.8%</td></tr>
+</tbody></table></div>
+
+<h2>📋 全量明细</h2>
+<div class="chart-box full"><table><thead><tr><th>账号</th><th>平台</th><th>发布</th><th>总播放</th><th>均播放</th><th>总赞</th><th>总评</th><th>总转</th><th>互动率</th></tr></thead><tbody><tr><td>ok哥</td><td>小红书</td><td>4</td><td>1706</td><td>426</td><td>26</td><td>1</td><td>1</td><td>1.6%</td></tr>
+<tr><td>ok哥</td><td>抖音</td><td>3</td><td>7074</td><td>2358</td><td>166</td><td>2</td><td>1</td><td>2.4%</td></tr>
+<tr><td>ok哥</td><td>视频号</td><td>19</td><td>11702</td><td>616</td><td>161</td><td>6</td><td>115</td><td>2.4%</td></tr>
+<tr><td>捷展大号</td><td>小红书</td><td>17</td><td>3717</td><td>219</td><td>32</td><td>4</td><td>16</td><td>1.4%</td></tr>
+<tr><td>捷展大号</td><td>抖音</td><td>17</td><td>6082</td><td>358</td><td>45</td><td>2</td><td>7</td><td>0.9%</td></tr>
+<tr><td>捷展大号</td><td>视频号</td><td>17</td><td>21060</td><td>1239</td><td>337</td><td>11</td><td>2484</td><td>13.4%</td></tr>
+<tr><td>捷展詹姆斯</td><td>小红书</td><td>17</td><td>2638</td><td>155</td><td>24</td><td>4</td><td>7</td><td>1.3%</td></tr>
+<tr><td>捷展詹姆斯</td><td>抖音</td><td>16</td><td>6387</td><td>399</td><td>62</td><td>2</td><td>14</td><td>1.2%</td></tr>
+</tbody></table></div>
+</div>
+<script>
+var H='8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92';
+function checkPwd(){var p=document.getElementById('pwd').value;crypto.subtle.digest('SHA-256',new TextEncoder().encode(p)).then(function(b){var h=Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');if(h===H){document.getElementById('auth').classList.add('hidden');document.getElementById('main').style.display='block';initCharts();}else{document.getElementById('err').style.display='block';}});return false;}
+function initCharts(){
+var accs=["ok\u54e5", "\u6377\u5c55\u5927\u53f7", "\u6377\u5c55\u8a79\u59c6\u65af"];
+var plats=['小红书','抖音','视频号'];
+var colors=[['#ff2344','#1a1a1a','#07c160'],['#ff234480','#1a1a1a80','#07c16080']];
+// c1: views by platform grouped by account
+new Chart(document.getElementById('c1'),{type:'bar',data:{labels:accs,datasets:[
+{label:'小红书',data:[1706.0, 3717.0, 2638.0],backgroundColor:'#ff2344'},
+{label:'抖音',data:[7074.0, 6082.0, 6387.0],backgroundColor:'#333'},
+{label:'视频号',data:[11702.0, 21060.0, 0],backgroundColor:'#07c160'}
+]},options:{responsive:true,plugins:{legend:{labels:{color:'#94a3b8'}}},scales:{x:{ticks:{color:'#94a3b8'}},y:{ticks:{color:'#64748b'}}}}});
+// c2: engagement
+new Chart(document.getElementById('c2'),{type:'bar',data:{labels:accs,datasets:[
+{label:'小红书',data:[1.6, 1.4, 1.3],backgroundColor:'#ff2344'},
+{label:'抖音',data:[2.4, 0.9, 1.2],backgroundColor:'#333'},
+{label:'视频号',data:[2.4, 13.4, 0.0],backgroundColor:'#07c160'}
+]},options:{responsive:true,plugins:{legend:{labels:{color:'#94a3b8'}}},scales:{x:{ticks:{color:'#94a3b8'}},y:{ticks:{color:'#64748b'}}}}});
+// c3: account total views
+new Chart(document.getElementById('c3'),{type:'bar',data:{labels:accs,datasets:[{data:[20482.0,30859.0,9025.0],backgroundColor:['#fbbf24','#38bdf8','#a78bfa']}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'}},y:{ticks:{color:'#94a3b8'}}}}});
+// c4: avg views
+new Chart(document.getElementById('c4'),{type:'bar',data:{labels:accs,datasets:[{data:[788,605,273],backgroundColor:['#fbbf24','#38bdf8','#a78bfa']}]},options:{responsive:true,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'}},y:{ticks:{color:'#94a3b8'}}}}});
+// c5: weekly views
+new Chart(document.getElementById('c5'),{type:'line',data:{labels:['W1','W2','W3','W4','W5'],datasets:[
+{label:'ok哥',data:[645.0, 1318.0, 12103.0, 3457.0, 1253.0],borderColor:'#fbbf24',tension:0.3},
+{label:'捷展大号',data:[4580.0, 4118.0, 6840.0, 7033.0, 4571.0],borderColor:'#38bdf8',tension:0.3},
+{label:'捷展詹姆斯',data:[0, 1545.0, 1777.0, 2675.0, 390.0],borderColor:'#a78bfa',tension:0.3}
+]},options:{responsive:true,plugins:{legend:{labels:{color:'#94a3b8'}}},scales:{x:{ticks:{color:'#64748b'}},y:{ticks:{color:'#64748b'}}}}});
+// c6: weekly count
+new Chart(document.getElementById('c6'),{type:'bar',data:{labels:['W1','W2','W3','W4','W5'],datasets:[
+{label:'ok哥',data:[1, 3, 7, 8, 3],backgroundColor:'#fbbf24'},
+{label:'捷展大号',data:[4, 4, 8, 10, 8],backgroundColor:'#38bdf8'},
+{label:'捷展詹姆斯',data:[0, 4, 5, 5, 2],backgroundColor:'#a78bfa'}
+]},options:{responsive:true,plugins:{legend:{labels:{color:'#94a3b8'}}},scales:{x:{stacked:true,ticks:{color:'#64748b'}},y:{stacked:true,ticks:{color:'#64748b'}}}}});
+}
+</script></body></html>
