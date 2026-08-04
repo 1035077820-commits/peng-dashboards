@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>团建活动流程看板</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC",sans-serif;background:#fff;color:#1a1a1a;padding:32px;min-height:100vh}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;margin-bottom:36px}
+.header h1{font-size:32px;font-weight:800;color:#1e40af}
+.header p{font-size:14px;color:#6b7280;margin-top:6px}
+.timeline{position:relative;padding-left:40px}
+.timeline::before{content:'';position:absolute;left:16px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#3b82f6,#8b5cf6,#ec4899,#f59e0b);border-radius:2px}
+.item{position:relative;margin-bottom:28px;padding:20px 24px;background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0;box-shadow:0 2px 4px rgba(0,0,0,0.04)}
+.item::before{content:'';position:absolute;left:-32px;top:24px;width:14px;height:14px;border-radius:50%;border:3px solid #3b82f6;background:#fff}
+.item:nth-child(2)::before{border-color:#8b5cf6}
+.item:nth-child(3)::before{border-color:#ec4899}
+.item:nth-child(4)::before{border-color:#f59e0b}
+.item:nth-child(5)::before{border-color:#10b981}
+.item:nth-child(6)::before{border-color:#6366f1}
+.item .time{font-size:12px;color:#6b7280;font-weight:600;margin-bottom:6px}
+.item .title{font-size:18px;font-weight:700;margin-bottom:8px}
+.item .desc{font-size:13px;color:#475569;line-height:1.8}
+.item .tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-top:8px}
+.tag-game{background:#dbeafe;color:#1e40af}
+.tag-free{background:#fef3c7;color:#92400e}
+.tag-open{background:#d1fae5;color:#065f46}
+.rules{margin-top:8px;padding:10px 14px;background:#fff;border-radius:8px;font-size:12px;color:#374151;line-height:1.9}
+.rules strong{color:#1e40af}
+.footer{text-align:center;margin-top:36px;padding-top:20px;border-top:1px solid #e2e8f0;color:#9ca3af;font-size:12px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🎉 团建活动流程</h1>
+<p>轻松有趣 · 增进默契 · 吃好玩好</p>
+</div>
+
+<div class="timeline">
+
+<div class="item">
+<div class="time">⏰ 0:00 - 0:10（10分钟）</div>
+<div class="title">🎤 开场 & 分组</div>
+<div class="desc">主持人暖场，随机抽签分成2-3队，每队选队长、起队名、喊口号。<br>规则：所有游戏积分制，最终总分最高的队伍赢大奖！</div>
+<span class="tag tag-open">暖场</span>
+</div>
+
+<div class="item">
+<div class="time">⏰ 0:10 - 0:35（25分钟）</div>
+<div class="title">🏃 游戏一：极速60秒</div>
+<div class="desc">每队派1人进入指定区域，60秒内按顺序收集30张卡片（卡片上是数字的各种表达方式：图片、谜语、实物）。队友在外面可以喊提示但不能进场。</div>
+<div class="rules">
+<strong>规则：</strong>每队3轮机会，每轮1分钟。正确顺序越多分越高。<br>
+<strong>计分：</strong>全部正确+50分，每错/漏1张-5分<br>
+<strong>看点：</strong>考验沟通+记忆+团队策略
+</div>
+<span class="tag tag-game">团队协作</span>
+</div>
+
+<div class="item">
+<div class="time">⏰ 0:35 - 1:00（25分钟）</div>
+<div class="title">🎭 游戏二：你演我猜 · 职场版</div>
+<div class="desc">每队轮流上台，一人看题表演（不能说话），队友猜词。题目混搭：职场动作 + 日常搞笑 + 公司内部梗。</div>
+<div class="rules">
+<strong>规则：</strong>每队2分钟，猜对1个+10分，可跳过（最多跳3个）<br>
+<strong>题库示例：</strong>加班、摸鱼、甲方改需求、快递到了、老板来了…<br>
+<strong>看点：</strong>爆笑担当，拉近距离
+</div>
+<span class="tag tag-game">搞笑互动</span>
+</div>
+
+<div class="item">
+<div class="time">⏰ 1:00 - 1:25（25分钟）</div>
+<div class="title">🧠 游戏三：谁是卧底</div>
+<div class="desc">每轮8人参加，其中1-2人是卧底。所有人拿到类似但不同的词，每轮每人用一句话描述自己的词，投票淘汰，找出卧底。</div>
+<div class="rules">
+<strong>规则：</strong>每轮3-4分钟，卧底存活到最后+20分，平民找出卧底+10分/人<br>
+<strong>词组示例：</strong>奶茶 vs 咖啡 / 广州 vs 深圳 / 老板 vs 甲方<br>
+<strong>看点：</strong>考验表达+观察力，紧张刺激
+</div>
+<span class="tag tag-game">烧脑对抗</span>
+</div>
+
+<div class="item">
+<div class="time">⏰ 1:25 - 1:50（25分钟）</div>
+<div class="title">🎯 游戏四：真心话大冒险 · 团队版</div>
+<div class="desc">转盘/骰子决定挑战者，真心话和大冒险五五开。完成挑战+5分，拒绝-10分（可用队伍积分买"免死金牌"）。</div>
+<div class="rules">
+<strong>真心话示例：</strong>入职第一天最尴尬的事 / 觉得公司谁最有趣 / 手机最近一张截图<br>
+<strong>大冒险示例：</strong>模仿老板开会 / 给指定同事一个公主抱 / 用rap介绍自己<br>
+<strong>看点：</strong>深度破冰，制造回忆
+</div>
+<span class="tag tag-game">破冰互动</span>
+</div>
+
+<div class="item">
+<div class="time">⏰ 1:50 - 2:30（40分钟）</div>
+<div class="title">🍕 自由时间 · 吃吃喝喝聊聊天</div>
+<div class="desc">颁奖（冠军队伍+最佳表现个人），然后自由活动。<br>准备零食饮料水果，放点音乐，大家随意聊天拍照~</div>
+<span class="tag tag-free">自由活动</span>
+</div>
+
+</div>
+
+<div class="footer">
+💡 道具清单：30张数字卡片 · 词语题板 · 谁是卧底词卡 · 转盘/骰子 · 计分板 · 小奖品 · 零食饮料
+</div>
+</div>
+</body>
+</html>
