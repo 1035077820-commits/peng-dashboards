@@ -162,13 +162,13 @@ function initDashboard(){
   let cp=document.getElementById('cross-platform');
   ['苹果','晓霞'].forEach(name=>{
     let vhData=vh[name],xhsData=xhs[name];
-    let vhViews=vhData.reduce((s,v)=>s+(v['播放量']||0),0);
-    let vhLikes=vhData.reduce((s,v)=>s+(v['喜欢']||0),0);
-    let vhFollow=vhData.reduce((s,v)=>s+(v['关注量']||0),0);
-    let xhsExpo=xhsData.reduce((s,v)=>s+(v['曝光']||0),0);
-    let xhsViews=xhsData.reduce((s,v)=>s+(v['观看量']||0),0);
-    let xhsLikes=xhsData.reduce((s,v)=>s+(v['点赞']||0),0);
-    let xhsFollow=xhsData.reduce((s,v)=>s+(v['涨粉']||0),0);
+    let vhViews=vhData.reduce((s,v)=>s+Number(v["播放量"]||0),0);
+    let vhLikes=vhData.reduce((s,v)=>s+Number(v["喜欢"]||0),0);
+    let vhFollow=vhData.reduce((s,v)=>s+Number(v["关注量"]||0),0);
+    let xhsExpo=xhsData.reduce((s,v)=>s+Number(v["曝光"]||0),0);
+    let xhsViews=xhsData.reduce((s,v)=>s+Number(v["观看量"]||0),0);
+    let xhsLikes=xhsData.reduce((s,v)=>s+Number(v["点赞"]||0),0);
+    let xhsFollow=xhsData.reduce((s,v)=>s+Number(v["涨粉"]||0),0);
     cp.innerHTML+=`<div class="compare-box"><h3>${name}</h3>
       <table><tr><th></th><th><span class="tag tag-vh">视频号</span></th><th><span class="tag tag-xhs">小红书</span></th></tr>
       <tr><td>内容数</td><td>${vhData.length}</td><td>${xhsData.length}</td></tr>
@@ -182,22 +182,22 @@ function initDashboard(){
   new Chart(document.getElementById('chart-cross'),{type:'bar',data:{
     labels:['苹果-视频号','苹果-小红书','晓霞-视频号','晓霞-小红书'],
     datasets:[{label:'播放/曝光',data:[
-      vh['苹果'].reduce((s,v)=>s+(v['播放量']||0),0),
-      xhs['苹果'].reduce((s,v)=>s+(v['曝光']||0),0),
-      vh['晓霞'].reduce((s,v)=>s+(v['播放量']||0),0),
-      xhs['晓霞'].reduce((s,v)=>s+(v['曝光']||0),0)
+      vh['苹果'].reduce((s,v)=>s+Number(v["播放量"]||0),0),
+      xhs['苹果'].reduce((s,v)=>s+Number(v["曝光"]||0),0),
+      vh['晓霞'].reduce((s,v)=>s+Number(v["播放量"]||0),0),
+      xhs['晓霞'].reduce((s,v)=>s+Number(v["曝光"]||0),0)
     ],backgroundColor:['#1d4ed8','#ff2442','#1d4ed8','#ff2442']}]
   },options:{plugins:{legend:{display:false},title:{display:true,text:'跨平台播放/曝光对比',color:'#e7e9ea'}},scales:{x:{ticks:{color:'#71767b'}},y:{ticks:{color:'#71767b'},grid:{color:'#38444d'}}}}});
 
   // VH Rankings
-  let vhRank=Object.keys(vh).map(k=>({name:k,views:vh[k].reduce((s,v)=>s+(v['播放量']||0),0)})).sort((a,b)=>b.views-a.views);
+  let vhRank=Object.keys(vh).map(k=>({name:k,views:vh[k].reduce((s,v)=>s+Number(v["播放量"]||0),0)})).sort((a,b)=>b.views-a.views);
   new Chart(document.getElementById('chart-vh-rank'),{type:'bar',data:{
     labels:vhRank.map(v=>v.name),
     datasets:[{label:'播放量',data:vhRank.map(v=>v.views),backgroundColor:'#1d9bf0'}]
   },options:{indexAxis:'y',plugins:{title:{display:true,text:'视频号播放量排行',color:'#e7e9ea'},legend:{display:false}},scales:{x:{ticks:{color:'#71767b'},grid:{color:'#38444d'}},y:{ticks:{color:'#e7e9ea'}}}}});
 
   // XHS Rankings
-  let xhsRank=Object.keys(xhs).map(k=>({name:k,expo:xhs[k].reduce((s,v)=>s+(v['曝光']||0),0)})).sort((a,b)=>b.expo-a.expo);
+  let xhsRank=Object.keys(xhs).map(k=>({name:k,expo:xhs[k].reduce((s,v)=>s+Number(v["曝光"]||0),0)})).sort((a,b)=>b.expo-a.expo);
   new Chart(document.getElementById('chart-xhs-rank'),{type:'bar',data:{
     labels:xhsRank.map(v=>v.name),
     datasets:[{label:'曝光量',data:xhsRank.map(v=>v.expo),backgroundColor:'#ff2442'}]
@@ -256,10 +256,10 @@ function initDashboard(){
   let tVh='<tr><th>排名</th><th>账号</th><th>发布数</th><th>总播放</th><th>总点赞</th><th>总评论</th><th>总分享</th><th>总关注</th><th>场均播放</th></tr>';
   vhRank.forEach((v,i)=>{
     let d=vh[v.name];
-    let likes=d.reduce((s,x)=>s+(x['喜欢']||0),0);
-    let comments=d.reduce((s,x)=>s+(x['评论量']||0),0);
-    let shares=d.reduce((s,x)=>s+(x['分享量']||0),0);
-    let follows=d.reduce((s,x)=>s+(x['关注量']||0),0);
+    let likes=d.reduce((s,x)=>s+Number(x["喜欢"]||0),0);
+    let comments=d.reduce((s,x)=>s+Number(x["评论量"]||0),0);
+    let shares=d.reduce((s,x)=>s+Number(x["分享量"]||0),0);
+    let follows=d.reduce((s,x)=>s+Number(x["关注量"]||0),0);
     tVh+=`<tr><td class="rank-${i<3?i+1:''}">${i+1}</td><td>${v.name}</td><td>${d.length}</td><td>${v.views}</td><td>${likes}</td><td>${comments}</td><td>${shares}</td><td>${follows}</td><td>${Math.round(v.views/d.length)}</td></tr>`;
   });
   document.getElementById('table-vh').innerHTML=tVh;
@@ -268,10 +268,10 @@ function initDashboard(){
   let tXhs='<tr><th>排名</th><th>账号</th><th>发布数</th><th>总曝光</th><th>总观看</th><th>总点赞</th><th>总收藏</th><th>总涨粉</th><th>场均曝光</th></tr>';
   xhsRank.forEach((v,i)=>{
     let d=xhs[v.name];
-    let views=d.reduce((s,x)=>s+(x['观看量']||0),0);
-    let likes=d.reduce((s,x)=>s+(x['点赞']||0),0);
-    let saves=d.reduce((s,x)=>s+(x['收藏']||0),0);
-    let follows=d.reduce((s,x)=>s+(x['涨粉']||0),0);
+    let views=d.reduce((s,x)=>s+Number(x["观看量"]||0),0);
+    let likes=d.reduce((s,x)=>s+Number(x["点赞"]||0),0);
+    let saves=d.reduce((s,x)=>s+Number(x["收藏"]||0),0);
+    let follows=d.reduce((s,x)=>s+Number(x["涨粉"]||0),0);
     tXhs+=`<tr><td class="rank-${i<3?i+1:''}">${i+1}</td><td>${v.name}</td><td>${d.length}</td><td>${v.expo}</td><td>${views}</td><td>${likes}</td><td>${saves}</td><td>${follows}</td><td>${Math.round(v.expo/d.length)}</td></tr>`;
   });
   document.getElementById('table-xhs').innerHTML=tXhs;
