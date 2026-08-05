@@ -3,112 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>团建活动流程看板</title>
+<title>🏕️ 部门露营团建方案</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"PingFang SC",sans-serif;background:#fff;color:#1a1a1a;padding:32px;min-height:100vh}
-.container{max-width:900px;margin:0 auto}
-.header{text-align:center;margin-bottom:36px}
-.header h1{font-size:32px;font-weight:800;color:#1e40af}
-.header p{font-size:14px;color:#6b7280;margin-top:6px}
-.timeline{position:relative;padding-left:40px}
-.timeline::before{content:'';position:absolute;left:16px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#3b82f6,#8b5cf6,#ec4899,#f59e0b);border-radius:2px}
-.item{position:relative;margin-bottom:28px;padding:20px 24px;background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0;box-shadow:0 2px 4px rgba(0,0,0,0.04)}
-.item::before{content:'';position:absolute;left:-32px;top:24px;width:14px;height:14px;border-radius:50%;border:3px solid #3b82f6;background:#fff}
-.item:nth-child(2)::before{border-color:#8b5cf6}
-.item:nth-child(3)::before{border-color:#ec4899}
-.item:nth-child(4)::before{border-color:#f59e0b}
-.item:nth-child(5)::before{border-color:#10b981}
-.item:nth-child(6)::before{border-color:#6366f1}
-.item .time{font-size:12px;color:#6b7280;font-weight:600;margin-bottom:6px}
-.item .title{font-size:18px;font-weight:700;margin-bottom:8px}
-.item .desc{font-size:13px;color:#475569;line-height:1.8}
-.item .tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-top:8px}
-.tag-game{background:#dbeafe;color:#1e40af}
-.tag-free{background:#fef3c7;color:#92400e}
-.tag-open{background:#d1fae5;color:#065f46}
-.rules{margin-top:8px;padding:10px 14px;background:#fff;border-radius:8px;font-size:12px;color:#374151;line-height:1.9}
-.rules strong{color:#1e40af}
-.footer{text-align:center;margin-top:36px;padding-top:20px;border-top:1px solid #e2e8f0;color:#9ca3af;font-size:12px}
+:root{--g:#2d5016;--gl:#4a7c23;--gp:#e8f5e1;--br:#5d4037;--cr:#faf8f0;--gold:#d4a017;--sh:0 4px 15px rgba(0,0,0,.1)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--cr);color:#333;line-height:1.6}
+#login{position:fixed;inset:0;background:linear-gradient(135deg,#2d5016,#4a7c23 50%,#8d6e63);display:flex;align-items:center;justify-content:center;z-index:9999}
+#login.h{display:none}
+.lb{background:#fff;border-radius:20px;padding:3rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:360px;width:90%}
+.lb h1{font-size:2.5rem;margin-bottom:.5rem}
+.lb p{color:#666;margin-bottom:1.5rem}
+.lb input{width:100%;padding:14px;border:2px solid #ddd;border-radius:12px;font-size:1.1rem;text-align:center;letter-spacing:8px;outline:none}
+.lb input:focus{border-color:var(--gl)}
+.lb button{margin-top:1rem;width:100%;padding:14px;background:var(--g);color:#fff;border:none;border-radius:12px;font-size:1.1rem;cursor:pointer}
+.lb button:hover{background:var(--gl)}
+.le{color:#e53935;margin-top:.5rem;font-size:.9rem;display:none}
+#main{display:none}
+header{background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;padding:3rem 1.5rem;text-align:center}
+header h1{font-size:2rem}
+header p{opacity:.85;margin-top:.3rem}
+.c{max-width:1100px;margin:0 auto;padding:1.5rem}
+section{margin-bottom:2.5rem}
+h2{color:var(--g);font-size:1.4rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:3px solid var(--gp)}
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}
+.ic{background:#fff;border-radius:12px;padding:1.2rem;box-shadow:var(--sh);text-align:center}
+.ic .l{font-size:.85rem;color:#888}
+.ic .v{font-size:1.2rem;font-weight:700;color:var(--g)}
+.sc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.s{background:#fff;border-radius:14px;padding:1.5rem;box-shadow:var(--sh);border:2px solid transparent;position:relative;transition:transform .2s}
+.s:hover{transform:translateY(-2px)}
+.s.rec{border-color:var(--gold);background:linear-gradient(135deg,#fffde7,#fff)}
+.badge{position:absolute;top:-10px;right:12px;background:var(--gold);color:#fff;padding:2px 10px;border-radius:8px;font-size:.75rem;font-weight:700}
+.s h3{color:var(--br);margin-bottom:.4rem}
+.s .st{color:var(--gold)}
+.s .ft{color:#666;font-size:.9rem}
+.s .pr{font-weight:700;color:var(--g);margin-top:.3rem}
+.tl{position:relative;padding-left:40px}
+.tl::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:3px;background:linear-gradient(var(--g),var(--gl))}
+.ti{position:relative;margin-bottom:1.2rem;background:#fff;border-radius:12px;padding:1rem 1.2rem;box-shadow:var(--sh)}
+.ti::before{content:'';position:absolute;left:-33px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:var(--g);border-radius:50%;border:3px solid var(--gp)}
+.ti .t{font-weight:700;color:var(--g);font-size:.9rem}
+.ti .n{font-weight:600}
+.ti .d{color:#666;font-size:.9rem}
+.gc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.gm{background:#fff;border-radius:14px;padding:1.5rem;box-shadow:var(--sh)}
+.gm h3{margin-bottom:.5rem}
+.gm p{font-size:.9rem;color:#555;margin:3px 0}
+.fs{background:#fff;border-radius:14px;padding:1.5rem;box-shadow:var(--sh)}
+.fs h3{color:var(--br);margin:1rem 0 .5rem}
+.fs ul{list-style:none;padding-left:1.2rem}
+.fs li{padding:3px 0;position:relative}
+.fs li::before{content:'•';position:absolute;left:-1rem;color:var(--gl)}
+.ft2{margin-top:1rem;padding:1rem;background:var(--gp);border-radius:10px;font-weight:700;text-align:center;color:var(--g);font-size:1.1rem}
+.bb{background:#fff;border-radius:14px;padding:1.5rem;box-shadow:var(--sh)}
+.bi{margin-bottom:1rem}
+.bl{display:flex;justify-content:space-between;font-size:.9rem;margin-bottom:4px}
+.bt{background:#e8e8e8;border-radius:8px;height:26px;overflow:hidden}
+.bf{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:600}
+.sp{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:600px){.sp{grid-template-columns:1fr}}
+.sb{background:#fff;border-radius:14px;padding:1.5rem;box-shadow:var(--sh)}
+.sb h3{color:var(--br);margin-bottom:.8rem}
+.sb ul{list-style:none;padding:0}
+.sb li{padding:4px 0;padding-left:1.5rem;position:relative;font-size:.95rem}
+.sb li::before{content:'✓';position:absolute;left:0;color:var(--gl);font-weight:700}
 </style>
 </head>
 <body>
-<div class="container">
-<div class="header">
-<h1>🎉 团建活动流程</h1>
-<p>轻松有趣 · 增进默契 · 吃好玩好</p>
+<div id="login"><div class="lb">
+<h1>🏕️</h1><p>输入密码查看团建方案</p>
+<input type="password" id="pwd" placeholder="••••" maxlength="10" autofocus onkeydown="if(event.key==='Enter')checkPwd()">
+<button onclick="checkPwd()">进入</button>
+<p class="le" id="err">密码错误，请重试</p>
+</div></div>
+
+<div id="main">
+<header><h1>🏕️ 部门露营团建方案</h1><p>轻松愉快，不聊工作！一起去露营吧～</p></header>
+<div class="c">
+
+<section>
+<h2>📋 基本信息</h2>
+<div class="ig">
+<div class="ic"><div class="l">主题</div><div class="v">露营团建</div></div>
+<div class="ic"><div class="l">人数</div><div class="v">17人（4男13女）</div></div>
+<div class="ic"><div class="l">时长</div><div class="v">一天</div></div>
+<div class="ic"><div class="l">预算</div><div class="v">人均200元</div></div>
+<div class="ic"><div class="l">地点</div><div class="v">广州番禺区</div></div>
+</div>
+</section>
+
+<section>
+<h2>📍 选址对比</h2>
+<div class="sc">
+<div class="s"><h3>🌳 大夫山森林公园露营区</h3><div class="ft">免费入园，自带装备，树荫多</div><div class="pr">人均：场地0元+自备物资</div><div class="st">⭐⭐⭐⭐ 省钱之选</div></div>
+<div class="s rec"><span class="badge">👑 推荐</span><h3>🏞️ 番禺莲花山露营基地</h3><div class="ft">江景草坪，有配套设施</div><div class="pr">人均：100-150元（含帐篷）</div><div class="st">⭐⭐⭐⭐⭐ 体验好</div></div>
+<div class="s"><h3>🌊 海鸥岛露营地</h3><div class="ft">海边风景、开阔草地</div><div class="pr">人均：80-120元</div><div class="st">⭐⭐⭐⭐ 拍照出片</div></div>
+<div class="s"><h3>🎢 长隆附近野趣营地</h3><div class="ft">商业营地，设施齐全</div><div class="pr">人均：150-200元</div><div class="st">⭐⭐⭐ 贵但省心</div></div>
+</div>
+</section>
+
+<section>
+<h2>⏰ 活动流程</h2>
+<div class="tl">
+<div class="ti"><span class="t">9:00</span> <span class="n">🚗 集合出发</span><div class="d">公司集合，拼车/包车前往</div></div>
+<div class="ti"><span class="t">9:45</span> <span class="n">⛺ 到达搭建</span><div class="d">分组搭帐篷、布置营地</div></div>
+<div class="ti"><span class="t">10:30</span> <span class="n">🎯 游戏1：真心话冒险飞盘</span><div class="d">接到飞盘的人抽题回答或做任务</div></div>
+<div class="ti"><span class="t">11:15</span> <span class="n">🏃 游戏2：撕名牌大战</span><div class="d">分队互撕，4男分散到各队平衡</div></div>
+<div class="ti"><span class="t">12:00-13:30</span> <span class="n">🍖 午餐+自由时间</span><div class="d">自助烧烤+外卖+聊天拍照</div></div>
+<div class="ti"><span class="t">13:30</span> <span class="n">🎵 游戏3：猜歌王</span><div class="d">手机播前奏，抢答歌名</div></div>
+<div class="ti"><span class="t">14:15</span> <span class="n">🎈 游戏4：气球踩踩乐</span><div class="d">脚绑气球互踩，最后幸存者赢</div></div>
+<div class="ti"><span class="t">15:00-16:00</span> <span class="n">😴 自由时间</span><div class="d">吃零食、聊天、拍照、躺平</div></div>
+<div class="ti"><span class="t">16:00</span> <span class="n">🏠 收拾返程</span><div class="d">打包撤营</div></div>
+</div>
+</section>
+
+<section>
+<h2>🎮 游戏详情</h2>
+<div class="gc">
+<div class="gm"><h3>🎯 真心话冒险飞盘</h3><p><b>玩法：</b>接到飞盘的人抽题回答或做任务</p><p><b>道具：</b>飞盘、题卡</p><p><b>时长：</b>30-40分钟</p></div>
+<div class="gm"><h3>🏃 撕名牌大战</h3><p><b>玩法：</b>分队互撕，4男分散到各队平衡</p><p><b>道具：</b>名牌贴纸</p><p><b>时长：</b>30-40分钟</p></div>
+<div class="gm"><h3>🎵 猜歌王</h3><p><b>玩法：</b>手机播前奏，抢答歌名</p><p><b>道具：</b>蓝牙音箱、手机</p><p><b>时长：</b>30分钟</p></div>
+<div class="gm"><h3>🎈 气球踩踩乐</h3><p><b>玩法：</b>脚绑气球互踩，最后幸存者赢</p><p><b>道具：</b>气球、绳子</p><p><b>时长：</b>20-30分钟</p></div>
+</div>
+</section>
+
+<section>
+<h2>🍽️ 食物安排</h2>
+<div class="fs">
+<h3>🔥 烧烤部分</h3>
+<ul><li>营地租烤架（约20-30元/人）</li><li>食材团购：肉类+蔬菜+海鲜（约50-60元/人）</li></ul>
+<h3>📦 外卖部分</h3>
+<ul><li>订大份外卖补充（烤鱼/披萨等）约20-30元/人</li></ul>
+<h3>🥤 饮料零食</h3>
+<ul><li>饮料、零食、水果台（约20元/人）</li></ul>
+<div class="ft2">🍖 食物总预算：约110-140元/人</div>
+</div>
+</section>
+
+<section>
+<h2>💰 预算分配</h2>
+<div class="bb">
+<div class="bi"><div class="bl"><span>🍖 食物（烧烤+外卖+零食）</span><span>110-140元/人</span></div><div class="bt"><div class="bf" style="width:70%;background:linear-gradient(90deg,var(--g),var(--gl))">64%</div></div></div>
+<div class="bi"><div class="bl"><span>⛺ 场地费</span><span>40-50元/人</span></div><div class="bt"><div class="bf" style="width:25%;background:var(--br)">23%</div></div></div>
+<div class="bi"><div class="bl"><span>🚌 交通（包车）</span><span>15-20元/人</span></div><div class="bt"><div class="bf" style="width:10%;background:#d4a017">8%</div></div></div>
+<div class="bi"><div class="bl"><span>🎁 道具+小奖品</span><span>10元/人</span></div><div class="bt"><div class="bf" style="width:5%;background:#8d6e63">5%</div></div></div>
+<div style="margin-top:1rem;text-align:center;font-weight:700;color:var(--g);font-size:1.1rem">💡 合计：约175-220元/人</div>
+</div>
+</section>
+
+<section>
+<h2>📦 物资清单</h2>
+<div class="sp">
+<div class="sb"><h3>🛒 公司采购</h3><ul>
+<li>帐篷（如营地不含）</li><li>蓝牙音箱</li><li>飞盘</li><li>气球+绳子</li><li>名牌贴纸</li><li>小奖品（盲盒/零食大礼包）</li><li>垃圾袋</li><li>题卡</li>
+</ul></div>
+<div class="sb"><h3>📢 通知同事自带</h3><ul>
+<li>防晒霜</li><li>驱蚊液</li><li>野餐垫</li><li>舒适衣服鞋</li>
+</ul></div>
+</div>
+</section>
+
+</div>
 </div>
 
-<div class="timeline">
-
-<div class="item">
-<div class="time">⏰ 0:00 - 0:10（10分钟）</div>
-<div class="title">🎤 开场 & 分组</div>
-<div class="desc">主持人暖场，随机抽签分成2-3队，每队选队长、起队名、喊口号。<br>规则：所有游戏积分制，最终总分最高的队伍赢大奖！</div>
-<span class="tag tag-open">暖场</span>
-</div>
-
-<div class="item">
-<div class="time">⏰ 0:10 - 0:35（25分钟）</div>
-<div class="title">🏃 游戏一：极速60秒</div>
-<div class="desc">每队派1人进入指定区域，60秒内按顺序收集30张卡片（卡片上是数字的各种表达方式：图片、谜语、实物）。队友在外面可以喊提示但不能进场。</div>
-<div class="rules">
-<strong>规则：</strong>每队3轮机会，每轮1分钟。正确顺序越多分越高。<br>
-<strong>计分：</strong>全部正确+50分，每错/漏1张-5分<br>
-<strong>看点：</strong>考验沟通+记忆+团队策略
-</div>
-<span class="tag tag-game">团队协作</span>
-</div>
-
-<div class="item">
-<div class="time">⏰ 0:35 - 1:00（25分钟）</div>
-<div class="title">🎭 游戏二：你演我猜 · 职场版</div>
-<div class="desc">每队轮流上台，一人看题表演（不能说话），队友猜词。题目混搭：职场动作 + 日常搞笑 + 公司内部梗。</div>
-<div class="rules">
-<strong>规则：</strong>每队2分钟，猜对1个+10分，可跳过（最多跳3个）<br>
-<strong>题库示例：</strong>加班、摸鱼、甲方改需求、快递到了、老板来了…<br>
-<strong>看点：</strong>爆笑担当，拉近距离
-</div>
-<span class="tag tag-game">搞笑互动</span>
-</div>
-
-<div class="item">
-<div class="time">⏰ 1:00 - 1:25（25分钟）</div>
-<div class="title">🍔 游戏三：偷吃版狼人杀</div>
-<div class="desc">每轮8-12人参加。所有人闭眼，“偷吃贼”偷吃桌上的零食（发出声音），睡醒后大家讨论谁是偷吃贼，投票淘汰。偷吃贼存活到最后就赢！</div>
-<div class="rules">
-<strong>角色分配：</strong>1-2个偷吃贼 + 1个美食家（可以闻到零食味道线索）+ 其余是平民<br>
-<strong>流程：</strong>闭眼→偷吃贼吃东西→美食家闻→睡醒→讨论（1.5min）→投票→揭晓<br>
-<strong>计分：</strong>偷吃贼存活到最后+20分，平民找出偷吃贼+10分/人<br>
-<strong>看点：</strong>吃东西的声音超搞笑，讨论环节爆笑不断
-</div>
-<span class="tag tag-game">欢乐对抗</span>
-</div>
-
-<div class="item">
-<div class="time">⏰ 1:25 - 1:50（25分钟）</div>
-<div class="title">🎯 游戏四：真心话大冒险 · 团队版</div>
-<div class="desc">转盘/骰子决定挑战者，真心话和大冒险五五开。完成挑战+5分，拒绝-10分（可用队伍积分买"免死金牌"）。</div>
-<div class="rules">
-<strong>真心话示例：</strong>入职第一天最尴尬的事 / 觉得公司谁最有趣 / 手机最近一张截图<br>
-<strong>大冒险示例：</strong>模仿老板开会 / 给指定同事一个公主抱 / 用rap介绍自己<br>
-<strong>看点：</strong>深度破冰，制造回忆
-</div>
-<span class="tag tag-game">破冰互动</span>
-</div>
-
-<div class="item">
-<div class="time">⏰ 1:50 - 2:30（40分钟）</div>
-<div class="title">🍕 自由时间 · 吃吃喝喝聊聊天</div>
-<div class="desc">颁奖（冠军队伍+最佳表现个人），然后自由活动。<br>准备零食饮料水果，放点音乐，大家随意聊天拍照~</div>
-<span class="tag tag-free">自由活动</span>
-</div>
-
-</div>
-
-<div class="footer">
-💡 道具清单：30张数字卡片 · 词语题板 · 谁是卧底词卡 · 转盘/骰子 · 计分板 · 小奖品 · 零食饮料
-</div>
-</div>
+<script>
+function checkPwd(){var p=document.getElementById('pwd'),e=document.getElementById('err');if(p.value==='1111'){document.getElementById('login').classList.add('h');document.getElementById('main').style.display='block'}else{e.style.display='block';p.value='';p.focus()}}
+document.getElementById('pwd').addEventListener('keydown',function(e){if(e.key==='Enter')checkPwd()});
+</script>
 </body>
 </html>
