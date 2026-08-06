@@ -187,41 +187,58 @@ function renderAll() {
     const headClass = s.headErrRate < 2 ? 'good' : s.headErrRate < 4 ? 'warn' : 'bad';
     const codeClass = s.codeErrRate < 5 ? 'good' : s.codeErrRate < 10 ? 'warn' : 'bad';
     const effClass = s.efficiency < 1.7 ? 'good' : s.efficiency < 1.9 ? 'warn' : 'bad';
+    const effMonthly = months.map((m, i) => (d.hours[i] / d.output[i]).toFixed(2));
     pHTML += `
     <div class="person-card">
       <div class="name" style="color:${colors[name]}">${name}</div>
       <div class="rank">时效排名 #${rank} | 月均产出 ${(s.totalOutput/5).toFixed(0)}款</div>
       <div class="stats">
-        <div class="stat-block ${effClass}"><div class="stat-label">时效</div><div class="stat-value">${s.efficiency.toFixed(2)}</div></div>
+        <div class="stat-block ${effClass}"><div class="stat-label">平均时效</div><div class="stat-value">${s.efficiency.toFixed(2)}</div></div>
         <div class="stat-block ${headClass}"><div class="stat-label">头版错率</div><div class="stat-value">${s.headErrRate.toFixed(1)}%</div></div>
         <div class="stat-block ${codeClass}"><div class="stat-label">放码错率</div><div class="stat-value">${s.codeErrRate.toFixed(1)}%</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:8px 0;text-align:center;font-size:11px;">
+        ${months.map((m,i) => `<div style="background:#f1f5f9;border-radius:6px;padding:4px;"><div style="color:#64748b">${m}</div><div style="font-weight:700;color:#1e293b">${effMonthly[i]}h</div><div style="color:#94a3b8;font-size:10px">${d.output[i]}款</div></div>`).join('')}
       </div>
       <div class="chart-box"><canvas id="chart_${idx}"></canvas></div>
     </div>`;
   });
   document.getElementById('personCards').innerHTML = pHTML;
 
-  // Render charts
+  // Render charts (dual axis: output bars + efficiency line)
   names.forEach((name, idx) => {
     const ctx = document.getElementById(`chart_${idx}`).getContext('2d');
+    const effValues = months.map((m, i) => (data[name].hours[i] / data[name].output[i]).toFixed(2));
     new Chart(ctx, {
       type: 'bar',
       data: {
         labels: months,
         datasets: [{
-          label: '产出',
+          label: '产出(款)',
           data: data[name].output,
-          backgroundColor: colors[name] + '80',
+          backgroundColor: colors[name] + '60',
           borderColor: colors[name],
           borderWidth: 1,
-          borderRadius: 4
+          borderRadius: 4,
+          yAxisID: 'y'
+        }, {
+          label: '时效(h/款)',
+          data: effValues,
+          type: 'line',
+          borderColor: '#f87171',
+          backgroundColor: '#f8717130',
+          tension: 0.3,
+          pointRadius: 5,
+          pointBackgroundColor: '#f87171',
+          yAxisID: 'y1'
         }]
       },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        plugins: { legend: { labels: { color: '#1e293b', font: { size: 10 } } } },
         scales: {
-          y: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { color: '#64748b' } },
+          y: { beginAtZero: true, position: 'left', title: { display: true, text: '款数', color: '#64748b' }, grid: { color: '#e2e8f0' }, ticks: { color: '#64748b' } },
+          y1: { beginAtZero: false, position: 'right', title: { display: true, text: '时效(h)', color: '#f87171' }, grid: { display: false }, ticks: { color: '#f87171' } },
           x: { grid: { display: false }, ticks: { color: '#64748b' } }
         }
       }
