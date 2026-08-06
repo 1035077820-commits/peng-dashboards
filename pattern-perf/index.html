@@ -86,6 +86,13 @@ h1 { text-align: center; font-size: 28px; margin-bottom: 8px; background: linear
   <div class="section-title">👤 个人绩效卡片</div>
   <div class="persons" id="personCards"></div>
 
+  <!-- Monthly Efficiency -->
+  <div class="section-title">⏱️ 每月时效对比（小时/款）</div>
+  <div class="compare" style="margin-bottom:32px">
+    <div style="height:280px"><canvas id="effChart"></canvas></div>
+    <div id="effTable" style="margin-top:16px"></div>
+  </div>
+
   <!-- Compare -->
   <div class="section-title">📊 人员横向对比</div>
   <div class="compare" id="compareTable"></div>
@@ -220,6 +227,44 @@ function renderAll() {
       }
     });
   });
+
+  // Monthly efficiency chart
+  const effData = names.map(name => ({
+    label: name,
+    data: months.map((m, i) => (data[name].hours[i] / data[name].output[i]).toFixed(2)),
+    borderColor: colors[name],
+    backgroundColor: colors[name] + '20',
+    tension: 0.3,
+    pointRadius: 5,
+    pointBackgroundColor: colors[name]
+  }));
+  new Chart(document.getElementById('effChart'), {
+    type: 'line',
+    data: { labels: months, datasets: effData },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#1e293b' } } },
+      scales: {
+        y: { title: { display: true, text: '小时/款', color: '#64748b' }, grid: { color: '#e2e8f0' }, ticks: { color: '#64748b' } },
+        x: { grid: { display: false }, ticks: { color: '#64748b' } }
+      }
+    }
+  });
+
+  // Monthly efficiency table
+  let eHTML = '<table><thead><tr><th>姓名</th>';
+  months.forEach(m => eHTML += `<th>${m}时效</th>`);
+  eHTML += '<th>平均</th></tr></thead><tbody>';
+  effRank.forEach(name => {
+    eHTML += `<tr><td style="color:${colors[name]};font-weight:600">${name}</td>`;
+    months.forEach((m, i) => {
+      const v = (data[name].hours[i] / data[name].output[i]).toFixed(2);
+      eHTML += `<td style="text-align:center">${v}</td>`;
+    });
+    eHTML += `<td style="text-align:center;font-weight:700">${allStats[name].efficiency.toFixed(2)}</td></tr>`;
+  });
+  eHTML += '</tbody></table>';
+  document.getElementById('effTable').innerHTML = eHTML;
 
   // Compare table
   const outputRank = [...names].sort((a,b) => allStats[b].totalOutput - allStats[a].totalOutput);
