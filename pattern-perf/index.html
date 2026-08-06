@@ -96,6 +96,10 @@ h1 { text-align: center; font-size: 28px; margin-bottom: 8px; background: linear
   <!-- Compare -->
   <div class="section-title">📊 人员横向对比</div>
   <div class="compare" id="compareTable"></div>
+
+  <!-- Individual Pages -->
+  <div class="section-title">📄 每人每月单独报告</div>
+  <div class="compare" id="individualNav"></div>
 </div>
 
 <script>
@@ -319,6 +323,18 @@ function renderAll() {
   });
   tHTML += '</tbody></table>';
   document.getElementById('compareTable').innerHTML = tHTML;
+
+  // Individual pages nav
+  const navNames = ['施从富','刘永辉','罗银','曾映辉'];
+  const navColors = {'施从富':'#34d399','刘永辉':'#60a5fa','罗银':'#fbbf24','曾映辉':'#a78bfa'};
+  let navHTML = '<table><thead><tr><th>姓名</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th></tr></thead><tbody>';
+  navNames.forEach(n => {
+    navHTML += `<tr><td style="font-weight:600;color:${navColors[n]}">${n}</td>`;
+    months.forEach(m => navHTML += `<td><a href="${n}_${m}.html" style="color:#3b82f6">查看</a></td>`);
+    navHTML += '</tr>';
+  });
+  navHTML += '</tbody></table>';
+  document.getElementById('individualNav').innerHTML = navHTML;
 }
 </script>
 </body>
