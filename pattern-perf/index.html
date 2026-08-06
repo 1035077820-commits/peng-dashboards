@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>纸样师绩效分析看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+h1 { text-align: center; font-size: 28px; margin-bottom: 8px; background: linear-gradient(135deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { text-align: center; color: #94a3b8; margin-bottom: 32px; font-size: 14px; }
+
+/* Overview Cards */
+.overview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.ov-card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+.ov-card .label { font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+.ov-card .value { font-size: 28px; font-weight: 700; }
+.ov-card .sub { font-size: 12px; color: #64748b; margin-top: 4px; }
+.ov-card.blue .value { color: #60a5fa; }
+.ov-card.green .value { color: #34d399; }
+.ov-card.orange .value { color: #fbbf24; }
+.ov-card.purple .value { color: #a78bfa; }
+
+/* Section */
+.section-title { font-size: 18px; font-weight: 600; margin: 32px 0 16px; padding-left: 12px; border-left: 3px solid #60a5fa; }
+
+/* Person Cards */
+.persons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 32px; }
+.person-card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+.person-card .name { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.person-card .rank { font-size: 12px; color: #94a3b8; }
+.person-card .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0; }
+.stat-block { text-align: center; padding: 8px; border-radius: 8px; }
+.stat-block .stat-label { font-size: 11px; color: #94a3b8; }
+.stat-block .stat-value { font-size: 18px; font-weight: 700; margin-top: 2px; }
+.stat-block.good { background: rgba(52,211,153,0.1); }
+.stat-block.good .stat-value { color: #34d399; }
+.stat-block.warn { background: rgba(251,191,36,0.1); }
+.stat-block.warn .stat-value { color: #fbbf24; }
+.stat-block.bad { background: rgba(248,113,113,0.1); }
+.stat-block.bad .stat-value { color: #f87171; }
+.stat-block.neutral { background: rgba(96,165,250,0.1); }
+.stat-block.neutral .stat-value { color: #60a5fa; }
+.chart-box { height: 180px; margin-top: 12px; }
+
+/* Compare Table */
+.compare { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; overflow-x: auto; }
+.compare table { width: 100%; border-collapse: collapse; }
+.compare th { text-align: left; padding: 10px 12px; font-size: 12px; color: #94a3b8; border-bottom: 1px solid #334155; }
+.compare td { padding: 10px 12px; font-size: 14px; border-bottom: 1px solid #1e293b; }
+.compare tr:hover { background: #334155; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+.badge-gold { background: rgba(251,191,36,0.2); color: #fbbf24; }
+.badge-silver { background: rgba(148,163,184,0.2); color: #94a3b8; }
+.badge-bronze { background: rgba(180,83,9,0.2); color: #d97706; }
+.bar-bg { background: #334155; border-radius: 4px; height: 8px; width: 100%; }
+.bar-fill { height: 8px; border-radius: 4px; }
+
+/* Password */
+.pw-overlay { position: fixed; inset: 0; background: #0f172a; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+.pw-box { background: #1e293b; padding: 40px; border-radius: 16px; text-align: center; border: 1px solid #334155; }
+.pw-box h2 { margin-bottom: 16px; }
+.pw-box input { padding: 10px 16px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #e2e8f0; font-size: 16px; width: 200px; text-align: center; }
+.pw-box button { margin-top: 12px; padding: 10px 24px; border-radius: 8px; border: none; background: #3b82f6; color: white; font-size: 14px; cursor: pointer; }
+.pw-box .err { color: #f87171; font-size: 12px; margin-top: 8px; display: none; }
+.hidden { display: none !important; }
+
+@media (max-width: 768px) {
+  .overview { grid-template-columns: repeat(2, 1fr); }
+  .persons { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="mainContent">
+  <h1>📐 纸样师绩效分析看板</h1>
+  <p class="subtitle">2026年3月-7月 | 数据来源：纸样统计表 & 工时表</p>
+
+  <!-- Overview -->
+  <div class="overview" id="overviewCards"></div>
+
+  <!-- Person Cards -->
+  <div class="section-title">👤 个人绩效卡片</div>
+  <div class="persons" id="personCards"></div>
+
+  <!-- Compare -->
+  <div class="section-title">📊 人员横向对比</div>
+  <div class="compare" id="compareTable"></div>
+</div>
+
+<script>
+// Data
+const months = ['3月','4月','5月','6月','7月'];
+const data = {
+  '施从富': {
+    hours: [205.5, 208.28, 189.2, 198.5, 216],
+    output: [114, 137, 122, 132, 153],
+    headTotal: [73, 101, 97, 105, 118],
+    headErr: [0, 0, 1, 4, 3],
+    codeTotal: [41, 36, 25, 27, 35],
+    codeErr: [5, 2, 3, 2, 0]
+  },
+  '刘永辉': {
+    hours: [207.85, 209.22, 210.33, 209.26, 215.88],
+    output: [97, 119, 138, 127, 186],
+    headTotal: [76, 91, 99, 105, 127],
+    headErr: [4, 1, 1, 2, 1],
+    codeTotal: [21, 28, 39, 22, 59],
+    codeErr: [3, 3, 0, 0, 0]
+  },
+  '罗银': {
+    hours: [200, 209.45, 210.9, 208.83, 225.28],
+    output: [103, 117, 108, 132, 116],
+    headTotal: [71, 90, 91, 110, 84],
+    headErr: [0, 0, 1, 3, 1],
+    codeTotal: [32, 27, 17, 22, 32],
+    codeErr: [1, 2, 2, 0, 0]
+  },
+  '曾映辉': {
+    hours: [208, 194, 184, 192, 216],
+    output: [113, 102, 94, 97, 118],
+    headTotal: [84, 55, 78, 79, 81],
+    headErr: [0, 1, 0, 8, 4],
+    codeTotal: [29, 47, 16, 18, 37],
+    codeErr: [8, 8, 4, 1, 1]
+  }
+};
+
+// Auto render on load
+window.addEventListener('DOMContentLoaded', renderAll);
+
+function sum(arr) { return arr.reduce((a,b) => a+b, 0); }
+function avg(arr) { return sum(arr) / arr.length; }
+function pct(err, total) { return total > 0 ? (err/total*100) : 0; }
+
+function getStats(d) {
+  const totalOutput = sum(d.output);
+  const totalHours = sum(d.hours);
+  const headErrRate = pct(sum(d.headErr), sum(d.headTotal));
+  const codeErrRate = pct(sum(d.codeErr), sum(d.codeTotal));
+  const efficiency = totalHours / totalOutput;
+  const growth = ((d.output[4] - d.output[0]) / d.output[0] * 100);
+  return { totalOutput, totalHours, headErrRate, codeErrRate, efficiency, growth };
+}
+
+function renderAll() {
+  // Overview
+  let allOutput = 0, allHeadErr = 0, allHeadTotal = 0, allCodeErr = 0, allCodeTotal = 0, allHours = 0;
+  Object.values(data).forEach(d => {
+    allOutput += sum(d.output);
+    allHeadErr += sum(d.headErr);
+    allHeadTotal += sum(d.headTotal);
+    allCodeErr += sum(d.codeErr);
+    allCodeTotal += sum(d.codeTotal);
+    allHours += sum(d.hours);
+  });
+  const ovHTML = `
+    <div class="ov-card blue"><div class="label">总产出（款）</div><div class="value">${allOutput}</div><div class="sub">3-7月全员累计</div></div>
+    <div class="ov-card green"><div class="label">头版平均出错率</div><div class="value">${(allHeadErr/allHeadTotal*100).toFixed(1)}%</div><div class="sub">${allHeadErr}错/${allHeadTotal}款</div></div>
+    <div class="ov-card orange"><div class="label">放码平均出错率</div><div class="value">${(allCodeErr/allCodeTotal*100).toFixed(1)}%</div><div class="sub">${allCodeErr}错/${allCodeTotal}款</div></div>
+    <div class="ov-card purple"><div class="label">月均时效</div><div class="value">${(allHours/allOutput).toFixed(2)}</div><div class="sub">小时/款（越低越好）</div></div>
+  `;
+  document.getElementById('overviewCards').innerHTML = ovHTML;
+
+  // Person cards
+  const names = Object.keys(data);
+  const colors = {'施从富':'#34d399','刘永辉':'#60a5fa','罗银':'#fbbf24','曾映辉':'#a78bfa'};
+  let pHTML = '';
+  const allStats = {};
+  names.forEach(name => { allStats[name] = getStats(data[name]); });
+  const effRank = [...names].sort((a,b) => allStats[a].efficiency - allStats[b].efficiency);
+  
+  names.forEach((name, idx) => {
+    const d = data[name];
+    const s = allStats[name];
+    const rank = effRank.indexOf(name) + 1;
+    const headClass = s.headErrRate < 2 ? 'good' : s.headErrRate < 4 ? 'warn' : 'bad';
+    const codeClass = s.codeErrRate < 5 ? 'good' : s.codeErrRate < 10 ? 'warn' : 'bad';
+    const effClass = s.efficiency < 1.7 ? 'good' : s.efficiency < 1.9 ? 'warn' : 'bad';
+    pHTML += `
+    <div class="person-card">
+      <div class="name" style="color:${colors[name]}">${name}</div>
+      <div class="rank">时效排名 #${rank} | 月均产出 ${(s.totalOutput/5).toFixed(0)}款</div>
+      <div class="stats">
+        <div class="stat-block ${effClass}"><div class="stat-label">时效</div><div class="stat-value">${s.efficiency.toFixed(2)}</div></div>
+        <div class="stat-block ${headClass}"><div class="stat-label">头版错率</div><div class="stat-value">${s.headErrRate.toFixed(1)}%</div></div>
+        <div class="stat-block ${codeClass}"><div class="stat-label">放码错率</div><div class="stat-value">${s.codeErrRate.toFixed(1)}%</div></div>
+      </div>
+      <div class="chart-box"><canvas id="chart_${idx}"></canvas></div>
+    </div>`;
+  });
+  document.getElementById('personCards').innerHTML = pHTML;
+
+  // Render charts
+  names.forEach((name, idx) => {
+    const ctx = document.getElementById(`chart_${idx}`).getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [{
+          label: '产出',
+          data: data[name].output,
+          backgroundColor: colors[name] + '80',
+          borderColor: colors[name],
+          borderWidth: 1,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+          x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+        }
+      }
+    });
+  });
+
+  // Compare table
+  const outputRank = [...names].sort((a,b) => allStats[b].totalOutput - allStats[a].totalOutput);
+  const growthRank = [...names].sort((a,b) => allStats[b].growth - allStats[a].growth);
+  const headRank = [...names].sort((a,b) => allStats[a].headErrRate - allStats[b].headErrRate);
+  const codeRank = [...names].sort((a,b) => allStats[a].codeErrRate - allStats[b].codeErrRate);
+  
+  const maxOutput = Math.max(...names.map(n => allStats[n].totalOutput));
+  
+  let tHTML = `<table><thead><tr>
+    <th>姓名</th><th>总产出</th><th>产出条</th><th>增长率</th><th>时效</th><th>头版错率</th><th>放码错率</th><th>综合排名</th>
+  </tr></thead><tbody>`;
+  
+  // Composite rank
+  const composite = {};
+  names.forEach(name => {
+    composite[name] = effRank.indexOf(name) + outputRank.indexOf(name) + headRank.indexOf(name) + codeRank.indexOf(name);
+  });
+  const finalRank = [...names].sort((a,b) => composite[a] - composite[b]);
+  
+  finalRank.forEach((name, i) => {
+    const s = allStats[name];
+    const badge = i === 0 ? 'badge-gold' : i === 1 ? 'badge-silver' : i === 2 ? 'badge-bronze' : '';
+    const barW = (s.totalOutput / maxOutput * 100).toFixed(0);
+    tHTML += `<tr>
+      <td style="color:${colors[name]};font-weight:600">${name}</td>
+      <td>${s.totalOutput}款</td>
+      <td><div class="bar-bg"><div class="bar-fill" style="width:${barW}%;background:${colors[name]}"></div></div></td>
+      <td style="color:${s.growth > 0 ? '#34d399' : '#f87171'}">${s.growth > 0 ? '+' : ''}${s.growth.toFixed(0)}%</td>
+      <td>${s.efficiency.toFixed(2)}h</td>
+      <td>${s.headErrRate.toFixed(1)}%</td>
+      <td>${s.codeErrRate.toFixed(1)}%</td>
+      <td><span class="badge ${badge}">#${i+1}</span></td>
+    </tr>`;
+  });
+  tHTML += '</tbody></table>';
+  document.getElementById('compareTable').innerHTML = tHTML;
+}
+</script>
+</body>
+</html>
