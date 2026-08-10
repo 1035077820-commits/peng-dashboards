@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>展厅邀约流程</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',sans-serif;background:#f8f9fb;color:#1a1a2e;min-height:100vh;padding:40px 20px 80px}
+.container{max-width:1100px;margin:0 auto}
+h1{text-align:center;font-size:32px;font-weight:900;margin-bottom:6px;color:#1a1a2e}
+.subtitle{text-align:center;font-size:14px;color:#888;margin-bottom:50px;letter-spacing:2px}
+
+/* Timeline */
+.timeline{position:relative;padding-left:0}
+.timeline::before{content:'';position:absolute;left:32px;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#4f46e5,#10b981,#f59e0b,#ef4444,#8b5cf6,#06b6d4);border-radius:2px}
+
+.phase{position:relative;margin-bottom:40px;padding-left:80px}
+.phase:last-child{margin-bottom:0}
+
+.phase-dot{position:absolute;left:20px;top:0;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:2}
+.phase-dot::after{content:'';position:absolute;width:42px;height:42px;border-radius:50%;border:2px solid;opacity:.25;top:-7px;left:-7px}
+
+.phase-title{font-size:20px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.phase-title .tag{font-size:11px;padding:2px 10px;border-radius:20px;color:#fff;font-weight:500}
+
+.phase-content{background:#fff;border-radius:14px;padding:24px 28px;box-shadow:0 2px 12px rgba(0,0,0,.04);border:1px solid #eee}
+
+.sub-section{margin-bottom:16px}
+.sub-section:last-child{margin-bottom:0}
+.sub-title{font-size:14px;font-weight:700;color:#444;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.sub-title::before{content:'';width:4px;height:16px;border-radius:2px;flex-shrink:0}
+
+.detail-list{list-style:none;padding-left:16px}
+.detail-list li{font-size:13px;color:#555;line-height:2;position:relative;padding-left:14px}
+.detail-list li::before{content:'';position:absolute;left:0;top:10px;width:5px;height:5px;border-radius:50%;background:#bbb}
+
+/* Phase colors */
+.phase-1 .phase-dot{background:#4f46e5}.phase-1 .phase-dot::after{border-color:#4f46e5}
+.phase-1 .phase-title{color:#4f46e5}.phase-1 .tag{background:#4f46e5}
+.phase-1 .sub-title::before{background:#4f46e5}
+
+.phase-2 .phase-dot{background:#10b981}.phase-2 .phase-dot::after{border-color:#10b981}
+.phase-2 .phase-title{color:#10b981}.phase-2 .tag{background:#10b981}
+.phase-2 .sub-title::before{background:#10b981}
+
+.phase-3 .phase-dot{background:#f59e0b}.phase-3 .phase-dot::after{border-color:#f59e0b}
+.phase-3 .phase-title{color:#f59e0b}.phase-3 .tag{background:#f59e0b}
+.phase-3 .sub-title::before{background:#f59e0b}
+
+.phase-4 .phase-dot{background:#ef4444}.phase-4 .phase-dot::after{border-color:#ef4444}
+.phase-4 .phase-title{color:#ef4444}.phase-4 .tag{background:#ef4444}
+.phase-4 .sub-title::before{background:#ef4444}
+
+.phase-5 .phase-dot{background:#8b5cf6}.phase-5 .phase-dot::after{border-color:#8b5cf6}
+.phase-5 .phase-title{color:#8b5cf6}.phase-5 .tag{background:#8b5cf6}
+.phase-5 .sub-title::before{background:#8b5cf6}
+
+.phase-6 .phase-dot{background:#06b6d4}.phase-6 .phase-dot::after{border-color:#06b6d4}
+.phase-6 .phase-title{color:#06b6d4}.phase-6 .tag{background:#06b6d4}
+.phase-6 .sub-title::before{background:#06b6d4}
+
+/* Standard section */
+.standard-section{margin-top:50px;background:#fff;border-radius:16px;padding:32px 36px;border:1px solid #e2e8f0;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.standard-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.standard-header h2{font-size:20px;font-weight:800;color:#1a1a2e}
+.standard-meta{display:flex;gap:10px}
+.meta-tag{font-size:12px;padding:4px 12px;border-radius:20px;font-weight:600}
+.meta-tag.resp{background:#dbeafe;color:#1e40af}
+.meta-tag.fixed{background:#fce7f3;color:#be185d}
+.standard-cards{display:flex;flex-direction:column;gap:20px}
+.std-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:22px 26px}
+.std-card h3{font-size:16px;font-weight:700;color:#334155;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e2e8f0}
+
+.highlight{background:#fffbe6;padding:2px 6px;border-radius:3px;font-weight:500;color:#b45309}
+.important{color:#dc2626;font-weight:500}
+
+/* Rule banner */
+.rule-banner{margin-top:50px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;padding:36px 40px;border:2px solid #e74c3c;position:relative;overflow:hidden}
+.rule-banner::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(231,76,60,.15);border-radius:50%}
+.rule-banner .rule-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.rule-banner .rule-header h2{font-size:22px;color:#fff;font-weight:900;letter-spacing:2px}
+.rule-badge{background:#e74c3c;color:#fff;font-size:11px;padding:4px 12px;border-radius:20px;font-weight:700;letter-spacing:1px}
+.rule-body{font-size:15px;color:#eee;line-height:2}
+.rule-body .amount{font-size:28px;font-weight:900;color:#e74c3c;margin:0 4px}
+.rule-slogans{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.rule-slogans .slogan{background:rgba(255,255,255,.08);border-left:3px solid #f39c12;padding:10px 16px;border-radius:6px;font-size:14px;color:#ffd93d;font-weight:500;letter-spacing:0.5px}
+
+footer{text-align:center;margin-top:60px;font-size:12px;color:#bbb;letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>展厅邀约流程</h1>
+<p class="subtitle">时间节点全流程 · 标准作业指引</p>
+
+<div class="timeline">
+
+<!-- Phase 1 -->
+<div class="phase phase-1">
+<div class="phase-dot">1</div>
+<div class="phase-title">邀约客户来之前 <span class="tag">策略准备</span></div>
+<div class="phase-content">
+<div class="sub-section">
+<div class="sub-title">陌生客户</div>
+<ul class="detail-list">
+<li>客户背调、判断需求匹配度</li>
+<li class="important">需求不明朗 → 拒绝拜访，杜绝同行和无意义拜访</li>
+</ul>
+</div>
+<div class="sub-section">
+<div class="sub-title">熟悉客户</div>
+<ul class="detail-list">
+<li>确定邀约策略与目标</li>
+<li>定好目标款式，明确现场执行方案</li>
+<li>必要时与上级沟通，或组织团队脑暴</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Phase 2 -->
+<div class="phase phase-2">
+<div class="phase-dot">2</div>
+<div class="phase-title">邀约客户后 <span class="tag">物料准备</span></div>
+<div class="phase-content">
+<div class="sub-section">
+<div class="sub-title">登记与协同</div>
+<ul class="detail-list">
+<li>填写<span class="highlight">展厅预约登记表</span></li>
+<li>提前邀约好上级，沟通策略，各司其职</li>
+</ul>
+</div>
+<div class="sub-section">
+<div class="sub-title">五项提前准备</div>
+<ul class="detail-list">
+<li>① 产品：重要产品提前找出，旧款可能需要下单补货</li>
+<li>② 选品挂杆：提前准备到位</li>
+<li>③ 选品登记表：准备空白表格</li>
+<li>④ 演讲PPT：趋势概念、品牌故事</li>
+<li>⑤ 策略落地的待办事项清单</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Phase 3 -->
+<div class="phase phase-3">
+<div class="phase-dot">3</div>
+<div class="phase-title">客户来之前 <span class="tag">临场检查</span></div>
+<div class="phase-content">
+<div class="sub-section">
+<div class="sub-title">确认与同步</div>
+<ul class="detail-list">
+<li>跟进客户实际到达时间</li>
+<li>同步通知一起接待的上级或同事</li>
+</ul>
+</div>
+<div class="sub-section">
+<div class="sub-title">前15分钟</div>
+<ul class="detail-list">
+<li>做好展厅环境整理</li>
+<li>待办事项最终确认</li>
+<li>策略要点转化为可执行的待办清单</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Phase 4 -->
+<div class="phase phase-4">
+<div class="phase-dot">4</div>
+<div class="phase-title">客户在现场 <span class="tag">核心执行</span></div>
+<div class="phase-content">
+<div class="sub-section">
+<div class="sub-title">接待执行要点</div>
+<ul class="detail-list">
+<li><strong>先讲概念，再看产品</strong>（PPT + 趋势白皮书 → 实物产品）</li>
+<li>积极推动<span class="highlight">选品登记</span>，引导客户做决策</li>
+<li>使用 AI 听记，避免遗漏，按产品和合作细节分类记录</li>
+<li>按照策略待办事项逐个落实推进</li>
+<li class="important">最终复盘一次，当场生成待办事项和时间节点</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Phase 5 -->
+<div class="phase phase-5">
+<div class="phase-dot">5</div>
+<div class="phase-title">客户离开后 <span class="tag">收尾整理</span></div>
+<div class="phase-content">
+<div class="sub-section">
+<div class="sub-title">展厅归位</div>
+<ul class="detail-list">
+<li>按照产品位置和颜色整理归位</li>
+<li>过于褶皱的产品需重新整烫后挂回</li>
+</ul>
+</div>
+<div class="sub-section">
+<div class="sub-title">当天整理发送</div>
+<ul class="detail-list">
+<li>尽量当天以 <span class="highlight">Excel</span> 形式整理发送会谈内容</li>
+<li class="important">整理越详细越有规划 → 客户越记得住，推进越顺利</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Phase 6 -->
+<div class="phase phase-6">
+<div class="phase-dot">6</div>
+<div class="phase-title">后续跟进 <span class="tag">持续推进</span></div>
+<div class="phase-content">
+<div class="sub-section">
+<div class="sub-title">跟进节奏</div>
+<ul class="detail-list">
+<li>按照事项节点逐步推进</li>
+<li>进度不顺畅 → 马上沟通对接，不拖延</li>
+<li>及时复盘，必要时再次拜访客户</li>
+</ul>
+</div>
+</div>
+</div>
+
+</div>
+
+<a id="standard"></a>
+<!-- 展厅整理规范 Section -->
+<div class="standard-section">
+<div class="standard-header">
+<h2>📋 展厅整理规范</h2>
+<div class="standard-meta">
+<span class="meta-tag resp">责任人：全体销售</span>
+<span class="meta-tag fixed">固定负责人：行政前台</span>
+</div>
+</div>
+
+<div class="standard-cards">
+<div class="std-card">
+<h3>一、样衣即时整理规范</h3>
+<ul class="detail-list">
+<li>客户接待结束后，需对样衣进行整理，确保外观整洁如初后挂回原位</li>
+<li>衣架有 logo 朝后，挂板应采用从衣架下方更换的方式</li>
+<li class="important">若发现样衣有脏污或破损，交由行政处理</li>
+</ul>
+</div>
+
+<div class="std-card">
+<h3>二、陈列要求</h3>
+<ul class="detail-list">
+<li>同款式放在一起</li>
+<li>按色系摆放（颜色从浅到深）</li>
+<li>大区域产品摆放归类整齐</li>
+<li>每件衣服间距统一</li>
+<li>桌面整洁：工艺卡摆放整齐，保持展厅桌面干净整洁</li>
+</ul>
+</div>
+
+<div class="std-card">
+<h3>三、样衣借用与归还管理</h3>
+<ul class="detail-list">
+<li><strong>借用流程：</strong>所有人员借用展厅样衣，需提前在钉钉“借样群”内拍照上传，清晰标注样衣款式、借用人、借用日期及预计归还时间，经确认后方可取走</li>
+<li><strong>归还要求：</strong>归还时需严格遵循“标准陈列要求”，将样衣细致熨烫平整、纽扣扣好、拉链拉好，恢复最佳展示状态后挂回原位</li>
+<li class="important">若归还时发现样衣损坏、污损，需立即报备展厅负责人</li>
+</ul>
+</div>
+</div>
+</div>
+
+<a id="rule"></a>
+<!-- Rule Section -->
+<div class="rule-banner">
+<div class="rule-header">
+<h2>⚠️ 执行力税规则</h2>
+<span class="rule-badge">强制执行</span>
+</div>
+<div class="rule-body">
+未按照以上流程执行的业务员，每次征收<span class="amount">¥38</span>执行力税
+</div>
+<div class="rule-slogans">
+<div class="slogan">💡 执行力税：助你提升，非惩罚</div>
+<div class="slogan">🎯 执行到位，开单对接更顺畅</div>
+</div>
+</div>
+
+<footer>— 内部资料 · 请勿外传 —</footer>
+</div>
+</body>
+</html>
