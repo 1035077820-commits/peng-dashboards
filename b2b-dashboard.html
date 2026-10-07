@@ -1,0 +1,230 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>团队销售跟单看板</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f5fa;color:#172443;font:15px/1.6 'Microsoft YaHei',sans-serif}main{max-width:1280px;margin:auto;padding:36px 30px}header{display:flex;justify-content:space-between;align-items:center;gap:20px}h1{font-size:29px;margin:0}h2{font-size:19px;margin:0}small,.muted{color:#75809a}.tools{display:flex;gap:10px;align-items:center}button,select,input{font:inherit;border:1px solid #d8deeb;border-radius:8px;background:white;padding:9px 14px;color:#263759}button{cursor:pointer}button.primary{background:#2757dc;color:white;border:0}button:disabled{opacity:.6;cursor:wait}.notice{margin:22px 0;background:#fff7e6;border-left:4px solid #e6b34f;padding:12px 16px;color:#745415;font-size:13px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card,section{background:white;border:1px solid #e5e9f1;border-radius:13px}.card{padding:18px 22px}.card span{font-size:13px;color:#6e7891}.card strong{display:block;font-size:31px;font-weight:600;margin-top:3px}.card small{font-size:12px}.filters{display:flex;align-items:center;gap:12px;margin:24px 0}.filters label{font-size:13px}section{padding:22px;margin:20px 0}.sectionhead{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:16px}table{width:100%;border-collapse:collapse;font-size:14px}th{background:#f0f3fa;color:#68758e;text-align:left;font-size:12px;font-weight:600;padding:12px 14px}td{padding:11px 14px;border-bottom:1px solid #edf0f6}.n{text-align:right;font-variant-numeric:tabular-nums}.subtotal{background:#f6f8fd;font-weight:600}.total{background:#eaf0ff;font-weight:700;color:#214da8}.dim{color:#939caf}.bar{display:inline-block;width:86px;height:6px;border-radius:4px;background:#e6ebf6;margin-right:10px;vertical-align:middle;overflow:hidden}.bar i{display:block;height:100%;background:#32a897}.foot{font-size:12px;color:#7c879d;margin-top:14px}.tablewrap{max-height:510px;overflow:auto}thead{position:sticky;top:0}details{font-size:13px}summary{cursor:pointer;color:#526487}.pill{display:inline-block;background:#edf3ff;border-radius:20px;padding:2px 10px;font-size:12px;color:#365cb0}a{color:#315bca;text-decoration:none}@media(max-width:800px){main{padding:20px 12px}.cards{grid-template-columns:repeat(2,1fr)}header,.filters{flex-wrap:wrap}.tablewrap{overflow:auto}table{min-width:580px}.tools{flex-wrap:wrap}}
+.teamcards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 22px}.teamcard{background:#f7f9fd;border:1px solid #e0e7f4;border-radius:10px;padding:16px}.teamcard h3{font-size:14px;margin:0 0 8px}.teamcard strong{font-size:26px}.widebar{height:7px;background:#e4eaf5;border-radius:6px;overflow:hidden;margin:10px 0}.widebar i{display:block;height:100%;background:#3974dc}.teamcard small{display:block}.personlist{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 20px}.personbutton{min-width:140px;text-align:left;padding:10px 14px}.personbutton span{display:block;font-size:12px;color:#8290a8}.personbutton.active{border-color:#3b68d9;background:#edf3ff;box-shadow:0 0 0 1px #3b68d9}.teamlabel{display:flex;justify-content:space-between;margin-top:15px;font-size:14px;font-weight:600}.detailpanel{border-top:1px solid #e5eaf3;padding-top:16px}.tag{border-radius:20px;padding:3px 10px;white-space:nowrap;font-size:12px}.done{color:#147659;background:#e2f5ec}.pending{color:#9b641d;background:#fff1d9}.empty{padding:22px;text-align:center;color:#8290a8}.personrow td:nth-child(2){padding-left:30px;color:#405579}.daytotal{background:#f3f5fb;font-weight:600}.personlink{padding:0;background:none;border:0;color:#2a60c1}.reportPreview,pre{white-space:pre-wrap;background:#f5f7fb;padding:18px;font:13px/1.8 'Microsoft YaHei',sans-serif}.sectionhead small{display:block}.foot{line-height:1.8}@media(max-width:900px){.teamcards{grid-template-columns:repeat(2,1fr)}.sectionhead{flex-wrap:wrap}}
+dialog{border:1px solid #dce3f0;border-radius:16px;width:min(1200px,96vw);max-height:90vh;padding:24px;color:#23324d}dialog::backdrop{background:#12244366}.rosterwrap{overflow:auto;max-height:52vh;margin:16px 0}#teamEditor{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}#teamEditor input{width:145px}.rosterwrap input:not([type=checkbox]),.rosterwrap select{width:145px}.followcheck{display:block;white-space:nowrap;font-size:13px}#rosterError{color:#ab5418}.filters{flex-wrap:wrap}#rosterDialog{width:min(1440px,97vw);height:90vh;max-height:90vh;overflow:hidden;box-sizing:border-box}#rosterDialog[open]{display:flex;flex-direction:column}.rosterlayout{display:grid;grid-template-columns:minmax(0,1fr) 280px;flex:1;min-height:0;margin:18px 0;border:1px solid #e4e9f2;border-radius:12px;overflow:hidden}#rosterMap{overflow:auto;background:radial-gradient(#dce3ee 1px,transparent 1px);background-size:18px 18px;padding:28px}#nodeEditor{padding:20px;background:#fff;border-left:1px solid #e4e9f2;overflow:auto}#nodeEditor h3{margin:0 0 16px}#nodeEditor label.field{display:block;margin:12px 0;font-size:13px}#nodeEditor input:not([type=checkbox]),#nodeEditor select{width:100%;margin-top:5px}#nodeEditor .followcheck{white-space:normal;margin:8px 0;padding:6px;border-radius:6px;background:#f6f8fc}.maptree{display:flex;align-items:center;width:max-content;min-width:100%;padding-right:20px}.maproot{background:#244c8e;color:white;border-radius:12px;padding:16px 20px;white-space:nowrap;font-weight:bold}.mapbranches{border-left:2px solid #c4d1e5;margin-left:30px;padding-left:28px;position:relative}.mapbranches:before{content:'';position:absolute;width:30px;border-top:2px solid #c4d1e5;left:-32px;top:50%}.teambranch{display:flex;align-items:center;position:relative;margin:22px 0;gap:30px}.teambranch:before{content:'';position:absolute;width:28px;border-top:2px solid #c4d1e5;left:-28px;top:50%}.mapnode{display:block;min-width:125px;max-width:190px;white-space:normal;text-align:left;box-shadow:0 2px 6px #17244308}.mapnode small{display:block;font-size:11px;color:inherit;opacity:.7}.teamnode{background:#f2eafb;border-color:#d7c5ee;color:#6a418f}.salesnode{background:#edf3ff;border-color:#acc4f4;color:#28559d}.follownode{background:#e9f7ef;border-color:#b4dcc6;color:#24734c}.mapnode.selected{outline:2px solid #355ed1;outline-offset:3px}.salesbranches{border-left:2px solid #c4d1e5;padding-left:22px;position:relative}.salesbranches:before{content:'';position:absolute;left:-31px;width:30px;top:50%;border-top:2px solid #c4d1e5}.salesbranch{display:flex;align-items:center;gap:24px;margin:14px 0;position:relative}.salesbranch:before{content:'';position:absolute;left:-24px;width:22px;top:50%;border-top:2px solid #c4d1e5}.followbranches{border-left:2px solid #bfdccd;padding-left:20px;position:relative}.followbranches:before{content:'';position:absolute;left:-25px;top:50%;width:24px;border-top:2px solid #bfdccd}.followbranches .mapnode{margin:8px 0;position:relative}.followbranches .mapnode:before{content:'';position:absolute;left:-22px;top:50%;width:20px;border-top:2px solid #bfdccd}.unassigned{border-style:dashed;background:#fafafa;color:#8893a5}.unmatched{margin-top:28px;border-top:1px solid #e0e6ee;padding-top:15px}.unmatched .personlist{margin-bottom:0}.rosterfooter{display:flex;justify-content:space-between;align-items:center;flex-shrink:0}#rosterDialog .sectionhead{flex-shrink:0}@media(max-width:800px){.rosterlayout{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(200px,1fr) 210px}#nodeEditor{border-left:0;border-top:1px solid #e4e9f2}}
+.categorytitle{font-size:16px;margin:22px 0 10px}.categorytitle small{font-size:12px;font-weight:normal}.salescolor{color:#28559d}.followcolor{color:#24734c}.followerbutton{background:#f2faf6;border-color:#b4dcc6}.bindingline{padding:12px 16px;border-radius:8px;background:#eef5fb;color:#32557a}.taskgroup{margin:18px 0;border:1px solid #e4e9f2;border-radius:10px;overflow:hidden}.taskgroup h3{font-size:15px;padding:12px 16px;margin:0;background:#f0f5ff}.taskgroup h3 small{font-size:12px;font-weight:normal}.followtasks h3{background:#e9f7ef;color:#24734c}.othertasks h3{background:#f5f5f7}.danger{color:#ae3232;border-color:#e4b6b6;margin-top:16px}.mapguide{font-size:13px;color:#60728e;position:sticky;left:0;margin-bottom:18px}[hidden]{display:none!important}.entryshell{max-width:1100px;margin:auto;padding:48px 30px}.entryshell h1{margin:8px 0}.entryteam{background:white;border:1px solid #e5e9f1;padding:18px 22px;border-radius:12px;margin:14px 0}.entryteam h3{margin:0;font-size:15px}.welcomeButton{display:block;width:100%;text-align:left;font-size:24px;background:#2757dc;color:white;padding:22px;margin:8px 0 24px}.welcomeButton span{float:right;font-size:14px}.viewbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.entrynote{font-size:12px;color:#75809a}.copyfeedback{font-size:13px;color:#24734c}.tools{flex-wrap:wrap}.responsibility{font-size:12px;color:#657898;padding:8px 0}
+body{background:#f5f7fa;color:#22334b;font-size:14px}main{max-width:1200px;padding:28px 28px 48px}h1{font-size:24px;letter-spacing:-.5px}header{padding-bottom:18px;border-bottom:1px solid #e2e7ee}header small{font-size:11px;letter-spacing:1px}h2{font-size:17px}button,input,select{padding:7px 12px;border-radius:7px}button{transition:background .15s}button:hover{background:#edf2fa}button.primary:hover{background:#244cc0}.tools{gap:8px}.viewbar{margin:18px 0;gap:8px}.viewbar strong{margin-right:auto;font-size:16px}.viewbar button{font-size:13px}.notice{font-size:12px;padding:10px 14px;margin:12px 0;border:1px solid #e4e9ef;background:#fff;color:#67768d;border-radius:8px}#status{border:0;background:none;padding:0;margin:8px 0 20px;font-size:11px;color:#8190a3}section{padding:22px;margin:18px 0;box-shadow:0 3px 14px #1b345004;border-color:#e3e8ef;border-radius:12px}.cards{gap:12px}.card{padding:14px 18px;background:#fff;border-radius:10px}.card strong{font-size:26px}.card small{font-size:11px}.filters{padding:14px 18px;background:white;border:1px solid #e3e8ef;border-radius:10px;gap:16px;margin:18px 0}.sectionhead{align-items:center;margin-bottom:14px}.sectionhead small{font-size:12px}.teamcards{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.teamcard{padding:14px;background:#f8fafc}.teamcard strong{font-size:23px}th{padding:10px 12px;background:#f7f9fc}td{padding:12px;border-color:#edf1f5}thead{z-index:1}.foot{font-size:11px;line-height:1.7;color:#8b96a7}.personlist{gap:8px;margin:8px 0 16px}.personbutton{font-size:13px;min-width:150px;border-color:#e0e6ee}.personbutton span{font-size:11px}.bindingline{font-size:13px;background:#f4f7fb;border:1px solid #e5ebf2;padding:10px 14px}.taskgroup{margin:14px 0;border-radius:9px}.taskgroup h3{font-size:14px;padding:11px 14px}.taskgroup .empty{font-size:12px;padding:14px;color:#94a0ae}.detailpanel{padding-top:16px}.detailpanel>.sectionhead{margin-bottom:10px}.detailpanel h2{font-size:15px}.tag{font-size:11px;padding:3px 8px}.taskcards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.taskmetric{border-radius:8px;background:#f5f8fd;padding:12px 15px}.taskmetric.follow{background:#f0f8f4}.taskmetric.other{background:#f7f7f8}.taskmetric span{display:block;font-size:12px;color:#6c7e95}.taskmetric strong{font-size:21px;margin-right:8px}.taskmetric small{font-size:11px}.personalMode main{max-width:1050px}.personalMode header .tools{font-size:12px}.personalMode #status{margin-bottom:4px}.personalMode #todoSection{margin-top:12px}.personalMode #todoSection>.sectionhead{align-items:flex-start;flex-wrap:wrap}.personalMode #todoSection>.sectionhead>div>small{display:none}.personalMode #todoSection>.foot{display:none}.personalMode .detailpanel{border:0;padding-top:0}.personalMode .detailpanel>.sectionhead{display:none}.personalMode #peoplePicker{display:none}.personalMode .bindingline{background:none;border:0;padding:2px 0 12px;color:#6a7b8e}.entryshell{max-width:1100px;padding-top:40px}#identityList{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.entryteam{margin:0;padding:20px}.entryteam h3{font-size:14px;color:#526781}.entryteam .personlist{margin-bottom:0}.entryteam .personbutton{min-width:calc(50% - 5px);flex:1}.welcomeButton{border:0;border-radius:12px;padding:20px 24px;margin-bottom:20px}.entryshell>.tools{margin-top:20px}.entryshell>p{font-size:13px;margin-bottom:24px}#peoplePicker{padding:12px 14px;background:#fafbfd;border:1px solid #e6ebf1;border-radius:8px;margin-bottom:14px}#peoplePicker summary{font-size:13px}.copyfeedback{display:block;width:100%;font-size:12px;text-align:right}.copyfeedback:empty{display:none}#dashboardMain{display:flex;flex-direction:column}#dashboardMain>header{order:0}#dashboardMain>.viewbar{order:1}#status{order:2}#managementFilters{order:3}#dashboardMain>.cards{order:4}#completionSection{order:5}#todoSection{order:6}#customerSection{order:7}#reportSection{order:8}#syncNotice{order:9}#scopeDetails{order:10}.rosterlayout{grid-template-columns:minmax(0,1fr) 265px}#rosterMap{padding:20px}.maproot{padding:12px 14px}.mapnode{min-width:112px}.mapbranches{margin-left:22px;padding-left:20px}.maptree{padding-right:4px}#rosterDialog{padding:20px}.mapguide{font-size:12px}.taskgroup table{table-layout:auto}.personalMode .taskgroup th:nth-child(4),.personalMode .taskgroup td:nth-child(4){display:none}@media(max-width:800px){main{padding:20px 12px}#identityList{grid-template-columns:1fr}.entryshell{padding:24px 14px}.taskcards{grid-template-columns:1fr}.taskmetric{padding:10px 14px}.viewbar strong{width:100%}.rosterlayout{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(200px,1fr) 210px}.tools{flex-wrap:wrap}.personalMode table{min-width:530px}}
+</style><div id="identityEntry" class="entryshell"><small>B2B / 团队销售跟单看板</small><h1>选择姓名，进入工作台</h1><p class="muted">个人工作台 · 主管查看本队 · 总监查看全部队伍</p><button id="cloudLogin" onclick="cloudLogin()" class="primary" hidden>使用钉钉登录</button><div id="welcomeBack"></div><div id="identityList">正在连接数据服务…</div><div class="tools"><button id="entryRoster">人员架构设置</button><span class="entrynote">云端数据服务连接后，使用钉钉身份进入工作台。</span></div></div><main id="dashboardMain" hidden>
+<header><div><small>销售运营 / 团队销售跟单SOP</small><h1>团队销售跟单看板</h1></div><div class="tools"><button id="editRoster">人员架构设置</button><a id="source" target="_blank" rel="noreferrer">打开源文件夹</a><button class="primary" id="refresh">刷新钉钉数据</button></div></header><div class="viewbar"><strong id="viewerName"></strong><button id="personalView">个人销售 / 跟单</button><button id="managementView" hidden>管理界面</button><button id="switchIdentity">返回姓名入口</button></div>
+<div class="notice" id="syncNotice">刷新按钮向后台请求钉钉最新数据；每 2 小时自动同步需后台定时服务启用。失败时保留上次成功结果。</div><div class="notice" id="status">正在读取数据…</div>
+<div class="cards"><div class="card"><span>录入客户数量</span><strong id="kCustomers">—</strong><small>除管理事项外，每个子表计 1 位客户</small></div><div class="card"><span>当前事件数量</span><strong id="kEvents">—</strong><small>按事件分组计数，隐藏分组不计</small></div><div class="card"><span>全部责任任务 / 完成数量</span><strong id="kTasks">—</strong><small>所选日期范围内的全部任务</small></div><div class="card"><span>任务完成度</span><strong id="kRate">—</strong><small>完成数量 ÷ 任务数量</small></div></div>
+<div class="filters" id="managementFilters"><label>队伍 <select id="team"><option value="">全部队伍</option></select></label><label>任务波段 <input id="from" type="date"> 至 <input id="to" type="date"></label><label><input type="checkbox" id="management" checked>包含管理事项任务</label><button id="reset">重置筛选</button></div>
+<section id="customerSection"><div class="sectionhead"><h2>客户与事件录入</h2><span class="pill" id="coverage"></span></div><div class="tablewrap"><table><thead><tr><th>队伍</th><th>业务员</th><th class="n">录入客户数量</th><th class="n">事件数量</th><th>数据状态</th></tr></thead><tbody id="people"></tbody></table></div><div class="foot">客户和事件为当前存量，不受任务日期筛选影响。缺少业务文件的人员显示“未录入”，汇总仅包含已同步文件。</div></section>
+<section id="todoSection"><div class="sectionhead"><div><h2>每人每日待办</h2><small>销售与跟单分类展示，点击人员查看待办及绑定关系</small></div><div class="tools"><label>日期 <input type="date" id="todoDate"></label><label><input type="checkbox" id="pendingOnly"> 仅未完成</label><button id="copySales">复制销售待办</button><button id="copyFollow">复制跟单待办</button><span id="copyStatus" class="copyfeedback" role="status"></span></div></div><textarea id="copyFallback" aria-label="待办复制内容" hidden style="width:100%;height:180px"></textarea><div id="personalSummary"></div><details id="peoplePicker"><summary>选择销售 / 跟单人员</summary><div id="todoTeams"></div></details><div id="todoDetail" class="detailpanel"><p class="muted">点击上方业务员查看当日明细</p></div><p class="foot">任务按源表节点分类：先展示销售待办，再展示跟单待办；空白节点归入管理事项或未分类。跟单从绑定销售的文件读取任务，无需另行录入。多位跟单绑定同一销售时共同展示该销售的跟单任务，汇总按源任务计数，不重复累加。</p></section>
+<section id="completionSection"><div class="sectionhead"><div><h2>任务完成度</h2><small>按队伍、人员及销售 / 跟单责任分类汇总</small></div><span class="muted" id="period"></span></div><div class="teamcards" id="teamProgress"></div><div class="tablewrap"><table><thead><tr><th>日期</th><th>队伍 / 销售归属 / 责任</th><th class="n">任务数量</th><th class="n">完成数量</th><th class="n">未完成</th><th class="n">完成率</th></tr></thead><tbody id="daily"></tbody></table></div><div class="foot">个人行按销售文件归属，销售与跟单责任分别展示；管理事项及未分类单列。汇总按源任务去重计算。隐藏的历史任务保留，未同步人员不按零完成处理。</div></section>
+<section id="reportSection"><div class="sectionhead"><div><h2>每日钉钉汇总</h2><small>云端同步 · B2B核心群发送尚未接通</small></div><button id="previewReport">查看今日推送内容</button></div><pre id="reportPreview" hidden></pre><p class="foot">群发送仍需单独配置接收渠道，当前未启用。</p></section>
+<section id="scopeDetails"><details><summary>统计口径与同步情况</summary><p>整份文件名含“模板”的文件不统计；客户数量按除“管理事项”外的客户子表计数；事件数量按有标题的事件分组计数，隐藏列或隐藏客户子表里的事件不计。任务按源表日期归属，汇总完成度按总完成数÷总任务数计算，不对百分比取平均。</p><p id="syncInfo"></p><p>刷新按钮请求后台从钉钉获取数据。自动同步依赖后台服务、钉钉应用权限及有效授权。</p><div id="warnings"></div></details></section>
+</main><dialog id="rosterDialog"><div class="sectionhead"><div><h2>人员架构图</h2><small>队伍 → 业务员 → 对应跟单 · 点击节点编辑，保存后生效</small></div><button id="cancelRoster">取消</button></div><div class="tools"><button id="addTeam">新增队伍</button><button id="addPerson">新增销售</button><button id="addFollower">新增跟单</button><span class="muted">蓝色：销售　绿色：跟单　虚线：待匹配</span></div><div class="rosterlayout"><div id="rosterMap" aria-label="人员架构思维导图"></div><aside id="nodeEditor"><p class="muted">点击队伍或人员节点进行编辑</p></aside></div><div class="rosterfooter"><span id="rosterError" role="status"></span><button class="primary" id="saveRoster">保存并重算</button></div></dialog><script src="b2b-cloud-config.js"></script><script>
+async function apiFetch(path, options={}) {
+ const cfg=window.B2B_CLOUD_CONFIG||{};
+ if(!cfg.apiBase)throw Error('云端数据服务尚未接通，请联系管理员完成配置。');
+ const base=new URL(cfg.apiBase);
+ if(base.protocol!=='https:')throw Error('数据服务必须使用 HTTPS');
+ const call=async route=>fetch(base.href.replace(/\/$/,'')+route,{...options,credentials:'include',cache:'no-store'});
+ let response=await call(path);
+ if(response.status===401){
+  document.getElementById('cloudLogin').hidden=false;
+  throw Error('请先登录钉钉以读取你的看板数据。');
+ }
+ if(response.status===202 && path.startsWith('/api/refresh')){
+  const job=await response.json();
+  if(!job.jobId)throw Error('同步服务未返回任务编号');
+  const status=document.getElementById('status');
+  status.textContent='正在从钉钉同步，请稍候…';
+  for(let i=0;i<60;i++){
+   await new Promise(resolve=>setTimeout(resolve,2000));
+   const poll=await fetch(base.href.replace(/\/$/,'')+'/api/sync-jobs/'+encodeURIComponent(job.jobId),{credentials:'include',cache:'no-store'});
+   if(!poll.ok)throw Error('无法读取同步进度，请稍后重试');
+   const state=await poll.json();
+   if(state.status==='failed')throw Error('本轮钉钉同步失败，保留上次数据。');
+   if(state.status==='completed')return fetch(base.href.replace(/\/$/,'')+'/api/data'+(path.includes('?')?'?'+path.split('?')[1]:''),{credentials:'include',cache:'no-store'});
+  }
+  throw Error('同步仍在后台运行，稍后重新打开看板可查看结果。');
+ }
+ return response;
+}
+function cloudLogin(){
+ const cfg=window.B2B_CLOUD_CONFIG||{};
+ if(!cfg.apiBase)return;
+ const url=new URL(cfg.apiBase.replace(/\/$/,'')+'/auth/login');
+ if(url.protocol!=='https:')return;
+ url.searchParams.set('returnTo',location.origin+location.pathname);
+ location.assign(url.href);
+}
+</script><script>
+let rosterDraft,rosterSelection=null;
+const isFollower=p=>p.role.includes('跟单')&&!p.role.includes('销售');
+async function openRoster(){
+ try{const r=await apiFetch('/api/roster',{cache:'no-store'});if(!r.ok)throw Error(await r.text());rosterDraft=await r.json();rosterSelection=null;el('rosterError').textContent='';renderRoster();el('rosterDialog').showModal();}catch(e){el('status').textContent='人员架构读取失败：'+e.message;}
+}
+function renderRoster(){
+ const {teams,people}=rosterDraft;
+ const personNode=(p,cls)=>`<button class="mapnode ${cls} ${rosterSelection?.id===p.id?'selected':''}" data-person-id="${esc(p.id)}">${esc(p.person)}<small>${isFollower(p)?'跟单':p.role.replace(/\n/g,' / ')}</small></button>`;
+ const branches=teams.map((team,i)=>{const sales=people.filter(p=>p.team===team&&!isFollower(p));return `<div class="teambranch"><button class="mapnode teamnode ${rosterSelection?.team===i?'selected':''}" data-team-index="${i}">${esc(team)}<small>${sales.length} 位业务员</small></button><div class="salesbranches">${sales.map(p=>{const fs=people.filter(f=>(p.followIds||[]).includes(f.id)&&isFollower(f));return `<div class="salesbranch">${personNode(p,'salesnode')}<div class="followbranches">${fs.length?fs.map(f=>personNode(f,'follownode')).join(''):`<button class="mapnode unassigned" data-match-id="${esc(p.id)}">＋ 匹配跟单</button>`}</div></div>`;}).join('')||`<button class="mapnode unassigned" data-add-team="${i}">＋ 新增业务员</button>`}</div></div>`;}).join('');
+ const unmatched=people.filter(isFollower);
+ el('rosterMap').innerHTML=`<div class="mapguide">队伍 → 销售人员 → 绑定跟单</div><div class="maptree"><div class="maproot">B2B 团队<small style="display:block;font-weight:normal">${teams.length} 支队伍<br>销售 ${people.filter(p=>!isFollower(p)).length} 人 · 跟单 ${unmatched.length} 人</small></div><div class="mapbranches">${branches}</div></div><div class="unmatched"><strong class="followcolor">跟单人员名册（${unmatched.length} 人）</strong><div class="personlist">${unmatched.map(p=>`<div>${personNode(p,'follownode')}<small>绑定销售：${people.filter(x=>(x.followIds||[]).includes(p.id)).map(x=>esc(x.person)).join('、')||'待绑定'}</small></div>`).join('')||'<small>暂无跟单，请点击“新增跟单”</small>'}</div></div>`;
+ el('rosterMap').querySelectorAll('[data-person-id]').forEach(b=>b.onclick=()=>{rosterSelection={id:b.dataset.personId};renderRoster();});
+ el('rosterMap').querySelectorAll('[data-match-id]').forEach(b=>b.onclick=()=>{rosterSelection={id:b.dataset.matchId};renderRoster();});
+ el('rosterMap').querySelectorAll('[data-team-index]').forEach(b=>b.onclick=()=>{rosterSelection={team:Number(b.dataset.teamIndex)};renderRoster();});
+ el('rosterMap').querySelectorAll('[data-add-team]').forEach(b=>b.onclick=()=>addRosterPerson(teams[Number(b.dataset.addTeam)]));
+ renderNodeEditor();
+}
+function renderNodeEditor(){
+ const {teams,people}=rosterDraft,box=el('nodeEditor');
+ if(!rosterSelection){box.innerHTML='<h3>编辑节点</h3><p class="muted">点击队伍或人员节点，修改信息或匹配关系。</p><p class="foot">跟单按业务员个人匹配，可跨队伍协作。一位跟单服务多位业务员时，会出现在各自分支下。</p>';return;}
+ if(rosterSelection.team!==undefined){const i=rosterSelection.team;box.innerHTML=`<h3>队伍设置</h3><label class="field">队伍名称<input id="editTeamName" value="${esc(teams[i])}"></label><button id="addToTeam">新增本队业务员</button>`;el('editTeamName').onchange=e=>{const name=e.target.value.trim();if(!name||teams.some((t,j)=>j!==i&&t===name)){el('rosterError').textContent='队伍名称不能为空或重复';return;}const old=teams[i];teams[i]=name;people.forEach(p=>{if(p.team===old)p.team=name;});el('rosterError').textContent='';renderRoster();};el('addToTeam').onclick=()=>addRosterPerson(teams[i]);return;}
+ const p=people.find(p=>p.id===rosterSelection.id);if(!p)return;
+ box.innerHTML=`<h3>${isFollower(p)?'跟单人员':'业务员'}设置</h3><label class="field">姓名<input data-field="person" value="${esc(p.person)}"></label><label class="field">所属队伍<select data-field="team">${teams.map(t=>`<option ${t===p.team?'selected':''}>${esc(t)}</option>`).join('')}</select></label><label class="field">岗位<select data-field="role">${[...new Set([p.role,'销售','跟单','销售 / 战队主管','销售 / 总监'])].map(r=>`<option ${p.role===r?'selected':''}>${esc(r)}</option>`).join('')}</select></label>${isFollower(p)?'<p class="foot">跟单岗位无需单独录入业务表格。</p>':`<label class="field">源文件名（不含 .xlsx）<input data-field="sourceName" value="${esc(p.sourceName)}"></label>`}<h4>${isFollower(p)?'对应业务员':'对应跟单人员'}</h4>${people.filter(x=>x.id!==p.id&&isFollower(x)!==isFollower(p)).map(x=>`<label class="followcheck"><input type="checkbox" data-match="${esc(x.id)}" ${(isFollower(p)?(x.followIds||[]).includes(p.id):(p.followIds||[]).includes(x.id))?'checked':''}>${esc(x.person)} <small>${esc(x.team)}</small></label>`).join('')||'<p class="muted">请先新增对应岗位人员</p>'}<p class="foot">修改暂存在图中；点击下方“保存并重算”后生效。</p>`;
+ if(isFollower(p)){box.insertAdjacentHTML('beforeend','<button id="removeFollower" class="danger">移除跟单人员</button>');el('removeFollower').onclick=()=>{const owners=people.filter(x=>(x.followIds||[]).includes(p.id)).map(x=>x.person);if(!confirm(`移除跟单“${p.person}”？${owners.length?'将解除与 '+owners.join('、')+' 的绑定。':''}源表任务保留，保存后生效。`))return;rosterDraft.people=people.filter(x=>x.id!==p.id);rosterDraft.people.forEach(x=>x.followIds=(x.followIds||[]).filter(id=>id!==p.id));rosterSelection=null;renderRoster();};}
+ box.querySelectorAll('[data-field]').forEach(input=>input.onchange=()=>{const field=input.dataset.field,value=input.value.trim();if(!value){el('rosterError').textContent='姓名和源文件名不能为空';return;}p[field]=value;if(field==='role'){if(isFollower(p))p.followIds=[];const eligible=new Set(people.filter(isFollower).map(x=>x.id));people.forEach(x=>x.followIds=(x.followIds||[]).filter(id=>eligible.has(id)));}el('rosterError').textContent='';renderRoster();});
+ box.querySelectorAll('[data-match]').forEach(input=>input.onchange=()=>{const other=people.find(x=>x.id===input.dataset.match),owner=isFollower(p)?other:p,follower=isFollower(p)?p:other;owner.followIds=(owner.followIds||[]).filter(id=>id!==follower.id);if(input.checked)owner.followIds.push(follower.id);renderRoster();});
+}
+function addRosterPerson(team,role='销售'){const prefix=role==='跟单'?'新跟单':'新人员';let n=1;while(rosterDraft.people.some(p=>p.person===prefix+n||p.sourceName===prefix+n))n++;const p={id:crypto.randomUUID(),person:prefix+n,team:team||rosterDraft.teams[0],role,sourceName:prefix+n,followIds:[]};rosterDraft.people.push(p);rosterSelection={id:p.id};renderRoster();}
+async function saveRoster(){
+ el('saveRoster').disabled=true;el('rosterError').textContent='正在保存…';
+ try{const r=await apiFetch('/api/roster',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(rosterDraft)});if(!r.ok)throw Error(await r.text());await r.json();el('rosterDialog').close();if(el('dashboardMain').hidden)await showEntry();else await load();}catch(e){el('rosterError').textContent='未保存：'+e.message;}finally{el('saveRoster').disabled=false;}
+}
+function initRoster(){
+ el('editRoster').onclick=openRoster;el('saveRoster').onclick=saveRoster;el('cancelRoster').onclick=()=>el('rosterDialog').close();
+ el('addTeam').onclick=()=>{let n=1;while(rosterDraft.teams.includes('新队伍'+n))n++;rosterDraft.teams.push('新队伍'+n);rosterSelection={team:rosterDraft.teams.length-1};renderRoster();};
+ el('addPerson').onclick=()=>addRosterPerson(rosterSelection?.team!==undefined?rosterDraft.teams[rosterSelection.team]:null);
+ el('addFollower').onclick=()=>addRosterPerson(rosterSelection?.team!==undefined?rosterDraft.teams[rosterSelection.team]:rosterDraft.people.find(p=>p.id===rosterSelection?.id)?.team,'跟单');
+}
+
+</script><script>
+let selectedFollower='';
+const taskCategory=t=>t.node?.includes('跟单')?'跟单':t.node?.includes('销售')?'销售':t.management?'管理事项':'未分类';
+const boundFollowers=p=>(D.excludedPeople||[]).filter(f=>(p.followIds||[]).includes(f.id));
+function currentTodoTasks(){
+ const day=el('todoDate').value,team=el('team').value;
+ const people=D.people.filter(p=>!team||p.team===team);
+ const person=people.some(p=>p.person===selectedPerson)?selectedPerson:'';
+ return D.tasks.filter(t=>t.date===day&&(!team||t.team===team)&&(el('management').checked||!t.management)&&(!el('pendingOnly').checked||!t.done)&&(selectedFollower?taskCategory(t)==='跟单'&&people.some(p=>p.person===t.person&&(p.followIds||[]).includes(selectedFollower)):!person||t.person===person));
+}
+async function copyTodo(category){
+ const tasks=currentTodoTasks().filter(t=>category==='销售'?taskCategory(t)!=='跟单':taskCategory(t)==='跟单');
+ const clean=x=>String(x??'').replace(/[\t\r\n]+/g,' ');
+ const lines=[`日期：${el('todoDate').value}`];
+ const owners=[...new Set(tasks.map(t=>t.person))];
+ for(const owner of owners){
+  const own=tasks.filter(t=>t.person===owner);
+  if(owners.length>1)lines.push('',`【${clean(owner)} · ${category}】`);
+  const customers=[...new Set(own.filter(t=>!t.management).map(t=>t.customer))];
+  const item=t=>`${clean(t.event)}&${clean(t.node|| (t.management?'管理事项':'未填写节点'))}：${clean(t.description)}${t.done?'（√）':''}`;
+  for(const customer of customers)lines.push(`${clean(customer)}  ${own.filter(t=>!t.management&&t.customer===customer).map(item).join(' ＋ ')}`);
+  const other=own.filter(t=>t.management);if(other.length)lines.push(`其他事项  ${other.map(item).join(' ＋ ')}`);
+ }
+ if(!tasks.length)lines.push('暂无待办');
+ try{await navigator.clipboard.writeText(lines.join('\n'));el('copyStatus').textContent=`已复制${category}待办 ${tasks.length} 项，可直接粘贴到钉钉`;}
+ catch(e){el('copyStatus').textContent='剪贴板不可用，请在下方选中文字复制';el('copyFallback').hidden=false;el('copyFallback').value=lines.join('\n');el('copyFallback').focus();el('copyFallback').select();}
+}
+function renderTodos(people){
+ el('copyStatus').textContent='';el('copyFallback').hidden=true;
+ const day=el('todoDate').value,mg=el('management').checked;
+ const tasks=D.tasks.filter(t=>t.date===day&&(mg||!t.management));
+ if(D.viewer?.view==='personal'){
+  const categories=D.viewer.follower?['跟单']:['销售','跟单','其他事项'];
+  el('personalSummary').innerHTML='<div class="taskcards">'+categories.map(c=>{const ts=tasks.filter(t=>c==='其他事项'?!['销售','跟单'].includes(taskCategory(t)):taskCategory(t)===c),done=ts.filter(t=>t.done).length;return `<div class="taskmetric ${c==='跟单'?'follow':c==='其他事项'?'other':''}"><span>${c}${c==='其他事项'?'（管理 / 待确认）':'责任'}</span><strong>${ts.length}</strong><small>项 · 已完成 ${done}</small></div>`;}).join('')+'</div>';
+ }
+ let html='<h3 class="categorytitle salescolor">销售人员</h3>';
+ for(const team of [...new Set(people.map(p=>p.team))]){
+  const members=people.filter(p=>p.team===team);
+  html+=`<div class="teamlabel"><span>${esc(team)}</span><span class="muted">${members.length} 位业务员</span></div><div class="personlist">`;
+  for(const p of members){const ts=tasks.filter(t=>t.person===p.person),fs=boundFollowers(p);html+=`<button class="personbutton ${!selectedFollower&&selectedPerson===p.person?'active':''}" data-person="${esc(p.person)}">销售 · ${esc(p.person)}<span>绑定跟单：${fs.map(f=>esc(f.person)).join('、')||'待绑定'}</span><span>${p.files?`销售 ${ts.filter(t=>taskCategory(t)==='销售').length} 项 · 跟单 ${ts.filter(t=>taskCategory(t)==='跟单').length} 项 · 全部 ${ts.length} 项`:'未录入业务文件'}</span></button>`;}
+  html+='</div>';
+ }
+ const followers=(D.excludedPeople||[]).filter(f=>!el('team').value||f.team===el('team').value||people.some(p=>(p.followIds||[]).includes(f.id)));
+ if(!followers.some(f=>f.id===selectedFollower))selectedFollower='';
+ html+='<h3 class="categorytitle followcolor">跟单人员 <small>点击查看所绑定销售的跟单节点任务</small></h3><div class="personlist">';
+ for(const f of followers){const owners=people.filter(p=>(p.followIds||[]).includes(f.id)),ft=tasks.filter(t=>taskCategory(t)==='跟单'&&owners.some(p=>p.person===t.person));html+=`<button class="personbutton followerbutton ${selectedFollower===f.id?'active':''}" data-follower="${esc(f.id)}">跟单 · ${esc(f.person)}<span>${esc(f.team)}</span><span>绑定销售：${owners.map(p=>esc(p.person)).join('、')||'待绑定'}</span><span>${owners.length?`${ft.filter(t=>!t.done).length} 待完成 / ${ft.length} 项任务`:'尚未绑定，无法分配任务'}</span></button>`;}
+ html+='</div>';el('todoTeams').innerHTML=html;
+ el('todoTeams').hidden=D.viewer?.view==='personal';
+ el('todoTeams').querySelectorAll('[data-person]').forEach(b=>b.onclick=()=>{selectedFollower='';selectedPerson=b.dataset.person;renderTodos(people);});
+ el('todoTeams').querySelectorAll('[data-follower]').forEach(b=>b.onclick=()=>{selectedFollower=b.dataset.follower;renderTodos(people);});
+ const table=ts=>`<div style="overflow:auto"><table><thead><tr><th>客户</th><th>事件</th><th>节点 / 责任分类</th><th>销售 → 绑定跟单</th><th>任务</th><th>是否完成</th></tr></thead><tbody>${ts.map(t=>{const owner=D.people.find(p=>p.person===t.person),fs=owner?boundFollowers(owner):[];return `<tr><td>${esc(t.customer)}</td><td>${esc(t.event)}</td><td>${esc(t.node||taskCategory(t))}</td><td>${esc(t.person)} → ${fs.map(f=>esc(f.person)).join('、')||'待绑定'}</td><td>${esc(t.description)}${t.hidden?'<small>（源表已隐藏）</small>':''}</td><td><span class="tag ${t.done?'done':'pending'}">${t.done?'√ 已完成':'未完成'}</span></td></tr>`;}).join('')}</tbody></table></div>`;
+ const group=(title,ts,cls)=>`<div class="taskgroup ${cls}"><h3>${title}<small> · ${ts.length} 项 / 已完成 ${ts.filter(t=>t.done).length} 项</small></h3>${ts.length?table(ts):'<div class="empty">当日没有符合筛选条件的任务</div>'}</div>`;
+ if(selectedFollower){const f=followers.find(f=>f.id===selectedFollower),owners=people.filter(p=>(p.followIds||[]).includes(f.id)),ts=tasks.filter(t=>owners.some(p=>p.person===t.person)&&taskCategory(t)==='跟单'&&(!el('pendingOnly').checked||!t.done));el('todoDetail').innerHTML=`<div class="sectionhead"><h2>跟单 · ${esc(f.person)}</h2><span class="muted">${esc(day)}</span></div><div class="bindingline">绑定销售：${owners.map(p=>esc(p.team)+' / '+esc(p.person)).join('、')||'尚未绑定'}</div>${owners.some(p=>!p.files)?'<p class="foot">部分绑定销售尚未录入业务文件，以下仅展示已有数据。</p>':''}`+group('跟单待办',ts,'followtasks');return;}
+ const p=people.find(p=>p.person===selectedPerson);
+ if(!p){el('todoDetail').innerHTML='<p class="muted">点击销售或跟单人员查看当日明细及绑定关系</p>';return;}
+ const ts=tasks.filter(t=>t.person===p.person&&(!el('pendingOnly').checked||!t.done));
+ const fs=boundFollowers(p),other=ts.filter(t=>!['销售','跟单'].includes(taskCategory(t)));
+ el('todoDetail').innerHTML=`<div class="sectionhead"><h2>${esc(p.team)} · 销售 ${esc(p.person)}</h2><span class="muted">${esc(day)} · ${ts.length} 项</span></div><div class="bindingline">销售 ${esc(p.person)} → 跟单 ${fs.map(f=>esc(f.person)).join('、')||'待绑定（请在人员架构设置中匹配）'}</div>`+(p.files?group('销售待办',ts.filter(t=>taskCategory(t)==='销售'),'salestasks')+group('跟单待办'+(fs.length?' · '+fs.map(f=>esc(f.person)).join('、'):' · 待绑定'),ts.filter(t=>taskCategory(t)==='跟单'),'followtasks')+(other.length?group('管理事项 / 未分类任务',other,'othertasks'):''):'<div class="empty">尚未录入业务文件，无法判断当天待办</div>');
+}
+
+function renderCompletion(people,tasks){
+ const teams=[...new Set(people.map(p=>p.team))];
+ el('teamProgress').innerHTML=teams.map(team=>{const ps=people.filter(p=>p.team===team),ts=tasks.filter(t=>t.team===team),c=ts.filter(t=>t.done).length,n=ps.filter(p=>p.files).length;return `<article class="teamcard"><h3>${esc(team)}</h3><strong>${n?pct(c,ts.length):'未录入'}</strong><div class="widebar"><i style="width:${ts.length?100*c/ts.length:0}%"></i></div><small>${n?`完成 ${c} / ${ts.length} · 未完成 ${ts.length-c}`:'尚无可统计任务'}</small><small>已同步 ${n} / ${ps.length} 人</small></article>`;}).join('');
+ let days=[...new Set(tasks.map(t=>t.date))].sort();
+ if(!days.length&&el('from').value&&el('from').value===el('to').value)days=[el('from').value];
+ const row=(day,label,ts,cls='',available=true)=>{const c=ts.filter(t=>t.done).length;return `<tr class="${cls}"><td>${esc(day)}</td><td>${label}</td><td class="n">${available?ts.length:'—'}</td><td class="n">${available?c:'—'}</td><td class="n">${available?ts.length-c:'—'}</td><td class="n">${available?`<span class="bar"><i style="width:${ts.length?100*c/ts.length:0}%"></i></span>${pct(c,ts.length)}`:'未录入'}</td></tr>`;};
+ let html='';
+ for(const day of days){const dt=tasks.filter(t=>t.date===day);
+  for(const team of teams){const ps=people.filter(p=>p.team===team),tt=dt.filter(t=>t.team===team);
+   html+=row(day,esc(team)+' · 队伍汇总',tt,'subtotal',ps.some(p=>p.files));
+   for(const p of ps){const pt=tt.filter(t=>t.person===p.person),fs=boundFollowers(p);html+=row('',`<button class="personlink" data-person="${esc(p.person)}" data-date="${day}">销售 ${esc(p.person)} · 全部责任合计</button>`,pt,'personrow',!!p.files);
+    for(const category of ['销售','跟单','管理事项','未分类']){const ct=pt.filter(t=>taskCategory(t)===category);if(ct.length||['销售','跟单'].includes(category))html+=row('',`<span class="${category==='跟单'?'followcolor':'salescolor'}">↳ ${category==='跟单'?'跟单责任 · '+(fs.map(f=>esc(f.person)).join('、')||'待绑定'):esc(category)+'责任'}</span>`,ct,'personrow',!!p.files);}
+   }
+  }
+  html+=row(day,'当日汇总（已同步）',dt,'daytotal',people.some(p=>p.files));
+ }
+ html+=row('所选日期','总汇总（已同步）',tasks,'total',people.some(p=>p.files));
+ el('daily').innerHTML=html;
+ el('daily').querySelectorAll('[data-person]').forEach(b=>b.onclick=()=>{selectedFollower='';selectedPerson=b.dataset.person;el('todoDate').value=b.dataset.date;renderTodos(people);el('todoSection').scrollIntoView({behavior:'smooth'});});
+}
+
+</script><script>
+let identityId=localStorage.getItem('b2b.identity')||'', activeView='personal', identities=[];
+const scopeQuery=()=>new URLSearchParams({identity:identityId,view:activeView}).toString();
+async function showEntry(){
+ const r=await apiFetch('/api/identities',{cache:'no-store'});if(!r.ok)throw Error('无法读取人员名单');identities=await r.json();
+ el('dashboardMain').hidden=true;el('identityEntry').hidden=false;
+ const remembered=identities.find(p=>p.id===identityId);
+ el('welcomeBack').innerHTML=remembered?`<small>上次使用</small><button class="welcomeButton" data-enter="${esc(remembered.id)}">${esc(remembered.person)} <span>进入我的看板 →</span></button>`:'';
+ el('identityList').innerHTML=[...new Set(identities.map(p=>p.team))].map(team=>`<div class="entryteam"><h3>${esc(team)}</h3><div class="personlist">${identities.filter(p=>p.team===team).map(p=>`<button class="personbutton" data-enter="${esc(p.id)}">${esc(p.person)}<span>${esc(p.role.replace(/\n/g,' / '))}</span></button>`).join('')}</div></div>`).join('');
+ el('identityEntry').querySelectorAll('[data-enter]').forEach(b=>b.onclick=()=>enterDashboard(b.dataset.enter));
+}
+async function enterDashboard(id){
+ identityId=id;activeView='personal';localStorage.setItem('b2b.identity',id);selectedPerson='';selectedFollower='';el('team').value='';
+ await load();if(!D?.viewer||D.viewer.id!==id)return;
+ el('identityEntry').hidden=true;el('dashboardMain').hidden=false;
+}
+function renderViewer(){
+ const u=D.viewer;if(!u)return;
+ document.body.classList.toggle('personalMode',u.view==='personal');
+ el('viewerName').textContent=u.person+' · '+(u.view==='management'?(u.director?'总监 · 全部队伍':'主管 · '+u.team):'个人工作台');
+ el('personalView').classList.toggle('primary',u.view==='personal');el('managementView').classList.toggle('primary',u.view==='management');el('managementView').hidden=!u.canManage;
+ el('managementView').textContent=u.director?'全局管理':'队伍管理';
+ el('editRoster').hidden=!(u.director&&u.view==='management');
+ el('source').hidden=u.view!=='management';el('reportSection').hidden=u.view!=='management';el('scopeDetails').hidden=u.view!=='management';
+ el('customerSection').hidden=u.view==='personal';
+ document.querySelector('.cards').hidden=u.view==='personal';
+ el('managementFilters').hidden=u.view==='personal';
+ el('syncNotice').hidden=u.view==='personal';
+ el('completionSection').hidden=u.view==='personal';
+ el('personalSummary').hidden=u.view!=='personal';
+ el('team').disabled=u.view==='personal'||!u.director;
+ if(el('team').options[0])el('team').options[0].textContent=u.director&&u.view==='management'?'全部队伍':u.team;
+ el('todoSection').querySelector('h2').textContent=u.view==='personal'?'我的每日待办':'每人每日待办';
+ if(u.view==='personal'){
+  el('from').value=el('todoDate').value;el('to').value=el('todoDate').value;el('management').checked=true;
+  if(u.follower){selectedFollower=u.id;selectedPerson='';}
+  else {selectedFollower='';selectedPerson=u.person;}
+ }
+}
+async function changeView(view){activeView=view;selectedPerson='';selectedFollower='';el('team').value='';await load();}
+function initIdentity(){
+ el('switchIdentity').onclick=()=>showEntry().catch(e=>alert(e.message));
+ el('personalView').onclick=()=>changeView('personal');el('managementView').onclick=()=>changeView('management');
+ el('entryRoster').onclick=openRoster;
+ showEntry().catch(e=>{el('identityList').textContent=e.message;});
+}
+
+</script><script>
+let D, selectedPerson=''; const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());const el=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const sum=(a,k)=>a.reduce((n,x)=>n+(x[k]||0),0),pct=(n,d)=>d?(100*n/d).toFixed(1)+'%':'—';
+function render(){renderViewer();if(el('from').value&&el('to').value&&el('from').value>el('to').value){el('status').textContent='开始日期不能晚于结束日期，请重新选择任务波段。';return;}const team=el('team').value,from=el('from').value,to=el('to').value,mg=el('management').checked;const ps=D.people.filter(p=>!team||p.team===team),ts=D.tasks.filter(t=>(!team||t.team===team)&&(!from||t.date>=from)&&(!to||t.date<=to)&&(mg||!t.management));let html='';for(const t of [...new Set(ps.map(p=>p.team))]){const rows=ps.filter(p=>p.team===t);for(const p of rows)html+=`<tr><td>${esc(p.team)}</td><td>${esc(p.person)}</td><td class="n">${p.customers??'—'}</td><td class="n">${p.events??'—'}</td><td class="${p.files?'':'dim'}">${p.files?'已同步':'未录入'}</td></tr>`;html+=`<tr class="subtotal"><td>${esc(t)} 小计</td><td>${rows.length} 人</td><td class="n">${rows.some(p=>p.files)?sum(rows,'customers'):'—'}</td><td class="n">${rows.some(p=>p.files)?sum(rows,'events'):'—'}</td><td>${rows.filter(p=>p.files).length}/${rows.length} 已同步</td></tr>`;}html+=`<tr class="total"><td>汇总（已同步）</td><td>${ps.length} 人</td><td class="n">${sum(ps,'customers')}</td><td class="n">${sum(ps,'events')}</td><td>${ps.filter(p=>p.files).length} 份业务文件</td></tr>`;el('people').innerHTML=html;el('coverage').textContent=`已同步 ${ps.filter(p=>p.files).length} / ${ps.length} 位业务员`;
+renderCompletion(ps,ts);renderTodos(ps);const completed=ts.filter(t=>t.done).length;el('kCustomers').textContent=sum(ps,'customers');el('kEvents').textContent=sum(ps,'events');el('kTasks').textContent=ts.length+' / '+completed;el('kRate').textContent=pct(completed,ts.length);el('period').textContent=from||to?`${from||'不限'} — ${to||'不限'}`:'全部任务日期';el('source').href=D.sourceFolder;el('syncInfo').textContent=D.files.map(f=>`${f.person}：${new Date(f.downloadedAt).toLocaleString('zh-CN')}`).join('；');el('warnings').textContent=D.warnings.join('；');el('status').textContent=`看板计算时间：${new Date(D.generatedAt).toLocaleString('zh-CN')}。已同步 ${D.files.length} 份业务文件；其余 ${D.people.filter(p=>!p.files).length} 位销售业务员尚无源文件。跟单岗位 ${D.excludedPeople?.length||0} 人无需录入。`;
+}
+async function load(refresh=false){el('refresh').disabled=true;try{const res=await apiFetch((refresh?'/api/refresh':'/api/data')+'?'+scopeQuery(),{method:refresh?'POST':'GET',cache:'no-store'});if(!res.ok)throw Error(await res.text());D=await res.json();const selected=el('team').value;el('team').innerHTML='<option value="">全部队伍</option>'+[...new Set(D.people.map(p=>p.team))].map(t=>`<option>${esc(t)}</option>`).join('');el('team').value=selected;render();}catch(e){el('status').textContent='刷新失败，保留上次结果：'+e.message;}finally{el('refresh').disabled=false;}}
+initRoster();el('copySales').onclick=()=>copyTodo('销售');el('copyFollow').onclick=()=>copyTodo('跟单');el('refresh').onclick=()=>load(true);for(const id of ['team','from','to','management'])el(id).onchange=()=>D&&render();el('reset').onclick=()=>{el('team').value='';el('from').value=today;el('to').value=today;el('management').checked=true;render();};el('from').value=today;el('to').value=today;el('todoDate').value=today;el('todoDate').onchange=()=>render();el('pendingOnly').onchange=()=>render();el('previewReport').onclick=async()=>{const r=await apiFetch('/api/report?'+scopeQuery());el('reportPreview').textContent=await r.text();el('reportPreview').hidden=false;};initIdentity();setInterval(()=>{if(!el('dashboardMain').hidden)load();},60000);
+</script></html>
