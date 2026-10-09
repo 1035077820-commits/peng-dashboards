@@ -111,7 +111,7 @@ const summaryRole=()=>selectedFollower||D.viewer?.follower?'跟单':'销售';
 const textWidth=s=>[...s].reduce((n,c)=>n+(/[\u0020-\u007e]/.test(c)?1:2),0);
 function summaryTable(rows){
  const widths=rows[0].map((_,i)=>Math.max(...rows.map(r=>textWidth(r[i]))));
- return rows.map(r=>r.map((s,i)=>s+' '.repeat(Math.max(0,widths[i]-textWidth(s)))).join('  ').trimEnd()).join('\n');
+ return rows.map(r=>r.map((s,i)=>s+' '.repeat(Math.max(0,widths[i]-textWidth(s)))).join(' | ').trimEnd()).join('\n');
 }
 async function copyDailySummary(){
  const category=summaryRole();
@@ -121,9 +121,9 @@ async function copyDailySummary(){
  const owners=[...new Set(tasks.map(t=>t.person))];let number=0;
  for(const owner of owners){
   if(owners.length>1){lines.push(`【${clean(owner)}】`);html.push(`<p><b>${esc(owner)}</b></p>`);}
-  const rows=[['序号','客户','事件','节点'],...tasks.filter(t=>t.person===owner).map(t=>[String(++number),clean(t.management?'管理事项':t.customer),clean(t.event||t.description),clean(t.node||(t.management?'管理事项':'未填写节点'))])];
+  const rows=[['序号','客户','事件','具体事项'],...tasks.filter(t=>t.person===owner).map(t=>[String(++number),clean(t.management?'管理事项':t.customer),clean(t.event||'未填写事件'),clean(t.description||t.node||(t.management?'管理事项':'未填写事项'))])];
   lines.push(summaryTable(rows));
-  html.push('<table style="border-collapse:collapse;font-family:Arial,Microsoft YaHei,sans-serif;font-size:14px"><tbody>'+rows.map((r,i)=>'<tr>'+r.map(v=>`<${i?'td':'th'} style="border:1px solid #dce3ed;padding:8px 12px;text-align:left;vertical-align:top;${i?'':'background:#f3f6fa;'}">${esc(v)}</${i?'td':'th'}>`).join('')+'</tr>').join('')+'</tbody></table>');
+  html.push('<table style="width:640px;max-width:100%;table-layout:fixed;border-collapse:collapse;font-family:Arial,Microsoft YaHei,sans-serif;font-size:14px;line-height:1.6"><colgroup><col style="width:8%"><col style="width:22%"><col style="width:28%"><col style="width:42%"></colgroup><tbody>'+rows.map((r,i)=>'<tr>'+r.map(v=>`<${i?'td':'th'} style="border:1px solid #dce3ed;padding:8px 12px;text-align:left;vertical-align:top;overflow-wrap:anywhere;${i?'':'background:#f3f6fa;'}">${esc(v)}</${i?'td':'th'}>`).join('')+'</tr>').join('')+'</tbody></table>');
  }
  if(!tasks.length){lines.push('暂无已完成事项');html.push('<p>暂无已完成事项</p>');}
  await copyText(lines.join('\n'),`已复制${category}当日总结 ${tasks.length} 项（已完成），可直接粘贴到钉钉`,html.join(''));

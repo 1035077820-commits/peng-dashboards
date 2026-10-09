@@ -1,4 +1,2 @@
 // Public routing only. Never put AppSecret or access tokens here.
-window.B2B_CLOUD_CONFIG = Object.freeze({
-  apiBase: "https://b2b-dashboard-gateway.pages.dev"
-});
+window.B2B_CLOUD_CONFIG = Object.freeze({apiBase: "https://b2b-dashboard-gateway.pages.dev"});
