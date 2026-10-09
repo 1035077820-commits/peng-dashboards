@@ -151,23 +151,25 @@ function currentTodoTasks({summary=false}={}){
  return D.tasks.filter(t=>t.date===day&&(!team||t.team===team)&&(summary||el('management').checked||!t.management)&&(summary?t.done:!el('pendingOnly').checked||!t.done)&&(selectedFollower?taskCategory(t)==='跟单'&&people.some(p=>p.person===t.person&&(p.followIds||[]).includes(selectedFollower)):!person||t.person===person));
 }
 const summaryRole=()=>selectedFollower||D.viewer?.follower?'跟单':'销售';
-function summaryText(rows){
- return rows.slice(1).map(([number,customer,event,description])=>`${number}. 客户：${customer}\n事件：${event}\n具体事项：${description}`).join('\n\n');
-}
 async function copyDailySummary(){
  const category=summaryRole();
  const tasks=currentTodoTasks({summary:true}).filter(t=>category==='销售'?taskCategory(t)!=='跟单':taskCategory(t)==='跟单');
  const clean=x=>String(x??'').replace(/[\t\r\n]+/g,' ').trim();
- const title=`日期：${el('todoDate').value}（岗位：${category}）`,lines=[title],html=[`<p>${esc(title)}</p>`];
- const owners=[...new Set(tasks.map(t=>t.person))];let number=0;
- for(const owner of owners){
-  if(owners.length>1){lines.push(`【${clean(owner)}】`);html.push(`<p><b>${esc(owner)}</b></p>`);}
-  const rows=[['序号','客户','事件','具体事项'],...tasks.filter(t=>t.person===owner).map(t=>[String(++number),clean(t.management?'管理事项':t.customer),clean(t.event||'未填写事件'),clean(t.description||t.node||(t.management?'管理事项':'未填写事项'))])];
-  lines.push('',summaryText(rows));
-  html.push('<table style="width:640px;max-width:100%;table-layout:fixed;border-collapse:collapse;font-family:Arial,Microsoft YaHei,sans-serif;font-size:14px;line-height:1.6"><colgroup><col style="width:8%"><col style="width:22%"><col style="width:28%"><col style="width:42%"></colgroup><tbody>'+rows.map((r,i)=>'<tr>'+r.map(v=>`<${i?'td':'th'} style="border:1px solid #dce3ed;padding:8px 12px;text-align:left;vertical-align:top;overflow-wrap:anywhere;${i?'':'background:#f3f6fa;'}">${esc(v)}</${i?'td':'th'}>`).join('')+'</tr>').join('')+'</tbody></table>');
+ const date=el('todoDate').value.replace(/^(\d{4})-(\d{2})-(\d{2})$/,(m,y,month,day)=>`${y}年${Number(month)}月${Number(day)}日`);
+ const lines=[`${category}日报｜${date}`];let number=0;
+ for(const management of [true,false]){
+  const items=tasks.filter(t=>!!t.management===management);
+  if(!items.length)continue;
+  lines.push('',management?'【管理事项】':'【客户跟进】','');
+  for(const t of items){
+   const event=clean(t.event||'未填写事件'),description=clean(t.description||'未填写事项');
+   lines.push(`${++number}. ${management?'':clean(t.customer)+'｜'}${event}：${description}`);
+  }
  }
- if(!tasks.length){lines.push('暂无已完成事项');html.push('<p>暂无已完成事项</p>');}
- await copyText(lines.join('\n'),`已复制${category}当日总结 ${tasks.length} 项（已完成），可直接粘贴到钉钉`,html.join(''));
+ if(!tasks.length)lines.push('','暂无已完成事项');
+ const text=lines.join('\n');
+ const html='<div style="text-align:left;font-family:Arial,Microsoft YaHei,sans-serif;font-size:14px;line-height:1.8">'+lines.map(line=>line?`<div>${esc(line)}</div>`:'<br>').join('')+'</div>';
+ await copyText(text,`已复制${category}当日总结 ${tasks.length} 项（已完成），可直接粘贴到钉钉`,html);
 }
 async function copyText(text,message,html){
  try{
