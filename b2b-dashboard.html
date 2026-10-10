@@ -51,7 +51,7 @@ async function apiFetch(path,options={}){
    await new Promise(resolve=>setTimeout(resolve,2000));
    const poll=await cloudRequest(new URL('/api/sync-jobs/'+encodeURIComponent(job.jobId)+(sendingReport?'?report=1':''),base),{cache:'no-store',headers:{Authorization:'Bearer '+sessionStorage.getItem('b2b.access')}});
    if(!poll.ok)throw Error('无法读取同步进度，请稍后重试。');const state=await poll.json();
-   document.getElementById('status').textContent=`正在刷新${scopeLabel}：${state.phase==='discover'?'查找源表':`已读取 ${state.completed} / ${state.total} 份文件`}…`;
+   document.getElementById('status').textContent=`正在刷新${scopeLabel}：${state.retrying?'钉钉连接暂时不稳定，自动重试中':state.phase==='discover'?'查找源表':`已读取 ${state.completed} / ${state.total} 份文件`}…`;
    if(state.status==='failed')throw Error('本轮同步失败（'+state.code+'），保留上次完整数据。');
    if(state.status==='completed'){
     if(sendingReport){if(state.reportStatus!=='sent')throw Error('数据已同步，但日报发送未成功（'+(state.reportError||state.reportStatus||'状态未知')+'）。请先检查群机器人状态。');document.getElementById('status').textContent='同步完成，日报已发送到 B2B核心群。';return new Response(JSON.stringify(state),{headers:{'Content-Type':'application/json'}});}
