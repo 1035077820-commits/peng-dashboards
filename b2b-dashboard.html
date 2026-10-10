@@ -18,7 +18,7 @@ body{background:#f5f7fa;color:#22334b;font-size:14px}main{max-width:1200px;paddi
 <section id="customerLevelSection" hidden><div class="sectionhead"><div><h2>客户级别分析</h2><small id="levelHint">按队伍查看分布，选择队伍展开个人情况</small></div></div><div class="tablewrap" id="levelTeams"></div><div id="levelDetail" class="tablewrap" hidden></div></section><section id="customerSection"><div class="sectionhead"><h2>客户与事件录入</h2><span class="pill" id="coverage"></span></div><div class="tablewrap"><table><thead><tr><th>队伍</th><th>业务员</th><th class="n">录入客户数量</th><th class="n">事件数量</th><th>数据状态</th></tr></thead><tbody id="people"></tbody></table></div><div class="foot">客户和事件为当前存量，不受任务日期筛选影响。缺少业务文件的人员显示“未录入”，汇总仅包含已同步文件。</div></section>
 <section id="todoSection"><div class="sectionhead"><div><h2>每人每日待办</h2><small>销售与跟单分类展示，点击人员查看待办及绑定关系</small></div><div class="tools"><label>日期 <input type="date" id="todoDate"></label><label><input type="checkbox" id="pendingOnly"> 仅未完成</label><button id="copySales">复制销售待办</button><button id="copyFollow">复制跟单待办</button><button id="copyDailySummary" title="复制所选日期已完成事项，按销售和跟单分段">当日总结</button><span id="copyStatus" class="copyfeedback" role="status"></span></div></div><textarea id="copyFallback" aria-label="复制内容" hidden style="width:100%;height:180px"></textarea><div id="personalSummary"></div><details id="peoplePicker"><summary>选择销售 / 跟单人员</summary><div id="todoTeams"></div></details><div id="todoDetail" class="detailpanel"><p class="muted">点击上方业务员查看当日明细</p></div><p class="foot">任务按源表节点分类：先展示销售待办，再展示跟单待办；空白节点归入管理事项或未分类。跟单从绑定销售的文件读取任务，无需另行录入。多位跟单绑定同一销售时共同展示该销售的跟单任务，汇总按源任务计数，不重复累加。</p></section>
 <section id="completionSection"><div class="sectionhead"><div><h2 id="completionTitle">任务完成度</h2><small id="completionHint">按队伍、人员及销售 / 跟单责任分类汇总</small></div><span class="muted" id="period"></span></div><div class="teamcards" id="teamProgress"></div><div id="teamDetailHeader" class="sectionhead" hidden><h3 id="teamDetailName"></h3><button id="backToTeams">返回全部队伍</button></div><div id="completionDetails"><div class="tablewrap"><table><thead><tr><th>日期</th><th>队伍 / 销售归属 / 责任</th><th class="n">任务数量</th><th class="n">完成数量</th><th class="n">未完成</th><th class="n">完成率</th></tr></thead><tbody id="daily"></tbody></table></div><div class="foot">个人行按销售文件归属，销售与跟单责任分别展示；管理事项及未分类单列。汇总按源任务去重计算。隐藏的历史任务保留，未同步人员不按零完成处理。</div></div></section>
-<section id="activitySection" hidden><div class="sectionhead"><div><h2>今日表格更新提醒</h2><small>按北京时间统计表格最近修改记录；今日修改表示表格有操作，修改者可能是协作者；缺少记录列为待核实</small></div><span class="pill" id="activityCount"></span></div><div id="activityWarnings"></div></section><section id="reportSection"><div class="sectionhead"><div><h2>每日钉钉汇总</h2><small>每天 23:00 自动同步发送，也可手动同步并发送</small></div><div class="reporttools"><button id="previewReport">查看今日推送内容</button><button id="sendReport" class="primary">同步并发送日报</button></div></div><span id="reportStatus" class="reportstatus" role="status"></span><pre id="reportPreview" hidden></pre><p class="foot">手动发送会重新同步整份业务文件夹，完整成功后发送到 B2B核心群。</p></section>
+<section id="activitySection" hidden><div class="sectionhead"><div><h2>表格更新记录与提醒</h2><small id="activityHint">每2小时同步，按北京时间查询各成员表格修改记录</small></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px"><small id="activityUpdated">最近完整更新：读取中…</small><div class="tools"><label>日期 <input type="date" id="activityDate"></label><button id="activityToday">今天</button><span class="pill" id="activityCount"></span></div></div></div><div id="activityWarnings"></div></section><section id="reportSection"><div class="sectionhead"><div><h2>每日钉钉汇总</h2><small>每天 23:00 自动同步发送，也可手动同步并发送</small></div><div class="reporttools"><button id="previewReport">查看今日推送内容</button><button id="sendReport" class="primary">同步并发送日报</button></div></div><span id="reportStatus" class="reportstatus" role="status"></span><pre id="reportPreview" hidden></pre><p class="foot">手动发送会重新同步整份业务文件夹，完整成功后发送到 B2B核心群。</p></section>
 <section id="scopeDetails"><details><summary>统计口径与同步情况</summary><p>整份文件名含“模板”的文件不统计；客户数量按除“管理事项”外的客户子表计数；事件数量按有标题的事件分组计数，隐藏列或隐藏客户子表里的事件不计。任务按源表日期归属，汇总完成度按总完成数÷总任务数计算，不对百分比取平均。</p><p id="syncInfo"></p><p>刷新按钮请求后台从钉钉获取数据。自动同步依赖后台服务、钉钉应用权限及有效授权。</p><div id="warnings"></div></details></section>
 </main><dialog id="rosterDialog"><div class="sectionhead"><div><h2>人员架构图</h2><small>队伍 → 业务员 → 对应跟单 · 点击节点编辑，保存后生效</small></div><button id="cancelRoster">取消</button></div><div class="tools"><button id="addTeam">新增队伍</button><button id="addPerson">新增销售</button><button id="addFollower">新增跟单</button><span class="muted">蓝色：销售　绿色：跟单　虚线：待匹配</span></div><div class="rosterlayout"><div id="rosterMap" aria-label="人员架构思维导图"></div><aside id="nodeEditor"><p class="muted">点击队伍或人员节点进行编辑</p></aside></div><div class="rosterfooter"><span id="rosterError" role="status"></span><button class="primary" id="saveRoster">保存并重算</button></div></dialog><script src="b2b-cloud-config.js"></script><script>const cloudBase=()=>new URL(window.B2B_CLOUD_CONFIG?.apiBase||'https://b2b-dashboard-gateway.pages.dev');
 async function cloudRequest(url,options={}){
@@ -133,27 +133,55 @@ function renderCustomerLevels(){
  el('levelDetail').innerHTML=selectedLevelTeam?`<h3>${esc(selectedLevelTeam)} · 个人客户级别</h3><div class="tablewrap"><table>${head('业务员')}<tbody>${people.filter(p=>p.team===selectedLevelTeam).map(p=>row(esc(p.person),[p])).join('')}${row('队伍汇总',people.filter(p=>p.team===selectedLevelTeam),'total')}</tbody></table></div>`:'';
  el('levelHint').textContent=pending?'部分旧数据尚未读取客户级别，列为“级别待同步”；完成本轮刷新后显示真实级别。':'点击队伍展开个人分布；未填写级别单列统计。';
 }
+let activityCache=null,activityRequest=0;
+async function loadActivityDay(){
+ if(D.viewer?.view!=='management')return;
+ const day=el('activityDate').value,key=scopeQuery()+'&day='+day;
+ if(activityCache?.key===key&&activityCache.requestedSyncedAt===D.syncedAt)return;
+ const requestedSyncedAt=D.syncedAt;
+ const request=++activityRequest;
+ el('activityHint').textContent='正在读取所选日期的记录…';
+ try{
+  const response=await (typeof apiFetch==='function'?apiFetch:fetch)('/api/activity?'+key,{cache:'no-store'});
+  if(!response.ok)throw Error('无法读取记录');
+  const data=await response.json();
+  if(request!==activityRequest)return;
+  activityCache={...data,key,requestedSyncedAt};renderActivityWarnings();
+ }catch{if(request===activityRequest)el('activityHint').textContent='历史记录读取失败，请重新选择日期或刷新；暂不判定未使用。';}
+}
 function renderActivityWarnings(){
  const section=el('activitySection');section.hidden=D.viewer?.view!=='management';if(section.hidden)return;
  const dayFmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'});
- const today=dayFmt.format(new Date());
+ const today=dayFmt.format(new Date()),input=el('activityDate');
+ if(input){input.max=today;if(!input.value)input.value=today;}
+ const day=input?.value||today;
  const stamp=value=>{if(value==null||value==='')return null;const numeric=typeof value==='number'||/^\d+$/.test(String(value));const n=numeric?Number(value):null;const d=new Date(numeric?(n<1e12?n*1000:n):value);return Number.isNaN(d.getTime())?null:d;};
+ const time=value=>{const d=stamp(value);return d?d.toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false}):'暂无完整同步';};
+ if(el('activityUpdated'))el('activityUpdated').textContent='最近完整更新：'+time(D.syncedAt);
+ const cached=activityCache?.day===day&&activityCache.key===scopeQuery()+'&day='+day?activityCache:null;
  const files=new Map((D.files||[]).map(f=>[f.person,f]));
- const people=D.people.map(p=>({...p,modified:stamp(files.get(p.person)?.modifiedAt)}));
- const updated=people.filter(p=>p.modified&&dayFmt.format(p.modified)===today);
- const stale=people.filter(p=>p.modified&&dayFmt.format(p.modified)<today);
- const unknown=people.filter(p=>!p.modified||dayFmt.format(p.modified)>today);
- el('activityCount').textContent=`今日有更新 ${updated.length} / ${people.length} 位 · 待核实 ${unknown.length} 位`;
- const renderGroup=(ps,title,color)=>[...new Set(ps.map(p=>p.team))].map(team=>`<div class="levelwarning" style="${color}"><h3>${esc(team)} · ${title} ${ps.filter(p=>p.team===team).length} 位</h3><ul>${ps.filter(p=>p.team===team).map(p=>`<li>${esc(p.person)}：${p.modified?'最近修改 '+esc(p.modified.toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false})):p.files?'修改时间待同步或未返回，暂无法判断':'尚无已同步业务文件，暂无法判断'}</li>`).join('')}</ul></div>`).join('');
- el('activityWarnings').innerHTML=renderGroup(stale,'未发现今日更新','')+renderGroup(unknown,'待核实','border-color:#a9b4c4;background:#f6f8fb;color:#526479')+renderGroup(updated,'今日有更新','border-color:#4a9d7a;background:#eff8f3;color:#256c4d');
+ const people=D.people.filter(p=>!el('team').value||p.team===el('team').value).map(p=>{
+  const history=cached?.people.find(r=>r.id===p.id),modified=stamp(files.get(p.person)?.modifiedAt);
+  const proven=modified&&dayFmt.format(modified)===day;
+  const current=day===today&&D.syncedAt&&dayFmt.format(new Date(D.syncedAt))===day;
+  const status=history?.status||(proven?'updated':current&&modified&&dayFmt.format(modified)<day?'stale':'unknown');
+  return {...p,status,modified:history?stamp(history.modifiedAt):modified,observedAt:history?.observedAt};
+ });
+ const updated=people.filter(p=>p.status==='updated'),stale=people.filter(p=>p.status==='stale'),unknown=people.filter(p=>p.status==='unknown');
+ const label=day===today?'今日':'当日';
+ el('activityCount').textContent=`${label}有更新 ${updated.length} / ${people.length} 位 · 待核实 ${unknown.length} 位`;
+ const renderGroup=(ps,title,color)=>[...new Set(ps.map(p=>p.team))].map(team=>`<div class="levelwarning" style="${color}"><h3>${esc(team)} · ${title} ${ps.filter(p=>p.team===team).length} 位</h3><ul>${ps.filter(p=>p.team===team).map(p=>`<li>${esc(p.person)}：${p.modified?'最近修改 '+esc(time(p.modified)):'记录不足，暂无法判断'}${p.status==='stale'?' · 备注：未发现当日修改，按未使用提醒':''}${p.observedAt?' · 核对截至 '+esc(time(p.observedAt)):''}</li>`).join('')}</ul></div>`).join('');
+ el('activityWarnings').innerHTML=renderGroup(stale,'未发现'+label+'更新','')+renderGroup(unknown,'待核实','border-color:#a9b4c4;background:#f6f8fb;color:#526479')+renderGroup(updated,label+'有更新','border-color:#4a9d7a;background:#eff8f3;color:#256c4d');
+ if(el('activityHint'))el('activityHint').textContent='每2小时完整同步；按表格修改记录判断，单纯打开无法识别，协作者修改也会计入。跟单无独立表格，不列入未使用提醒。历史状态仅代表记录截至时间。';
+ if(input)loadActivityDay();
 }
 const taskCategory=t=>t.node?.includes('跟单')?'跟单':t.node?.includes('销售')?'销售':t.management?'管理事项':'未分类';
 const boundFollowers=p=>(D.excludedPeople||[]).filter(f=>(p.followIds||[]).includes(f.id));
-function currentTodoTasks({summary=false}={}){
+function currentTodoTasks({summary=false,includeManagement=false}={}){
  const day=el('todoDate').value,team=el('team').value;
  const people=D.people.filter(p=>!team||p.team===team);
  const person=people.some(p=>p.person===selectedPerson)?selectedPerson:'';
- return D.tasks.filter(t=>t.date===day&&(!team||t.team===team)&&(summary||el('management').checked||!t.management)&&(summary?t.done:!el('pendingOnly').checked||!t.done)&&(selectedFollower?taskCategory(t)==='跟单'&&people.some(p=>p.person===t.person&&(p.followIds||[]).includes(selectedFollower)):!person||t.person===person));
+ return D.tasks.filter(t=>t.date===day&&(!team||t.team===team)&&(summary||includeManagement||el('management').checked||!t.management)&&(summary?t.done:!el('pendingOnly').checked||!t.done)&&(selectedFollower?taskCategory(t)==='跟单'&&people.some(p=>p.person===t.person&&(p.followIds||[]).includes(selectedFollower)):!person||t.person===person));
 }
 const summaryRole=()=>selectedFollower||D.viewer?.follower?'跟单':'销售';
 async function copyDailySummary(){
@@ -187,20 +215,29 @@ async function copyText(text,message,html){
  catch(e){el('copyStatus').textContent='剪贴板不可用，请在下方选中文字复制';el('copyFallback').hidden=false;el('copyFallback').value=text;el('copyFallback').focus();el('copyFallback').select();}
 }
 async function copyTodo(category){
- const tasks=currentTodoTasks().filter(t=>category==='销售'?taskCategory(t)!=='跟单':taskCategory(t)==='跟单');
- const clean=x=>String(x??'').replace(/[\t\r\n]+/g,' ');
- const lines=[`日期：${el('todoDate').value}`];
+ const tasks=currentTodoTasks({includeManagement:category==='销售'}).filter(t=>category==='销售'?taskCategory(t)!=='跟单':!t.management&&taskCategory(t)==='跟单');
+ const clean=x=>String(x??'').replace(/[\t\r\n]+/g,' ').trim();
+ const date=el('todoDate').value.replace(/^(\d{4})-(\d{2})-(\d{2})$/,(m,y,month,day)=>`${y}年${Number(month)}月${Number(day)}日`);
+ const lines=[`${category}待办｜${date}`];let number=0;
  const owners=[...new Set(tasks.map(t=>t.person))];
  for(const owner of owners){
   const own=tasks.filter(t=>t.person===owner);
   if(owners.length>1)lines.push('',`【${clean(owner)} · ${category}】`);
-  const customers=[...new Set(own.filter(t=>!t.management).map(t=>t.customer))];
-  const item=t=>`${clean(t.event)}&${clean(t.node|| (t.management?'管理事项':'未填写节点'))}：${clean(t.description)}${t.done?'（√）':''}`;
-  for(const customer of customers)lines.push(`${clean(customer)}  ${own.filter(t=>!t.management&&t.customer===customer).map(item).join(' ＋ ')}`);
-  const other=own.filter(t=>t.management);if(other.length)lines.push(`其他事项  ${other.map(item).join(' ＋ ')}`);
+  for(const management of [true,false]){
+   const items=own.filter(t=>!!t.management===management);
+   if(!items.length)continue;
+   lines.push('',management?'【管理事项】':'【客户跟进】','');
+   const customers=[...new Set(items.map(t=>t.customer))];
+   for(const customer of customers){
+    for(const t of items.filter(t=>t.customer===customer)){
+     lines.push(`${++number}. ${management?'':clean(t.customer||'未填写客户')+'｜'}${clean(t.event||'未填写事件')}：${clean(t.description||'未填写事项')}${t.done?'（√）':''}`);
+    }
+   }
+  }
  }
- if(!tasks.length)lines.push('暂无待办');
- await copyText(lines.join('\n'),`已复制${category}待办 ${tasks.length} 项，可直接粘贴到钉钉`);
+ if(!tasks.length)lines.push('','暂无待办');
+ const html='<div style="text-align:left;font-family:Arial,Microsoft YaHei,sans-serif;font-size:14px;line-height:1.8">'+lines.map(line=>line?`<div>${esc(line)}</div>`:'<br>').join('')+'</div>';
+ await copyText(lines.join('\n'),`已复制${category}待办 ${tasks.length} 项，可直接粘贴到钉钉`,html);
 }
 function renderTodos(people){
  el('copyStatus').textContent='';el('copyFallback').hidden=true;
@@ -337,5 +374,5 @@ function render(){renderViewer();if(el('from').value&&el('to').value&&el('from')
 renderCompletion(ps,ts);renderTodos(ps);renderCustomerLevels();renderActivityWarnings();const completed=ts.filter(t=>t.done).length;el('kCustomers').textContent=sum(ps,'customers');el('kEvents').textContent=sum(ps,'events');el('kTasks').textContent=ts.length+' / '+completed;el('kRate').textContent=pct(completed,ts.length);el('period').textContent=from||to?`${from||'不限'} — ${to||'不限'}`:'全部任务日期';el('source').href=D.sourceFolder;el('syncInfo').textContent=D.files.map(f=>`${f.person}：${new Date(f.downloadedAt).toLocaleString('zh-CN')}`).join('；');el('warnings').textContent=D.warnings.join('；');el('status').textContent=`最近完整同步：${new Date(D.syncedAt||D.generatedAt).toLocaleString('zh-CN')}。已同步 ${D.files.length} 份业务文件；其余 ${D.people.filter(p=>!p.files).length} 位销售业务员尚无源文件。跟单岗位 ${D.excludedPeople?.length||0} 人无需录入。`;
 }
 async function load(refresh=false){el('refresh').disabled=true;try{const res=await apiFetch((refresh?'/api/refresh':'/api/data')+'?'+scopeQuery(),{method:refresh?'POST':'GET',cache:'no-store'});if(!res.ok)throw Error(await res.text());D=await res.json();const selected=el('team').value;el('team').innerHTML='<option value="">全部队伍</option>'+[...new Set(D.people.map(p=>p.team))].map(t=>`<option>${esc(t)}</option>`).join('');el('team').value=selected;render();}catch(e){el('status').textContent='刷新失败，保留上次结果：'+e.message;}finally{el('refresh').disabled=false;}}
-initRoster();el('copyDailySummary').onclick=copyDailySummary;el('copySales').onclick=()=>copyTodo('销售');el('copyFollow').onclick=()=>copyTodo('跟单');el('refresh').onclick=()=>load(true);for(const id of ['from','to','management'])el(id).onchange=()=>D&&render();el('team').onchange=()=>D&&selectOverviewTeam(el('team').value);el('reset').onclick=()=>{el('team').value='';el('from').value=today;el('to').value=today;el('management').checked=true;render();};el('from').value=today;el('to').value=today;el('todoDate').value=today;el('todoDate').onchange=()=>render();el('pendingOnly').onchange=()=>render();el('previewReport').onclick=async()=>{const r=await apiFetch('/api/report?'+scopeQuery());el('reportPreview').textContent=await r.text();el('reportPreview').hidden=false;};el('sendReport').onclick=async()=>{const b=el('sendReport');b.disabled=true;el('reportStatus').textContent='正在同步全部业务文件…';try{const r=await apiFetch('/api/report-send?'+scopeQuery(),{method:'POST'}),s=await r.json();el('reportStatus').textContent=s.reportStatus==='sent'?'同步完成，日报已发送到 B2B核心群。':`同步完成，发送状态：${s.reportStatus||'待确认'}${s.reportError?'（'+s.reportError+'）':''}`;}catch(e){el('reportStatus').textContent='未发送：'+e.message;}finally{b.disabled=false;}};initIdentity();setInterval(()=>{if(!el('dashboardMain').hidden)load();},60000);
+el('activityDate').onchange=()=>{activityCache=null;renderActivityWarnings();};el('activityToday').onclick=()=>{el('activityDate').value=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());activityCache=null;renderActivityWarnings();};initRoster();el('copyDailySummary').onclick=copyDailySummary;el('copySales').onclick=()=>copyTodo('销售');el('copyFollow').onclick=()=>copyTodo('跟单');el('refresh').onclick=()=>load(true);for(const id of ['from','to','management'])el(id).onchange=()=>D&&render();el('team').onchange=()=>D&&selectOverviewTeam(el('team').value);el('reset').onclick=()=>{el('team').value='';el('from').value=today;el('to').value=today;el('management').checked=true;render();};el('from').value=today;el('to').value=today;el('todoDate').value=today;el('todoDate').onchange=()=>render();el('pendingOnly').onchange=()=>render();el('previewReport').onclick=async()=>{const r=await apiFetch('/api/report?'+scopeQuery());el('reportPreview').textContent=await r.text();el('reportPreview').hidden=false;};el('sendReport').onclick=async()=>{const b=el('sendReport');b.disabled=true;el('reportStatus').textContent='正在同步全部业务文件…';try{const r=await apiFetch('/api/report-send?'+scopeQuery(),{method:'POST'}),s=await r.json();el('reportStatus').textContent=s.reportStatus==='sent'?'同步完成，日报已发送到 B2B核心群。':`同步完成，发送状态：${s.reportStatus||'待确认'}${s.reportError?'（'+s.reportError+'）':''}`;}catch(e){el('reportStatus').textContent='未发送：'+e.message;}finally{b.disabled=false;}};initIdentity();setInterval(()=>{if(!el('dashboardMain').hidden)load();},60000);
 </script></html>
