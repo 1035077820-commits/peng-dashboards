@@ -165,12 +165,12 @@ function renderActivityWarnings(){
   const proven=modified&&dayFmt.format(modified)===day;
   const current=day===today&&D.syncedAt&&dayFmt.format(new Date(D.syncedAt))===day;
   const status=history?.status||(proven?'updated':current&&modified&&dayFmt.format(modified)<day?'stale':'unknown');
-  return {...p,status,modified:history?stamp(history.modifiedAt):modified,observedAt:history?.observedAt};
+  return {...p,status,modified:history?stamp(history.modifiedAt):modified,observedAt:history?.observedAt,mentionReady:history?.mentionReady};
  });
  const updated=people.filter(p=>p.status==='updated'),stale=people.filter(p=>p.status==='stale'),unknown=people.filter(p=>p.status==='unknown');
  const label=day===today?'今日':'当日';
  el('activityCount').textContent=`${label}有更新 ${updated.length} / ${people.length} 位 · 待核实 ${unknown.length} 位`;
- const renderGroup=(ps,title,color)=>[...new Set(ps.map(p=>p.team))].map(team=>`<div class="levelwarning" style="${color}"><h3>${esc(team)} · ${title} ${ps.filter(p=>p.team===team).length} 位</h3><ul>${ps.filter(p=>p.team===team).map(p=>`<li>${esc(p.person)}：${p.modified?'最近修改 '+esc(time(p.modified)):'记录不足，暂无法判断'}${p.status==='stale'?' · 备注：未发现当日修改，按未使用提醒':''}${p.observedAt?' · 核对截至 '+esc(time(p.observedAt)):''}</li>`).join('')}</ul></div>`).join('');
+ const renderGroup=(ps,title,color)=>[...new Set(ps.map(p=>p.team))].map(team=>`<div class="levelwarning" style="${color}"><h3>${esc(team)} · ${title} ${ps.filter(p=>p.team===team).length} 位</h3><ul>${ps.filter(p=>p.team===team).map(p=>`<li>${esc(p.person)}：${p.modified?'最近修改 '+esc(time(p.modified)):'记录不足，暂无法判断'}${p.status==='stale'?' · 备注：未发现当日修改，按未使用提醒':''}${p.status==='stale'&&p.mentionReady===false?' · 群提醒账号待匹配，请本人用钉钉登录看板':''}${p.observedAt?' · 核对截至 '+esc(time(p.observedAt)):''}</li>`).join('')}</ul></div>`).join('');
  el('activityWarnings').innerHTML=renderGroup(stale,'未发现'+label+'更新','')+renderGroup(unknown,'待核实','border-color:#a9b4c4;background:#f6f8fb;color:#526479')+renderGroup(updated,label+'有更新','border-color:#4a9d7a;background:#eff8f3;color:#256c4d');
  if(el('activityHint'))el('activityHint').textContent='每2小时完整同步；按表格修改记录判断，单纯打开无法识别，协作者修改也会计入。跟单无独立表格，不列入未使用提醒。历史状态仅代表记录截至时间。';
  if(input)loadActivityDay();
