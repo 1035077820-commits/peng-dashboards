@@ -248,7 +248,7 @@ function renderTodos(people){
  const day=el('todoDate').value,mg=el('management').checked;
  const tasks=D.tasks.filter(t=>t.date===day&&(mg||!t.management));
  if(D.viewer?.view==='personal'){
-  const categories=D.viewer.follower?['跟单']:['销售','跟单','其他事项'];
+  const categories=D.viewer.follower?['跟单']:['销售',...(tasks.some(t=>taskCategory(t)==='跟单')?['跟单']:[]),'其他事项'];
   el('personalSummary').innerHTML='<div class="taskcards">'+categories.map(c=>{const ts=tasks.filter(t=>c==='其他事项'?!['销售','跟单'].includes(taskCategory(t)):taskCategory(t)===c),done=ts.filter(t=>t.done).length;return `<div class="taskmetric ${c==='跟单'?'follow':c==='其他事项'?'other':''}"><span>${c}${c==='其他事项'?'（管理 / 待确认）':'责任'}</span><strong>${ts.length}</strong><small>项 · 已完成 ${done}</small></div>`;}).join('')+'</div>';
  }
  let html='<h3 class="categorytitle salescolor">销售人员</h3>';
@@ -268,12 +268,14 @@ function renderTodos(people){
  el('todoTeams').querySelectorAll('[data-follower]').forEach(b=>b.onclick=()=>{selectedFollower=b.dataset.follower;renderTodos(people);});
  const table=ts=>`<div style="overflow:auto"><table><thead><tr><th>客户</th><th>事件</th><th>任务</th><th>是否完成</th></tr></thead><tbody>${ts.map(t=>`<tr><td>${esc(t.customer)}</td><td>${esc(t.event)}</td><td>${esc(t.description)}${t.hidden?'<small>（源表已隐藏）</small>':''}</td><td><span class="tag ${t.done?'done':'pending'}">${t.done?'√ 已完成':'未完成'}</span></td></tr>`).join('')}</tbody></table></div>`;
  const group=(title,ts,cls)=>`<div class="taskgroup ${cls}"><h3>${title}<small> · ${ts.length} 项 / 已完成 ${ts.filter(t=>t.done).length} 项</small></h3>${ts.length?table(ts):'<div class="empty">当日没有符合筛选条件的任务</div>'}</div>`;
+ if(el('copyFollow'))el('copyFollow').hidden=!tasks.some(t=>taskCategory(t)==='跟单'&&(selectedFollower?people.some(p=>p.person===t.person&&(p.followIds||[]).includes(selectedFollower)):!selectedPerson||t.person===selectedPerson));
  if(selectedFollower){const f=followers.find(f=>f.id===selectedFollower),owners=people.filter(p=>(p.followIds||[]).includes(f.id)),ts=tasks.filter(t=>owners.some(p=>p.person===t.person)&&taskCategory(t)==='跟单'&&(!el('pendingOnly').checked||!t.done));el('todoDetail').innerHTML=`<div class="sectionhead"><h2>跟单 · ${esc(f.person)}</h2><span class="muted">${esc(day)}</span></div><div class="bindingline">绑定销售：${owners.map(p=>esc(p.team)+' / '+esc(p.person)).join('、')||'尚未绑定'}</div>${owners.some(p=>!p.files)?'<p class="foot">部分绑定销售尚未录入业务文件，以下仅展示已有数据。</p>':''}`+group('跟单待办',ts,'followtasks');return;}
  const p=people.find(p=>p.person===selectedPerson);
  if(!p){el('todoDetail').innerHTML='<p class="muted">点击销售或跟单人员查看当日明细及绑定关系</p>';return;}
  const ts=tasks.filter(t=>t.person===p.person&&(!el('pendingOnly').checked||!t.done));
  const fs=boundFollowers(p),other=ts.filter(t=>!['销售','跟单'].includes(taskCategory(t)));
- el('todoDetail').innerHTML=`<div class="sectionhead"><h2>${esc(p.team)} · 销售 ${esc(p.person)}</h2><span class="muted">${esc(day)} · ${ts.length} 项</span></div><div class="bindingline">销售 ${esc(p.person)} → 跟单 ${fs.map(f=>esc(f.person)).join('、')||'待绑定（请在人员架构设置中匹配）'}</div>`+(p.files?group('销售待办',ts.filter(t=>taskCategory(t)==='销售'),'salestasks')+group('跟单待办'+(fs.length?' · '+fs.map(f=>esc(f.person)).join('、'):' · 待绑定'),ts.filter(t=>taskCategory(t)==='跟单'),'followtasks')+(other.length?group('管理事项 / 其他事项 / 未分类任务',other,'othertasks'):''):'<div class="empty">尚未录入业务文件，无法判断当天待办</div>');
+ const hasFollow=tasks.some(t=>t.person===p.person&&taskCategory(t)==='跟单');
+ el('todoDetail').innerHTML=`<div class="sectionhead"><h2>${esc(p.team)} · 销售 ${esc(p.person)}</h2><span class="muted">${esc(day)} · ${ts.length} 项</span></div>`+(hasFollow?`<div class="bindingline">销售 ${esc(p.person)} → 跟单 ${fs.map(f=>esc(f.person)).join('、')||'待绑定（请在人员架构设置中匹配）'}</div>`:'')+(p.files?group('销售待办',ts.filter(t=>taskCategory(t)==='销售'),'salestasks')+(hasFollow?group('跟单待办'+(fs.length?' · '+fs.map(f=>esc(f.person)).join('、'):' · 待绑定'),ts.filter(t=>taskCategory(t)==='跟单'),'followtasks'):'')+(other.length?group('管理事项 / 其他事项 / 未分类任务',other,'othertasks'):''):'<div class="empty">尚未录入业务文件，无法判断当天待办</div>');
 }
 
 function selectOverviewTeam(team){
