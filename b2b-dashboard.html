@@ -312,7 +312,7 @@ function renderCompletion(people,tasks){
   for(const team of teams){const ps=people.filter(p=>p.team===team),tt=dt.filter(t=>t.team===team);
    html+=row(day,esc(team)+' · 队伍汇总',tt,'subtotal',ps.some(p=>p.files));
    for(const p of ps){const pt=tt.filter(t=>t.person===p.person),fs=boundFollowers(p);html+=row('',`<button class="personlink" data-person="${esc(p.person)}" data-date="${day}">销售 ${esc(p.person)} · 全部责任合计</button>`,pt,'personrow personsummary',!!p.files);
-    for(const category of ['销售','跟单','管理事项','其他事项','未分类']){const ct=pt.filter(t=>taskCategory(t)===category),kind=category==='销售'?'sales':category==='跟单'?'follow':'other';if(ct.length||['销售','跟单'].includes(category))html+=row('',`<span class="responsibilitylabel">${category==='跟单'?'跟单责任 · '+(fs.map(f=>esc(f.person)).join('、')||'待绑定'):esc(category)+'责任'}</span>`,ct,`personrow responsibilityrow ${kind}responsibility`,!!p.files);}
+    for(const category of ['销售','跟单','管理事项','其他事项','未分类']){const ct=pt.filter(t=>taskCategory(t)===category),kind=category==='销售'?'sales':category==='跟单'?'follow':'other';const show=category==='跟单'?(fs.length>0&&ct.length>0):(ct.length>0||category==='销售');if(show)html+=row('',`<span class="responsibilitylabel">${category==='跟单'?'跟单责任 · '+fs.map(f=>esc(f.person)).join('、'):esc(category)+'责任'}</span>`,ct,`personrow responsibilityrow ${kind}responsibility`,!!p.files);}
    }
   }
   html+=row(day,'当日汇总（已同步）',dt,'daytotal',people.some(p=>p.files));
