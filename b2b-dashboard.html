@@ -378,7 +378,7 @@ function matchCrmNames(tasks=crmTasks()){
 }
 function crmImportRows(tasks){
  const clean=x=>String(x??'').replace(/[\t\r\n]+/g,' ').trim();
- return tasks.map(t=>[clean(t.crmCustomer),`${t.date} 00:00:00`,clean(t.event),clean(t.description),'']);
+ return tasks.map(t=>[clean(t.crmCustomer),`${t.date} 00:00:00`,'',[clean(t.event),clean(t.description)].filter(Boolean).join('：'),'']);
 }
 function renderCrmMatch(){
  const panel=el('crmMatchPanel');if(!panel)return;const result=matchCrmNames();
