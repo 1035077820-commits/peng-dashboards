@@ -17,7 +17,7 @@ body{background:#f5f7fa;color:#22334b;font-size:14px}main{max-width:1200px;paddi
 <div class="cards"><div class="card"><span>录入客户数量</span><strong id="kCustomers">—</strong><small>除管理及其他事项外，每个客户子表计 1 位客户</small></div><div class="card"><span>当前事件数量</span><strong id="kEvents">—</strong><small>按事件分组计数，隐藏分组不计</small></div><div class="card"><span>全部责任任务 / 完成数量</span><strong id="kTasks">—</strong><small>所选日期范围内的全部任务</small></div><div class="card"><span>任务完成度</span><strong id="kRate">—</strong><small>完成数量 ÷ 任务数量</small></div></div>
 <div class="filters" id="managementFilters"><label>队伍 <select id="team"><option value="">全部队伍</option></select></label><label>任务波段 <input id="from" type="date"> 至 <input id="to" type="date"></label><label><input type="checkbox" id="management" checked>包含管理事项任务</label><button id="reset">重置筛选</button></div>
 <section id="customerLevelSection" hidden><div class="sectionhead"><div><h2>客户级别分析</h2><small id="levelHint">按队伍查看分布，选择队伍展开个人情况</small></div></div><div class="tablewrap" id="levelTeams"></div><div id="levelDetail" class="tablewrap" hidden></div></section><section id="customerSection"><div class="sectionhead"><h2>客户与事件录入</h2><span class="pill" id="coverage"></span></div><div class="tablewrap"><table><thead><tr><th>队伍</th><th>业务员</th><th class="n">录入客户数量</th><th class="n">事件数量</th><th>数据状态</th></tr></thead><tbody id="people"></tbody></table></div><div class="foot">客户和事件为当前存量，不受任务日期筛选影响。缺少业务文件的人员显示“未录入”，汇总仅包含已同步文件。</div></section>
-<section id="todoSection"><div class="sectionhead"><div><h2>每人每日待办</h2><small>销售与跟单分类展示，点击人员查看待办及绑定关系</small></div><div class="tools"><label>日期 <input type="date" id="todoDate"></label><label><input type="checkbox" id="pendingOnly"> 仅未完成</label><button id="copySales">复制销售待办</button><button id="copyFollow">复制跟单待办</button><button id="copyDailySummary" title="复制所选日期已完成事项，按销售和跟单分段">当日总结</button><button id="copyCrmRecords" title="复制CRM跟进记录导入模板格式">复制CRM跟进记录</button><button id="matchCrmCustomers" title="粘贴个人CRM客户名单并匹配当前客户">匹配CRM客户名称</button><span id="copyStatus" class="copyfeedback" role="status"></span></div></div><div id="crmMatchPanel" class="crmpanel" hidden><div class="sectionhead"><div><strong>个人CRM客户名单</strong><small>每行一个CRM客户名称，也可直接粘贴CRM导出的客户列；名单只保存在本机浏览器。</small></div><button id="closeCrmMatch">收起</button></div><textarea id="crmCustomerList" rows="5" placeholder="每行一个CRM客户名称"></textarea><div class="tools"><button id="saveCrmCustomers" class="primary">保存并匹配</button><button id="copyCrmUnmatched">复制未匹配客户</button><span id="crmMatchStatus" class="copyfeedback" role="status"></span></div><div id="crmMatchResult"></div></div><textarea id="copyFallback" aria-label="复制内容" hidden style="width:100%;height:180px"></textarea><div id="personalSummary"></div><details id="peoplePicker"><summary>选择销售 / 跟单人员</summary><div id="todoTeams"></div></details><div id="todoDetail" class="detailpanel"><p class="muted">点击上方业务员查看当日明细</p></div><p class="foot">任务按源表节点分类：先展示销售待办，再展示跟单待办；空白节点归入管理事项或未分类。跟单从绑定销售的文件读取任务，无需另行录入。多位跟单绑定同一销售时共同展示该销售的跟单任务，汇总按源任务计数，不重复累加。</p></section>
+<section id="todoSection"><div class="sectionhead"><div><h2>每人每日待办</h2><small>销售与跟单分类展示，点击人员查看待办及绑定关系</small></div><div class="tools"><label>日期 <input type="date" id="todoDate"></label><label><input type="checkbox" id="pendingOnly"> 仅未完成</label><button id="copySales">复制销售待办</button><button id="copyFollow">复制跟单待办</button><button id="copyDailySummary" title="复制所选日期已完成事项，按销售和跟单分段">当日总结</button><button id="copyCrmRecords" title="复制CRM跟进记录导入模板格式">复制CRM跟进记录</button><button id="matchCrmCustomers" title="粘贴个人CRM客户名单并匹配当前客户">匹配CRM客户名称</button><span id="copyStatus" class="copyfeedback" role="status"></span></div></div><div id="crmMatchPanel" class="crmpanel" hidden><div class="sectionhead"><div><strong>个人CRM客户名单</strong><small>每行一个CRM客户名称；名称不一致时可写“看板客户名=CRM客户名”。名单只保存在本机浏览器。</small></div><button id="closeCrmMatch">收起</button></div><textarea id="crmCustomerList" rows="5" placeholder="每行一个CRM客户名称"></textarea><div class="tools"><button id="saveCrmCustomers" class="primary">保存并匹配</button><button id="copyCrmUnmatched">复制未匹配客户</button><span id="crmMatchStatus" class="copyfeedback" role="status"></span></div><div id="crmMatchResult"></div></div><textarea id="copyFallback" aria-label="复制内容" hidden style="width:100%;height:180px"></textarea><div id="personalSummary"></div><details id="peoplePicker"><summary>选择销售 / 跟单人员</summary><div id="todoTeams"></div></details><div id="todoDetail" class="detailpanel"><p class="muted">点击上方业务员查看当日明细</p></div><p class="foot">任务按源表节点分类：先展示销售待办，再展示跟单待办；空白节点归入管理事项或未分类。跟单从绑定销售的文件读取任务，无需另行录入。多位跟单绑定同一销售时共同展示该销售的跟单任务，汇总按源任务计数，不重复累加。</p></section>
 <section id="completionSection"><div class="sectionhead"><div><h2 id="completionTitle">任务完成度</h2><small id="completionHint">按队伍、人员及销售 / 跟单责任分类汇总</small></div><span class="muted" id="period"></span></div><div class="teamcards" id="teamProgress"></div><div id="teamDetailHeader" class="sectionhead" hidden><h3 id="teamDetailName"></h3><button id="backToTeams">返回全部队伍</button></div><div id="completionDetails"><div class="tablewrap"><table><thead><tr><th>日期</th><th>队伍 / 销售归属 / 责任</th><th class="n">任务数量</th><th class="n">完成数量</th><th class="n">未完成</th><th class="n">完成率</th></tr></thead><tbody id="daily"></tbody></table></div><div class="foot">个人行按销售文件归属，销售与跟单责任分别展示；管理事项及未分类单列。汇总按源任务去重计算。隐藏的历史任务保留，未同步人员不按零完成处理。</div></div></section>
 <section id="activitySection" hidden><div class="sectionhead"><div><h2>表格更新记录与提醒</h2><small id="activityHint">每2小时同步，按北京时间查询各成员表格修改记录</small></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px"><small id="activityUpdated">最近完整更新：读取中…</small><div class="tools"><label>日期 <input type="date" id="activityDate"></label><button id="activityToday">今天</button><span class="pill" id="activityCount"></span></div></div></div><div id="activityWarnings"></div></section><section id="reportSection"><div class="sectionhead"><div><h2>每日钉钉汇总</h2><small>每天 23:00 自动同步发送，也可手动同步并发送</small></div><div class="reporttools"><button id="previewReport">查看今日推送内容</button><button id="sendReport" class="primary">同步并发送日报</button></div></div><span id="reportStatus" class="reportstatus" role="status"></span><pre id="reportPreview" hidden></pre><p class="foot">手动发送会重新同步整份业务文件夹，完整成功后发送到 B2B核心群。</p></section>
 <section id="scopeDetails"><details><summary>统计口径与同步情况</summary><p>整份文件名含“模板”的文件不统计；客户数量按除“管理事项”和“其他事项”外的客户子表计数；事件数量按有标题的事件分组计数，隐藏列或隐藏客户子表里的事件不计。任务按源表日期归属，汇总完成度按总完成数÷总任务数计算，不对百分比取平均。</p><p id="syncInfo"></p><p>刷新按钮请求后台从钉钉获取数据。自动同步依赖后台服务、钉钉应用权限及有效授权。</p><div id="warnings"></div></details></section>
@@ -345,22 +345,21 @@ let crmUnmatched=[];
 const crmStorageKey=()=>`b2b-crm-customers:${D?.viewer?.person||selectedPerson||'personal'}`;
 function crmNormalize(value){return String(value??'').trim().toLowerCase().replace(/[\s　()（）［］【】、,，.。\-—_]+/g,'');}
 function crmTasks(){
- const day=el('todoDate')?.value, person=selectedPerson;
- const people=D.people||[];
- return (D.tasks||[]).filter(t=>t.date===day&&!t.management&&(!person||t.person===person)&&(selectedFollower?taskCategory(t)==='跟单'&&people.some(p=>p.person===t.person&&(p.followIds||[]).includes(selectedFollower)):true));
+ const category=summaryRole();
+ return currentTodoTasks({summary:true}).filter(t=>!t.management&&t.taskKind!=='other'&&(category==='跟单'?taskCategory(t)==='跟单':taskCategory(t)!=='跟单'));
 }
 function crmCustomers(){
  try{return JSON.parse(localStorage.getItem(crmStorageKey())||'[]').filter(Boolean);}catch{return [];}
 }
 function matchCrmNames(tasks=crmTasks()){
- const names=crmCustomers(),index=new Map(names.map(n=>[crmNormalize(n),n])),matched=[],unmatched=[];
+ const entries=crmCustomers(),names=entries.map(n=>String(n).includes('=>')?String(n).split('=>')[1].trim():String(n)),index=new Map(names.map(n=>[crmNormalize(n),n])); for(const entry of entries){const parts=String(entry).split(/=>|=/);if(parts.length>1&&parts[0].trim()&&parts[1].trim())index.set(crmNormalize(parts[0]),parts[1].trim());} const matched=[],unmatched=[];
  for(const t of tasks){const source=String(t.customer||'').trim(),crm=index.get(crmNormalize(source));if(crm)matched.push({...t,crmCustomer:crm});else unmatched.push(source||'未填写客户');}
  crmUnmatched=[...new Set(unmatched)];return {matched,unmatched:crmUnmatched,names};
 }
 function renderCrmMatch(){
  const panel=el('crmMatchPanel');if(!panel)return;const result=matchCrmNames();
  el('crmMatchResult').innerHTML=`<div class="crmmatchsummary">已匹配 ${result.matched.length} 条 · 未匹配 ${result.unmatched.length} 个客户</div>`+(result.unmatched.length?`<div class="crmwarn">CRM个人名单中未找到：${result.unmatched.map(esc).join('、')}</div>`:'<div class="crmgood">当前日期客户全部已匹配</div>');
- el('crmMatchStatus').textContent=`名单 ${result.names.length} 个；当前日期 ${result.matched.length+result.unmatched.length} 条客户任务`;
+ el('crmMatchStatus').textContent=`名单 ${result.names.length} 个；当前日期已完成客户跟进 ${crmTasks().length} 条。复制后粘贴到CRM模板A2，保留原表头。`;
 }
 function openCrmMatch(){
  const panel=el('crmMatchPanel');if(!panel)return;panel.hidden=false;el('crmCustomerList').value=crmCustomers().join('\n');renderCrmMatch();el('crmCustomerList').focus();
@@ -373,11 +372,13 @@ async function copyCrmRecords(){
  const result=matchCrmNames();
  if(!result.names.length){openCrmMatch();el('crmMatchStatus').textContent='请先粘贴并保存个人CRM客户名单，再生成导入记录';return;}
  const clean=x=>String(x??'').replace(/[\t\r\n]+/g,' ').trim();
- const rows=result.matched.map(t=>[t.crmCustomer,`${t.date} 00:00:00`,clean(t.event||''),clean(t.description||''),clean(t.node|| (t.done?'已完成':'待跟进'))]);
- const text=[['客户','*跟进时间','关键事项','*跟进内容','任务'],...rows].map(r=>r.join('\t')).join('\n');
- await copyText(text,`已复制CRM跟进记录 ${rows.length} 条；未匹配 ${result.unmatched.length} 个客户`);
+ if(!result.matched.length){el('copyStatus').textContent='当前日期没有可导入的已完成客户跟进记录；请确认任务已打√并完成CRM名称匹配';renderCrmMatch();return;}
+ const rows=result.matched.map(t=>[t.crmCustomer,`${t.date} 00:00:00`,clean(t.event||''),clean(t.description||''),'']);
+ const text=rows.map(r=>r.join('\t')).join('\n');
+ await copyText(text,`已复制${summaryRole()}已完成CRM跟进记录 ${rows.length} 条，请粘贴到模板A2（不含表头）；未匹配 ${result.unmatched.length} 个客户未导出`);
  renderCrmMatch();
 }
+
 </script><script>
 // The backend has already limited D to the authenticated person's allowed scope.
 function pendingRows(data,{from='',to='',team=''}={}){
