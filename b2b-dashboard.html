@@ -462,7 +462,7 @@ function renderPending(){
  el('pendingHint').textContent='未打 √ 或未勾选即未完成；按源表任务日期归类，默认包含截至今天的历史未完成任务。其他事项含管理事项及未分类任务。';
  if(from.value&&to.value&&from.value>to.value){el('pendingCount').textContent='';el('pendingContent').innerHTML='<p class="empty">开始日期不能晚于结束日期</p>';return;}
  const rows=pendingRows(D,{from:from.value,to:to.value,team:personal?'':el('team').value});
- const days=ts=>[...new Set(ts.map(t=>t.date))].sort();
+ const days=ts=>[...new Set(ts.map(t=>t.date))].sort((a,b)=>b.localeCompare(a));
  const counts=ts=>['销售','跟单','其他事项'].map(c=>ts.filter(t=>pendingCategory(t)===c).length);
  const content=el('pendingContent');
  const opened=new Set([...content.querySelectorAll('details[open]')].map(d=>d.dataset.pendingKey));
