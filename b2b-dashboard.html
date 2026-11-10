@@ -30,7 +30,7 @@ body{background:#f5f7fa;color:#22334b;font-size:14px}main{max-width:1200px;paddi
 @media(max-width:900px){#todoSection>.sectionhead>.todo-tools{flex:1 1 100%;width:100%;justify-content:flex-start}}
 @media(max-width:720px){.todo-tools{gap:12px}.todo-filters{width:100%;padding:0;flex-wrap:wrap}.todo-actions{min-width:0;width:100%}.todo-actions button{padding:8px 6px;font-size:12px;white-space:normal}.todo-tools .copyfeedback{text-align:left}}
 </style>
-<section id="todoSection"><div class="sectionhead"><div><h2>每人每日待办</h2><small>销售与跟单分类展示，点击人员查看待办及绑定关系</small></div><div class="tools todo-tools"><div class="todo-filters"><label>日期 <input type="date" id="todoDate"></label><label><input type="checkbox" id="pendingOnly"> 仅未完成</label></div><div class="todo-actions" role="group" aria-label="每日待办操作"><button id="copySales">复制销售待办</button><button id="copyFollow">复制跟单待办</button><button id="copyCrmRecords" title="复制CRM跟进记录导入模板格式">复制CRM跟进记录</button><button id="matchCrmCustomers" title="读取个人CRM客户名单并匹配当前客户">匹配CRM客户名称</button><button id="copyDailySummary" title="复制所选日期已完成事项，按销售和跟单分段">当日总结</button><button id="copyTomorrowPlan" title="刷新钉钉数据后复制北京时间明日未完成待办">明日计划</button></div><span id="copyStatus" class="copyfeedback" role="status"></span></div></div><div id="crmMatchPanel" class="crmpanel" hidden><div class="sectionhead"><div><strong>个人CRM客户名单</strong><small>核对所选日期全部已完成客户跟进的名称，再按导入模板五列整批复制。名称不一致时，请修改钉钉原表后刷新。</small></div><button id="closeCrmMatch">收起</button></div><div class="tools"><button id="refreshCrmCustomers" onclick="refreshCrmMatch()">刷新并重新核对</button><button id="copyVerifiedCrmRecords" class="primary" onclick="copyCrmRecords()" disabled>核对通过，复制全部跟进记录</button><button id="copyCrmUnmatched">复制名称不一致客户</button><span id="crmMatchStatus" class="copyfeedback" role="status"></span></div><details><summary>查看CRM客户名单</summary><div id="crmLiveCustomerNames" style="white-space:pre-wrap;line-height:1.8;max-height:220px;overflow:auto"></div></details><div id="crmMatchResult"></div></div><textarea id="copyFallback" aria-label="复制内容" hidden style="width:100%;height:180px"></textarea><div id="personalSummary"></div><details id="peoplePicker"><summary>选择销售 / 跟单人员</summary><div id="todoTeams"></div></details><div id="todoDetail" class="detailpanel"><p class="muted">点击上方业务员查看当日明细</p></div><p class="foot">任务按源表节点分类：先展示销售待办，再展示跟单待办；空白节点归入管理事项或未分类。跟单从绑定销售的文件读取任务，无需另行录入。多位跟单绑定同一销售时共同展示该销售的跟单任务，汇总按源任务计数，不重复累加。</p></section>
+<section id="todoSection"><div class="sectionhead"><div><h2>每人每日待办</h2><small>销售与跟单分类展示，点击人员查看待办及绑定关系</small></div><div class="tools todo-tools"><div class="todo-filters"><label>日期 <input type="date" id="todoDate"></label><label><input type="checkbox" id="pendingOnly"> 仅未完成</label></div><div class="todo-actions" role="group" aria-label="每日待办操作"><button id="copySales">复制销售待办</button><button id="copyFollow">复制跟单待办</button><button id="copyCrmRecords" title="复制CRM跟进记录导入模板格式">复制CRM跟进记录</button><button id="matchCrmCustomers" title="读取个人CRM客户名单并匹配当前客户">匹配CRM客户名称</button><button id="copyDailySummary" title="复制所选日期已完成和未完成事项，分段列出">当日总结</button><button id="copyTomorrowPlan" title="刷新钉钉数据后复制北京时间明日未完成待办">明日计划</button></div><span id="copyStatus" class="copyfeedback" role="status"></span></div></div><div id="crmMatchPanel" class="crmpanel" hidden><div class="sectionhead"><div><strong>个人CRM客户名单</strong><small>核对所选日期全部已完成客户跟进的名称，再按导入模板五列整批复制。名称不一致时，请修改钉钉原表后刷新。</small></div><button id="closeCrmMatch">收起</button></div><div class="tools"><button id="refreshCrmCustomers" onclick="refreshCrmMatch()">刷新并重新核对</button><button id="copyVerifiedCrmRecords" class="primary" onclick="copyCrmRecords()" disabled>核对通过，复制全部跟进记录</button><button id="copyCrmUnmatched">复制名称不一致客户</button><span id="crmMatchStatus" class="copyfeedback" role="status"></span></div><details><summary>查看CRM客户名单</summary><div id="crmLiveCustomerNames" style="white-space:pre-wrap;line-height:1.8;max-height:220px;overflow:auto"></div></details><div id="crmMatchResult"></div></div><textarea id="copyFallback" aria-label="复制内容" hidden style="width:100%;height:180px"></textarea><div id="personalSummary"></div><details id="peoplePicker"><summary>选择销售 / 跟单人员</summary><div id="todoTeams"></div></details><div id="todoDetail" class="detailpanel"><p class="muted">点击上方业务员查看当日明细</p></div><p class="foot">任务按源表节点分类：先展示销售待办，再展示跟单待办；空白节点归入管理事项或未分类。跟单从绑定销售的文件读取任务，无需另行录入。多位跟单绑定同一销售时共同展示该销售的跟单任务，汇总按源任务计数，不重复累加。</p></section>
 <section id="completionSection"><div class="sectionhead"><div><h2 id="completionTitle">任务完成度</h2><small id="completionHint">按队伍、人员及销售 / 跟单责任分类汇总</small></div><span class="muted" id="period"></span></div><div class="teamcards" id="teamProgress"></div><div id="teamDetailHeader" class="sectionhead" hidden><h3 id="teamDetailName"></h3><button id="backToTeams">返回全部队伍</button></div><div id="completionDetails"><div class="tablewrap"><table><thead><tr><th>日期</th><th>队伍 / 销售归属 / 责任</th><th class="n">任务数量</th><th class="n">完成数量</th><th class="n">未完成</th><th class="n">完成率</th></tr></thead><tbody id="daily"></tbody></table></div><div class="foot">个人行按销售文件归属，销售与跟单责任分别展示；管理事项及未分类单列。汇总按源任务去重计算。隐藏的历史任务保留，未同步人员不按零完成处理。</div></div></section>
 <section id="activitySection" hidden><div class="sectionhead"><div><h2>表格更新记录与提醒</h2><small id="activityHint">每2小时同步，按北京时间查询各成员表格修改记录</small></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px"><small id="activityUpdated">最近完整更新：读取中…</small><div class="tools"><label>日期 <input type="date" id="activityDate"></label><button id="activityToday">今天</button><span class="pill" id="activityCount"></span></div></div></div><div id="activityWarnings"></div></section><section id="reportSection"><div class="sectionhead"><div><h2>每日钉钉汇总</h2><small>每天 23:00 自动同步发送，也可手动同步并发送</small></div><div class="reporttools"><button id="previewReport">查看今日推送内容</button><button id="sendReport" class="primary">同步并发送日报</button></div></div><span id="reportStatus" class="reportstatus" role="status"></span><pre id="reportPreview" hidden></pre><p class="foot">手动发送会重新同步整份业务文件夹，完整成功后发送到 B2B核心群。</p></section>
 <section id="scopeDetails"><details><summary>统计口径与同步情况</summary><p>整份文件名含“模板”的文件不统计；客户数量按除“管理事项”和“其他事项”外的客户子表计数；事件数量按有标题的事件分组计数，隐藏列或隐藏客户子表里的事件不计。任务按源表日期归属，汇总完成度按总完成数÷总任务数计算，不对百分比取平均。</p><p id="syncInfo"></p><p>刷新按钮请求后台从钉钉获取数据。自动同步依赖后台服务、钉钉应用权限及有效授权。</p><div id="warnings"></div></details></section>
@@ -203,24 +203,24 @@ function currentTodoTasks({summary=false,includeManagement=false,day=el('todoDat
 const summaryRole=()=>selectedFollower||D.viewer?.follower?'跟单':'销售';
 async function copyDailySummary(){
  const category=summaryRole();
- const tasks=currentTodoTasks({summary:true}).filter(t=>category==='销售'?taskCategory(t)!=='跟单':taskCategory(t)==='跟单');
+ const tasks=currentTodoTasks({includeManagement:true,pendingOnly:false}).filter(t=>category==='销售'?taskCategory(t)!=='跟单':taskCategory(t)==='跟单');
  const clean=x=>String(x??'').replace(/[\t\r\n]+/g,' ').trim();
  const date=el('todoDate').value.replace(/^(\d{4})-(\d{2})-(\d{2})$/,(m,y,month,day)=>`${y}年${Number(month)}月${Number(day)}日`);
- const lines=[`${category}日报｜${date}`];let number=0;
- for(const section of ['管理事项','其他事项','客户跟进']){
-  const management=section!=='客户跟进';
-  const items=tasks.filter(t=>(t.taskKind==='other'?'其他事项':t.management?'管理事项':'客户跟进')===section);
-  if(!items.length)continue;
-  lines.push('',`【${section}】`,'');
-  for(const t of items){
-   const event=clean(t.event||'未填写事件'),description=clean(t.description||'未填写事项');
-   lines.push(`${++number}. ${management?'':clean(t.customer)+'｜'}${event}：${description}`);
+ const completed=tasks.filter(t=>t.done),pending=tasks.filter(t=>!t.done);
+ const lines=[`${category}日报｜${date}`,`已完成 ${completed.length} 项｜未完成 ${pending.length} 项`];
+ for(const [label,group] of [['已完成事项',completed],['未完成事项',pending]]){
+  lines.push('',`【${label}】`);let number=0;
+  for(const section of ['管理事项','其他事项','客户跟进']){
+   const items=group.filter(t=>(t.taskKind==='other'?'其他事项':t.management?'管理事项':'客户跟进')===section);
+   if(!items.length)continue;
+   lines.push('',`【${section}】`);
+   for(const t of items)lines.push(`${++number}. ${section==='客户跟进'?clean(t.customer)+'｜':''}${clean(t.event||'未填写事件')}：${clean(t.description||'未填写事项')}`);
   }
+  if(!group.length)lines.push(label==='已完成事项'?'暂无已完成事项':'无未完成事项');
  }
- if(!tasks.length)lines.push('','暂无已完成事项');
  const text=lines.join('\n');
  const html='<div style="text-align:left;font-family:Arial,Microsoft YaHei,sans-serif;font-size:14px;line-height:1.8">'+lines.map(line=>line?`<div>${esc(line)}</div>`:'<br>').join('')+'</div>';
- await copyText(text,`已复制${category}当日总结 ${tasks.length} 项（已完成），可直接粘贴到钉钉`,html);
+ await copyText(text,`已复制${category}当日总结：已完成 ${completed.length} 项，未完成 ${pending.length} 项，可直接粘贴到钉钉`,html);
 }
 async function copyText(text,message,html){
  try{
