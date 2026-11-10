@@ -236,6 +236,41 @@ function taskCopyHtml(lines,escape){
   return '<div'+(heading?' style="font-weight:700;font-size:16px;margin-top:8px"':'')+'>'+escape(line)+'</div>';
  }).join('')+'</div>';
 }
+function formatTaskCopy(tasks,{category,day,mode='todo',executor=''}={}){
+ const clean=x=>String(x??'').replace(/[\t\r\n]+/g,' ').trim();
+ const date=String(day).replace(/^(\d{4})-(\d{2})-(\d{2})$/,(m,y,month,d)=>`${y}年${Number(month)}月${Number(d)}日`);
+ const title=category+(mode==='summary'?'日报':mode==='tomorrow'?'明日计划':'待办');
+ const completed=tasks.filter(t=>t.done).length;
+ const owners=[...new Set(tasks.map(t=>t.person||'未标注销售'))];
+ const lines=[`${title}｜${date}`,...(executor?[`${category==='跟单'?'跟单':'执行人'}：${clean(executor)}`]:[]),`共 ${tasks.length} 项｜已完成 ${completed}｜未完成 ${tasks.length-completed}`];
+ for(const [index,owner] of owners.entries()){
+  const own=tasks.filter(t=>(t.person||'未标注销售')===owner),done=own.filter(t=>t.done).length;
+  lines.push('','━━━━━━━━━━━━━━━━',`【${index+1}/${owners.length}　销售：${clean(owner)}】`,`共 ${own.length} 项｜已完成 ${done}｜未完成 ${own.length-done}`);
+  let number=0;
+  const groups=mode==='summary'?[['✅ 已完成事项',own.filter(t=>t.done)],['⏳ 未完成事项',own.filter(t=>!t.done)]]:[['',own]];
+  for(const [label,group] of groups){
+   if(label)lines.push('',label);
+   if(!group.length&&label){lines.push(label.includes('未完成')?'无未完成事项':'暂无已完成事项');continue;}
+   for(const section of ['管理事项','其他事项','客户跟进']){
+    const items=group.filter(t=>(t.taskKind==='other'?'其他事项':t.management?'管理事项':'客户跟进')===section);
+    if(!items.length)continue;
+    lines.push('',`▸ ${section} · ${items.length}项`);
+    for(const t of items){
+     lines.push('',`${++number}. ${t.done?'✅ 已完成':'□ 待完成'}｜${section==='客户跟进'?clean(t.customer||'未填写客户')+'｜':''}${clean(t.event||'未填写事件')}`,`   内容：${clean(t.description||'未填写事项')}`);
+    }
+   }
+  }
+ }
+ if(!tasks.length)lines.push('',mode==='summary'?'当日暂无事项':'暂无待办');
+ return lines;
+}
+function taskCopyHtml(lines,escape){
+ return '<div style="text-align:left;font-family:Arial,Microsoft YaHei,sans-serif;font-size:14px;line-height:1.8">'+lines.map(line=>{
+  if(!line)return '<br>';
+  const heading=line.startsWith('【')||line.startsWith('✅ 已完成事项')||line.startsWith('⏳ 未完成事项');
+  return '<div'+(heading?' style="font-weight:700;font-size:16px;margin-top:8px"':'')+'>'+escape(line)+'</div>';
+ }).join('')+'</div>';
+}
 async function copyDailySummary(){
  const category=summaryRole();
  const tasks=currentTodoTasks({includeManagement:true,pendingOnly:false}).filter(t=>category==='销售'?taskCategory(t)!=='跟单':taskCategory(t)==='跟单');
